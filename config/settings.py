@@ -26,7 +26,13 @@ if not SECRET_KEY:
 DEBUG = get_bool_env('DEBUG', default=True)
 
 # Allowed hosts
-ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', default='127.0.0.1,localhost,testserver')
+ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', default='127.0.0.1,localhost,testserver,.ngrok-free.app,.ngrok.io,.loca.lt')
+
+# CSRF Trusted Origins for tunneling (ngrok, localtunnel) and remote testing
+CSRF_TRUSTED_ORIGINS = get_list_env(
+    'CSRF_TRUSTED_ORIGINS',
+    default='https://*.ngrok-free.app,https://*.ngrok.io,https://*.loca.lt,http://127.0.0.1,http://localhost'
+)
 
 # Application definition
 INSTALLED_APPS = [
