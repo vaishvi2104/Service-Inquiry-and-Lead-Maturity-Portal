@@ -26,13 +26,18 @@ if not SECRET_KEY:
 DEBUG = get_bool_env('DEBUG', default=True)
 
 # Allowed hosts
-ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', default='127.0.0.1,localhost,testserver,.ngrok-free.app,.ngrok.io,.loca.lt')
+ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', default='127.0.0.1,localhost,testserver,.onrender.com,.ngrok-free.app,.ngrok.io,.loca.lt')
+if DEBUG and '*' not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append('*')
 
-# CSRF Trusted Origins for tunneling (ngrok, localtunnel) and remote testing
+# CSRF Trusted Origins for tunneling (ngrok, localtunnel), Render, and remote testing
 CSRF_TRUSTED_ORIGINS = get_list_env(
     'CSRF_TRUSTED_ORIGINS',
-    default='https://*.ngrok-free.app,https://*.ngrok.io,https://*.loca.lt,http://127.0.0.1,http://localhost'
+    default='https://*.onrender.com,https://*.ngrok-free.app,https://*.ngrok.io,https://*.loca.lt,http://127.0.0.1,http://localhost'
 )
+
+# Reverse proxy SSL header (essential for Render, Heroku, AWS, etc.)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 INSTALLED_APPS = [
@@ -50,6 +55,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -115,6 +121,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Whitenoise storage for production static files compression and caching
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedStaticFilesStorage',
+    },
+}
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
