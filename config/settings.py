@@ -26,7 +26,7 @@ if not SECRET_KEY:
 DEBUG = get_bool_env('DEBUG', default=True)
 
 # Allowed hosts
-ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', default='127.0.0.1,localhost')
+ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', default='127.0.0.1,localhost,testserver')
 
 # Application definition
 INSTALLED_APPS = [

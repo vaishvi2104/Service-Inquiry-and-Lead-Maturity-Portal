@@ -152,6 +152,19 @@ class Inquiry(models.Model):
         return badge_map.get(self.status, 'bg-secondary-lt')
 
     @property
+    def adminlte_badge_class(self) -> str:
+        """Return AdminLTE 4 badge-stage class for the current lead status."""
+        badge_map = {
+            LeadStatus.NEW: 'badge-stage badge-new',
+            LeadStatus.CONTACTED: 'badge-stage badge-contacted',
+            LeadStatus.FOLLOW_UP: 'badge-stage badge-followup',
+            LeadStatus.PROPOSAL_SENT: 'badge-stage badge-proposal',
+            LeadStatus.MATURE: 'badge-stage badge-mature',
+            LeadStatus.CLOSED: 'badge-stage badge-closed',
+        }
+        return badge_map.get(self.status, 'badge-stage badge-closed')
+
+    @property
     def is_follow_up_due(self) -> bool:
         """Check if a follow-up is scheduled and due."""
         from django.utils import timezone

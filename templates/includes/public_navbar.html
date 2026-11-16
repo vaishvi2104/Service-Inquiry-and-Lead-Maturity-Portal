@@ -1,37 +1,68 @@
-<header class="sticky-top">
-  <nav class="navbar navbar-expand-lg sahay-navbar" aria-label="Main Navigation">
+<!-- Top Informational Bar -->
+<div class="corp-topbar d-none d-md-block">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-3">
+        <span><i class="bi bi-geo-alt me-1"></i> Ahmedabad, Gujarat</span>
+        <span>&bull;</span>
+        <span><i class="bi bi-envelope me-1"></i> info@startupsahay.com</span>
+        <span>&bull;</span>
+        <span><i class="bi bi-telephone me-1"></i> +91-63526-75546</span>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-white-50">Private Consultancy Firm</span>
+        <span>&bull;</span>
+        <a href="{% url 'dashboard:login' %}" class="fw-semibold">
+          <i class="bi bi-lock-fill me-1"></i> Staff Login
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Corporate Navigation -->
+<header class="corp-header sticky-top">
+  <nav class="navbar navbar-expand-lg corp-navbar" aria-label="Main Navigation">
     <div class="container">
-      <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'public:home' %}">
-        <span class="sahay-brand-text">Start-Up Sahay</span>
-        <span class="badge sahay-brand-badge rounded-pill">Pvt Ltd</span>
+      <a class="corp-brand" href="{% url 'public:home' %}">
+        <div class="corp-brand-icon">
+          <i class="bi bi-building"></i>
+        </div>
+        <div class="d-flex flex-column">
+          <span class="corp-brand-text">Start-Up Sahay</span>
+          <span class="corp-brand-sub">Private Limited &bull; Corporate Advisory</span>
+        </div>
       </a>
 
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#corpNavbarContent" aria-controls="corpNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarContent">
-        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+      <div class="collapse navbar-collapse" id="corpNavbarContent">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1 my-2 my-lg-0">
           <li class="nav-item">
-            <a class="nav-link sahay-nav-link" href="{% url 'public:home' %}">Home</a>
+            <a class="nav-link corp-nav-link" href="{% url 'public:home' %}">Home</a>
           </li>
           <li class="nav-item">
-            <button type="button" class="btn nav-link sahay-nav-link text-start" data-scroll-target="services-section">Services</button>
+            <button type="button" class="btn nav-link corp-nav-link text-start" data-scroll-target="services-section">Services</button>
           </li>
           <li class="nav-item">
-            <button type="button" class="btn nav-link sahay-nav-link text-start" data-scroll-target="about-section">About</button>
+            <button type="button" class="btn nav-link corp-nav-link text-start" data-scroll-target="process-section">Our Process</button>
           </li>
           <li class="nav-item">
-            <button type="button" class="btn nav-link sahay-nav-link text-start" data-scroll-target="contact-section">Contact</button>
+            <button type="button" class="btn nav-link corp-nav-link text-start" data-scroll-target="about-section">About Us</button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn nav-link corp-nav-link text-start" data-scroll-target="faq-section">FAQ</button>
           </li>
           <li class="nav-item ms-lg-2">
-            <button type="button" class="btn btn-sahay-accent btn-sm text-white" data-scroll-target="inquiry-form-section">
-              <i class="bi bi-send-fill me-1"></i> Submit Inquiry
+            <button type="button" class="btn btn-corp-primary btn-sm" data-scroll-target="inquiry-form-section">
+              <i class="bi bi-send me-1"></i> Submit Inquiry
             </button>
           </li>
-          <li class="nav-item ms-lg-1">
-            <a class="btn btn-sahay-outline btn-sm" href="{% url 'dashboard:overview' %}">
-              <i class="bi bi-lock-fill me-1"></i> Staff Portal
+          <li class="nav-item ms-lg-1 d-md-none mt-2">
+            <a class="btn btn-corp-secondary btn-sm w-100" href="{% url 'dashboard:overview' %}">
+              <i class="bi bi-shield-lock me-1"></i> Staff Portal
             </a>
           </li>
         </ul>

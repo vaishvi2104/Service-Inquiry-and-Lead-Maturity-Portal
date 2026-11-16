@@ -1,249 +1,204 @@
-{% extends 'tabler_base.html' %}
+{% extends 'adminlte_base.html' %}
 {% load static %}
 
-{% block title %}Follow-up Management Desk — Sahay LeadFlow{% endblock %}
+{% block title %}Follow-up Desk — Sahay LeadFlow{% endblock %}
+
+{% block page_title %}Follow-up Management Desk{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard:overview' %}">Home</a></li>
+<li class="breadcrumb-item active" aria-current="page">Follow-up Desk</li>
+{% endblock %}
 
 {% block content %}
-<div class="page-body">
-  <div class="container-xl">
-    <div class="page-header d-print-none mb-3">
-      <div class="row g-2 align-items-center">
-        <div class="col">
-          <div class="page-pretitle text-uppercase">Lead Nurturing</div>
-          <h2 class="page-title d-flex align-items-center gap-2">
-            <span>Follow-up Management Desk</span>
-            {% if follow_ups.total_due > 0 %}
-            <span class="badge bg-red-lt">{{ follow_ups.total_due }} Pending Action</span>
-            {% else %}
-            <span class="badge bg-green-lt">All Caught Up</span>
-            {% endif %}
-          </h2>
-        </div>
+<!-- Summary Status Bar -->
+<div class="row g-3 mb-3">
+  <!-- Overdue Box -->
+  <div class="col-md-4">
+    <div class="info-box">
+      <span class="info-box-icon text-bg-danger text-white">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">Overdue Follow-ups</span>
+        <span class="info-box-number text-danger">{{ follow_ups.overdue.count }}</span>
       </div>
     </div>
+  </div>
 
-    <!-- 3 Segment Cards: Overdue, Due Today, Upcoming -->
-    <div class="row row-cards mb-4">
-      <div class="col-md-4">
-        <div class="card card-sm border-danger border-opacity-25">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <span class="avatar bg-red-lt"><i class="ti ti-alert-triangle fs-2"></i></span>
-              </div>
-              <div class="col">
-                <div class="font-weight-medium text-secondary">Overdue Follow-ups</div>
-                <div class="h2 mb-0 fw-bold text-red">{{ follow_ups.overdue.count }}</div>
+  <!-- Due Today Box -->
+  <div class="col-md-4">
+    <div class="info-box">
+      <span class="info-box-icon text-bg-warning text-dark">
+        <i class="bi bi-calendar-event-fill"></i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">Due Today</span>
+        <span class="info-box-number text-warning">{{ follow_ups.due_today.count }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming Box -->
+  <div class="col-md-4">
+    <div class="info-box">
+      <span class="info-box-icon text-bg-primary text-white">
+        <i class="bi bi-calendar-check-fill"></i>
+      </span>
+      <div class="info-box-content">
+        <span class="info-box-text">Upcoming Follow-ups</span>
+        <span class="info-box-number text-primary">{{ follow_ups.upcoming.count }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Follow-up Groups -->
+<div class="row g-3">
+  <!-- 1. Overdue Follow-ups -->
+  <div class="col-lg-4">
+    <div class="card card-outline card-danger shadow-xs h-100">
+      <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+        <h4 class="card-title text-danger fs-6 fw-bold mb-0">
+          <i class="bi bi-exclamation-octagon-fill me-1"></i> Overdue Follow-ups
+        </h4>
+        <span class="badge bg-danger text-white">{{ follow_ups.overdue.count }}</span>
+      </div>
+      <div class="card-body p-2">
+        {% if follow_ups.overdue %}
+        <div class="d-flex flex-column gap-2">
+          {% for lead in follow_ups.overdue %}
+          <div class="p-2 border rounded bg-white shadow-xs">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="ref-code text-decoration-none">
+                {{ lead.reference_id }}
+              </a>
+              <span class="badge bg-danger-subtle text-danger border border-danger-subtle small">
+                {{ lead.follow_up_date|date:"d M, h:i A" }}
+              </span>
+            </div>
+            <div class="fw-bold text-dark small mb-1">{{ lead.full_name }}</div>
+            <div class="d-flex justify-content-between align-items-center small text-secondary">
+              <span>+91 {{ lead.mobile_number }}</span>
+              <div class="btn-group btn-group-sm">
+                {% if lead.get_whatsapp_url %}
+                <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-whatsapp btn-sm py-0" title="WhatsApp">
+                  <i class="bi bi-whatsapp"></i>
+                </a>
+                {% endif %}
+                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-outline-primary btn-sm py-0">
+                  <i class="bi bi-arrow-right"></i>
+                </a>
               </div>
             </div>
           </div>
+          {% endfor %}
         </div>
+        {% else %}
+        <div class="text-center py-4 text-muted small">
+          <i class="bi bi-check-circle fs-3 text-success d-block mb-1"></i>
+          No overdue follow-ups. Excellent!
+        </div>
+        {% endif %}
       </div>
-      <div class="col-md-4">
-        <div class="card card-sm border-warning border-opacity-25">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <span class="avatar bg-yellow-lt"><i class="ti ti-calendar-due fs-2"></i></span>
-              </div>
-              <div class="col">
-                <div class="font-weight-medium text-secondary">Due Today</div>
-                <div class="h2 mb-0 fw-bold text-yellow">{{ follow_ups.due_today.count }}</div>
+    </div>
+  </div>
+
+  <!-- 2. Due Today Follow-ups -->
+  <div class="col-lg-4">
+    <div class="card card-outline card-warning shadow-xs h-100">
+      <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+        <h4 class="card-title text-warning text-dark fs-6 fw-bold mb-0">
+          <i class="bi bi-calendar-event me-1"></i> Due Today
+        </h4>
+        <span class="badge bg-warning text-dark">{{ follow_ups.due_today.count }}</span>
+      </div>
+      <div class="card-body p-2">
+        {% if follow_ups.due_today %}
+        <div class="d-flex flex-column gap-2">
+          {% for lead in follow_ups.due_today %}
+          <div class="p-2 border rounded bg-white shadow-xs">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="ref-code text-decoration-none">
+                {{ lead.reference_id }}
+              </a>
+              <span class="badge bg-warning-subtle text-dark border border-warning-subtle small">
+                {{ lead.follow_up_date|date:"h:i A" }}
+              </span>
+            </div>
+            <div class="fw-bold text-dark small mb-1">{{ lead.full_name }}</div>
+            <div class="d-flex justify-content-between align-items-center small text-secondary">
+              <span>+91 {{ lead.mobile_number }}</span>
+              <div class="btn-group btn-group-sm">
+                {% if lead.get_whatsapp_url %}
+                <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-whatsapp btn-sm py-0" title="WhatsApp">
+                  <i class="bi bi-whatsapp"></i>
+                </a>
+                {% endif %}
+                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-outline-primary btn-sm py-0">
+                  <i class="bi bi-arrow-right"></i>
+                </a>
               </div>
             </div>
           </div>
+          {% endfor %}
         </div>
+        {% else %}
+        <div class="text-center py-4 text-muted small">
+          <i class="bi bi-calendar2-check fs-3 text-secondary d-block mb-1"></i>
+          No follow-ups scheduled for today.
+        </div>
+        {% endif %}
       </div>
-      <div class="col-md-4">
-        <div class="card card-sm border-primary border-opacity-25">
-          <div class="card-body">
-            <div class="row align-items-center">
-              <div class="col-auto">
-                <span class="avatar bg-blue-lt"><i class="ti ti-calendar-plus fs-2"></i></span>
-              </div>
-              <div class="col">
-                <div class="font-weight-medium text-secondary">Upcoming Follow-ups</div>
-                <div class="h2 mb-0 fw-bold text-blue">{{ follow_ups.upcoming.count }}</div>
+    </div>
+  </div>
+
+  <!-- 3. Upcoming Follow-ups -->
+  <div class="col-lg-4">
+    <div class="card card-outline card-primary shadow-xs h-100">
+      <div class="card-header bg-white py-2 d-flex justify-content-between align-items-center">
+        <h4 class="card-title text-primary fs-6 fw-bold mb-0">
+          <i class="bi bi-calendar3 me-1"></i> Upcoming (Next 7 Days)
+        </h4>
+        <span class="badge bg-primary">{{ follow_ups.upcoming.count }}</span>
+      </div>
+      <div class="card-body p-2">
+        {% if follow_ups.upcoming %}
+        <div class="d-flex flex-column gap-2">
+          {% for lead in follow_ups.upcoming %}
+          <div class="p-2 border rounded bg-white shadow-xs">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="ref-code text-decoration-none">
+                {{ lead.reference_id }}
+              </a>
+              <span class="badge bg-light text-secondary border small">
+                {{ lead.follow_up_date|date:"d M, h:i A" }}
+              </span>
+            </div>
+            <div class="fw-bold text-dark small mb-1">{{ lead.full_name }}</div>
+            <div class="d-flex justify-content-between align-items-center small text-secondary">
+              <span>+91 {{ lead.mobile_number }}</span>
+              <div class="btn-group btn-group-sm">
+                {% if lead.get_whatsapp_url %}
+                <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-whatsapp btn-sm py-0" title="WhatsApp">
+                  <i class="bi bi-whatsapp"></i>
+                </a>
+                {% endif %}
+                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-outline-primary btn-sm py-0">
+                  <i class="bi bi-arrow-right"></i>
+                </a>
               </div>
             </div>
           </div>
+          {% endfor %}
         </div>
+        {% else %}
+        <div class="text-center py-4 text-muted small">
+          <i class="bi bi-inbox fs-3 text-secondary d-block mb-1"></i>
+          No upcoming follow-ups scheduled.
+        </div>
+        {% endif %}
       </div>
-    </div>
-
-    <!-- Active Follow-ups Table -->
-    <div class="card mb-4 shadow-sm">
-      <div class="card-header">
-        <h3 class="card-title d-flex align-items-center gap-2">
-          <i class="ti ti-calendar-event text-primary"></i> Scheduled Follow-up Queue
-        </h3>
-      </div>
-      {% if follow_ups.due_today or follow_ups.overdue or follow_ups.upcoming %}
-      <div class="table-responsive">
-        <table class="table table-vcenter card-table table-hover">
-          <thead>
-            <tr>
-              <th>Lead Reference</th>
-              <th>Customer Name</th>
-              <th>Service</th>
-              <th>Current Stage</th>
-              <th>Scheduled Time</th>
-              <th>Urgency</th>
-              <th class="w-1 text-end">Outreach</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- 1. Overdue Items -->
-            {% for lead in follow_ups.overdue %}
-            <tr class="table-danger-subtle">
-              <td>
-                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="font-monospace fw-bold text-reset">
-                  {{ lead.reference_id }}
-                </a>
-              </td>
-              <td>
-                <div class="fw-bold">{{ lead.full_name }}</div>
-                <div class="text-secondary small">{{ lead.mobile_number }}</div>
-              </td>
-              <td><span class="badge badge-outline text-secondary">{{ lead.get_service_display }}</span></td>
-              <td><span class="badge {{ lead.tabler_badge_class }}">{{ lead.get_status_display }}</span></td>
-              <td class="text-danger fw-semibold">{{ lead.follow_up_date|date:"d M Y, h:i A" }}</td>
-              <td><span class="badge bg-red text-white">Overdue</span></td>
-              <td class="text-end">
-                <div class="btn-list flex-nowrap justify-content-end">
-                  {% if lead.get_whatsapp_url %}
-                  <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost-success" title="WhatsApp">
-                    <i class="ti ti-brand-whatsapp"></i>
-                  </a>
-                  {% endif %}
-                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-outline-primary">
-                    Action
-                  </a>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-
-            <!-- 2. Due Today Items -->
-            {% for lead in follow_ups.due_today %}
-            <tr>
-              <td>
-                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="font-monospace fw-bold text-reset">
-                  {{ lead.reference_id }}
-                </a>
-              </td>
-              <td>
-                <div class="fw-bold">{{ lead.full_name }}</div>
-                <div class="text-secondary small">{{ lead.mobile_number }}</div>
-              </td>
-              <td><span class="badge badge-outline text-secondary">{{ lead.get_service_display }}</span></td>
-              <td><span class="badge {{ lead.tabler_badge_class }}">{{ lead.get_status_display }}</span></td>
-              <td class="text-warning fw-semibold">{{ lead.follow_up_date|date:"h:i A" }} (Today)</td>
-              <td><span class="badge bg-yellow-lt">Due Today</span></td>
-              <td class="text-end">
-                <div class="btn-list flex-nowrap justify-content-end">
-                  {% if lead.get_whatsapp_url %}
-                  <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost-success" title="WhatsApp">
-                    <i class="ti ti-brand-whatsapp"></i>
-                  </a>
-                  {% endif %}
-                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-outline-primary">
-                    Action
-                  </a>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-
-            <!-- 3. Upcoming Items -->
-            {% for lead in follow_ups.upcoming %}
-            <tr>
-              <td>
-                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="font-monospace fw-bold text-reset">
-                  {{ lead.reference_id }}
-                </a>
-              </td>
-              <td>
-                <div class="fw-bold">{{ lead.full_name }}</div>
-                <div class="text-secondary small">{{ lead.mobile_number }}</div>
-              </td>
-              <td><span class="badge badge-outline text-secondary">{{ lead.get_service_display }}</span></td>
-              <td><span class="badge {{ lead.tabler_badge_class }}">{{ lead.get_status_display }}</span></td>
-              <td class="text-secondary">{{ lead.follow_up_date|date:"d M Y, h:i A" }}</td>
-              <td><span class="badge bg-blue-lt">Upcoming</span></td>
-              <td class="text-end">
-                <div class="btn-list flex-nowrap justify-content-end">
-                  {% if lead.get_whatsapp_url %}
-                  <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost-success" title="WhatsApp">
-                    <i class="ti ti-brand-whatsapp"></i>
-                  </a>
-                  {% endif %}
-                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-outline-primary">
-                    Action
-                  </a>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="p-5 text-center text-secondary">
-        <i class="ti ti-calendar-check fs-1 text-green d-block mb-2"></i>
-        <h4 class="fw-bold">No Pending Follow-ups</h4>
-        <p class="text-secondary small">No customer follow-ups are currently pending action.</p>
-      </div>
-      {% endif %}
-    </div>
-
-    <!-- Unscheduled Leads Section -->
-    <div class="card shadow-sm">
-      <div class="card-header">
-        <h3 class="card-title d-flex align-items-center gap-2">
-          <i class="ti ti-calendar-question text-secondary"></i> Active Inquiries Needing Follow-up Scheduling
-        </h3>
-      </div>
-      {% if follow_ups.unscheduled %}
-      <div class="table-responsive">
-        <table class="table table-vcenter card-table table-hover">
-          <thead>
-            <tr>
-              <th>Lead Reference</th>
-              <th>Customer Name</th>
-              <th>Service Track</th>
-              <th>Current Stage</th>
-              <th>Received On</th>
-              <th class="w-1 text-end">Schedule</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for lead in follow_ups.unscheduled %}
-            <tr>
-              <td>
-                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="font-monospace fw-bold text-reset">
-                  {{ lead.reference_id }}
-                </a>
-              </td>
-              <td>{{ lead.full_name }}</td>
-              <td><span class="badge badge-outline text-secondary">{{ lead.get_service_display }}</span></td>
-              <td><span class="badge {{ lead.tabler_badge_class }}">{{ lead.get_status_display }}</span></td>
-              <td class="text-secondary small">{{ lead.created_at|date:"d M Y, h:i A" }}</td>
-              <td class="text-end">
-                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-outline-warning">
-                  <i class="ti ti-calendar-plus me-1"></i> Schedule
-                </a>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <div class="p-4 text-center text-secondary small">
-        All active inquiries have a scheduled follow-up.
-      </div>
-      {% endif %}
     </div>
   </div>
 </div>

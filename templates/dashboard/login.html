@@ -1,90 +1,101 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sign In — Sahay LeadFlow</title>
+
+  <!-- Google Font: Source Sans 3 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap">
+
   {% load static %}
-  <!-- Tabler Core CSS -->
-  <link rel="stylesheet" href="{% static 'tabler/css/tabler.min.css' %}">
-  <link rel="stylesheet" href="{% static 'tabler/css/tabler-icons.min.css' %}">
-  <script>
-    (function() {
-      var theme = localStorage.getItem('tablerTheme') || 'light';
-      document.documentElement.setAttribute('data-bs-theme', theme);
-    })();
-  </script>
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="{% static 'adminlte/bootstrap-icons/bootstrap-icons.min.css' %}">
+  <!-- AdminLTE 4 CSS -->
+  <link rel="stylesheet" href="{% static 'adminlte/css/adminlte.min.css' %}">
+  <!-- Custom Sahay CRM Styles -->
+  <link rel="stylesheet" href="{% static 'css/adminlte_custom.css' %}">
 </head>
-<body class="d-flex flex-column">
-  <div class="page page-center">
-    <div class="container container-tight py-4">
-      <div class="text-center mb-4">
-        <a href="{% url 'public:home' %}" class="d-inline-flex align-items-center gap-2 text-decoration-none">
-          <span class="avatar avatar-md bg-primary text-white rounded">
-            <i class="ti ti-layers-linked fs-1"></i>
-          </span>
-          <div class="text-start">
-            <h1 class="h2 mb-0 fw-bold text-primary">Sahay LeadFlow</h1>
-            <span class="badge bg-blue-lt text-uppercase">Start-Up Sahay Staff Portal</span>
-          </div>
-        </a>
+<body class="login-page bg-body-tertiary">
+  <div class="login-box">
+    <!-- Brand Title -->
+    <div class="login-logo text-center mb-3">
+      <a href="{% url 'public:home' %}" class="d-inline-flex align-items-center gap-2 text-decoration-none">
+        <div class="brand-icon-box" style="width: 38px; height: 38px;">
+          <i class="bi bi-briefcase-fill"></i>
+        </div>
+        <div class="text-start lh-1">
+          <span class="fs-4 fw-bold text-dark">Sahay LeadFlow</span>
+          <div class="small text-muted" style="font-size: 0.72rem; letter-spacing: 0.05em;">START-UP SAHAY CRM</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Login Card -->
+    <div class="card card-outline card-primary shadow-sm">
+      <div class="card-header text-center py-3 bg-white">
+        <h4 class="mb-0 fw-bold fs-5 text-dark">Staff Authentication</h4>
       </div>
 
-      <div class="card card-md shadow-sm">
-        <div class="card-body">
-          <h2 class="h2 text-center mb-4">Login to your account</h2>
+      <div class="card-body login-card-body p-4">
+        <p class="login-box-msg text-secondary small text-center mb-3">
+          Sign in to access lead management, follow-ups, and pipeline records.
+        </p>
 
-          {% include 'includes/tabler_messages.html' %}
+        {% include 'includes/adminlte_messages.html' %}
 
-          <form action="{% url 'dashboard:login' %}" method="post" autocomplete="off" novalidate>
-            {% csrf_token %}
-            {% if next %}
-            <input type="hidden" name="next" value="{{ next }}">
+        <form action="{% url 'dashboard:login' %}" method="post" novalidate autocomplete="off">
+          {% csrf_token %}
+          {% if next %}
+          <input type="hidden" name="next" value="{{ next }}">
+          {% endif %}
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label small fw-semibold text-secondary" for="id_username">Staff Username</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+              {{ form.username }}
+            </div>
+            {% if form.username.errors %}
+            <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
             {% endif %}
+          </div>
 
-            <div class="mb-3">
-              <label class="form-label" for="id_username">Username</label>
-              <div class="input-icon">
-                <span class="input-icon-addon"><i class="ti ti-user"></i></span>
-                {{ form.username }}
-              </div>
-              {% if form.username.errors %}
-              <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
-              {% endif %}
+          <!-- Password -->
+          <div class="mb-4">
+            <label class="form-label small fw-semibold text-secondary" for="id_password">Password</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+              {{ form.password }}
             </div>
+            {% if form.password.errors %}
+            <div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>
+            {% endif %}
+          </div>
 
-            <div class="mb-4">
-              <label class="form-label" for="id_password">Password</label>
-              <div class="input-icon">
-                <span class="input-icon-addon"><i class="ti ti-lock"></i></span>
-                {{ form.password }}
-              </div>
-              {% if form.password.errors %}
-              <div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>
-              {% endif %}
-            </div>
-
-            <div class="form-footer">
-              <button type="submit" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
-                <i class="ti ti-login fs-2"></i> Sign In to Portal
-              </button>
-            </div>
-          </form>
-        </div>
-        <div class="card-footer bg-transparent text-secondary text-center small py-3">
-          <i class="ti ti-shield-lock me-1"></i> Restricted Area &bull; Staff accounts only
-        </div>
+          <!-- Submit Button -->
+          <div class="d-grid mb-2">
+            <button type="submit" class="btn btn-primary py-2 fw-semibold d-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-box-arrow-in-right"></i> Sign In to Portal
+            </button>
+          </div>
+        </form>
       </div>
 
-      <div class="text-center text-secondary mt-3 small">
-        <a href="{% url 'public:home' %}" class="text-secondary text-decoration-none">
-          <i class="ti ti-arrow-left me-1"></i> Return to Public Customer Website
-        </a>
+      <div class="card-footer bg-light py-2 text-center text-secondary small">
+        <i class="bi bi-shield-lock me-1"></i> Authorized Staff & Consultant Access Only
       </div>
+    </div>
+
+    <div class="text-center mt-3">
+      <a href="{% url 'public:home' %}" class="text-secondary small text-decoration-none">
+        <i class="bi bi-arrow-left me-1"></i> Return to Public Customer Website
+      </a>
     </div>
   </div>
 
-  <script src="{% static 'tabler/js/tabler.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'adminlte/js/adminlte.min.js' %}"></script>
 </body>
 </html>

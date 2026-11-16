@@ -1,0 +1,530 @@
+/* ==========================================================================
+   Start-Up Sahay — Sahay LeadFlow AdminLTE 4 Theme Enhancements
+   Enterprise CRM Design System: Clean, professional, high-density business UI
+   Zero frivolous decoration, crisp borders, consistent spacing, accessible contrast.
+   ========================================================================== */
+
+:root {
+  /* Corporate Navy Brand System */
+  --sahay-navy: #0f2e5a;
+  --sahay-navy-dark: #0a1f3d;
+  --sahay-navy-light: #1b4982;
+  --sahay-blue: #184c78;
+  --sahay-accent: #d97706;
+  --sahay-border: #dee2e6;
+  --sahay-border-light: #e9ecef;
+  --sahay-bg-app: #f4f6f9;
+  --sahay-text-main: #212529;
+  --sahay-text-muted: #6c757d;
+  
+  /* Status Colors */
+  --status-new: #0d6efd;
+  --status-contacted: #0891b2;
+  --status-followup: #d97706;
+  --status-proposal: #7c3aed;
+  --status-mature: #16a34a;
+  --status-closed: #4b5563;
+  
+  /* WhatsApp Official */
+  --wa-green: #25d366;
+  --wa-dark: #128c7e;
+}
+
+body.layout-fixed {
+  font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--sahay-text-main);
+  background-color: var(--sahay-bg-app);
+}
+
+/* Sidebar Branding & Aesthetics */
+.app-sidebar {
+  background-color: #111827 !important;
+}
+
+.app-sidebar .sidebar-brand {
+  height: 56px;
+  background-color: #0b0f19;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 1rem;
+}
+
+.app-sidebar .brand-link {
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+}
+
+.brand-icon-box {
+  width: 32px;
+  height: 32px;
+  background-color: var(--sahay-blue);
+  color: #ffffff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sidebar-menu .nav-item .nav-link {
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.55rem 0.85rem;
+  border-radius: 4px;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.15rem 0.5rem;
+  transition: all 0.15s ease-in-out;
+}
+
+.sidebar-menu .nav-item .nav-link:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.sidebar-menu .nav-item .nav-link.active {
+  color: #ffffff;
+  background-color: var(--sahay-blue);
+  font-weight: 600;
+}
+
+.sidebar-menu .nav-item .nav-link .nav-icon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-menu .nav-header {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  padding: 0.75rem 1rem 0.25rem;
+}
+
+/* Header Navbar */
+.app-header.navbar {
+  height: 56px;
+  border-bottom: 1px solid var(--sahay-border);
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.user-avatar-circle {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  background-color: var(--sahay-blue);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Cards & Content Header */
+.app-content-header {
+  padding: 1rem 1rem 0.5rem;
+  background-color: transparent;
+}
+
+.app-content-header .breadcrumb {
+  margin-bottom: 0;
+  font-size: 0.85rem;
+}
+
+.app-content-header .breadcrumb-item a {
+  color: var(--sahay-blue);
+  text-decoration: none;
+}
+
+.app-content-header .breadcrumb-item a:hover {
+  text-decoration: underline;
+}
+
+.card {
+  border: 1px solid var(--sahay-border);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background-color: #ffffff;
+  margin-bottom: 1.25rem;
+}
+
+.card-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--sahay-border);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  color: var(--sahay-text-main);
+}
+
+.card-header .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+/* Small Info Boxes (AdminLTE 4) */
+.info-box {
+  display: flex;
+  min-height: 80px;
+  background-color: #ffffff;
+  border: 1px solid var(--sahay-border);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.info-box-icon {
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.info-box-content {
+  padding: 0.75rem 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info-box-text {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--sahay-text-muted);
+}
+
+.info-box-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--sahay-text-main);
+  line-height: 1.2;
+}
+
+/* Tables */
+.table-crm {
+  margin-bottom: 0;
+  font-size: 0.88rem;
+}
+
+.table-crm thead th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid var(--sahay-border);
+  padding: 0.65rem 0.85rem;
+  white-space: nowrap;
+}
+
+.table-crm tbody td {
+  padding: 0.65rem 0.85rem;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--sahay-border-light);
+}
+
+.table-crm tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.ref-code {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--sahay-navy);
+}
+
+/* Status Badges */
+.badge-stage {
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+  border-radius: 3px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.badge-new {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+.badge-contacted {
+  background-color: #ecfeff;
+  color: #0e7490;
+  border: 1px solid #a5f3fc;
+}
+
+.badge-followup {
+  background-color: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.badge-proposal {
+  background-color: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+}
+
+.badge-mature {
+  background-color: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.badge-closed {
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.badge-service {
+  background-color: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  font-weight: 500;
+  font-size: 0.74rem;
+}
+
+/* WhatsApp Button */
+.btn-whatsapp {
+  background-color: #25d366;
+  color: #ffffff;
+  border: 1px solid #1ebc59;
+  font-weight: 500;
+}
+
+.btn-whatsapp:hover,
+.btn-whatsapp:focus {
+  background-color: #128c7e;
+  color: #ffffff;
+  border-color: #0e6c61;
+}
+
+.btn-outline-whatsapp {
+  color: #128c7e;
+  background-color: #ffffff;
+  border: 1px solid #25d366;
+}
+
+.btn-outline-whatsapp:hover,
+.btn-outline-whatsapp:focus {
+  background-color: #25d366;
+  color: #ffffff;
+}
+
+/* Kanban Pipeline System */
+.kanban-board-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1.5rem;
+  min-height: calc(100vh - 240px);
+}
+
+.kanban-column {
+  flex: 0 0 310px;
+  width: 310px;
+  background-color: #edf2f7;
+  border: 1px solid var(--sahay-border);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.kanban-column-header {
+  padding: 0.75rem 1rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--sahay-border);
+  border-top: 3px solid var(--sahay-blue);
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.kanban-column-header.col-new { border-top-color: var(--status-new); }
+.kanban-column-header.col-contacted { border-top-color: var(--status-contacted); }
+.kanban-column-header.col-followup { border-top-color: var(--status-followup); }
+.kanban-column-header.col-proposal { border-top-color: var(--status-proposal); }
+.kanban-column-header.col-mature { border-top-color: var(--status-mature); }
+.kanban-column-header.col-closed { border-top-color: var(--status-closed); }
+
+.kanban-column-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--sahay-text-main);
+  margin-bottom: 0;
+}
+
+.kanban-cards-list {
+  padding: 0.75rem;
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 250px;
+}
+
+.kanban-card {
+  background-color: #ffffff;
+  border: 1px solid var(--sahay-border);
+  border-radius: 4px;
+  padding: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.kanban-card:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.kanban-card-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--sahay-text-main);
+  margin-bottom: 0.35rem;
+}
+
+/* Timeline component for Audit History */
+.timeline-audit {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-audit:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--sahay-border);
+  left: 20px;
+  margin-left: -1px;
+}
+
+.timeline-audit > li {
+  position: relative;
+  margin-right: 0;
+  margin-bottom: 15px;
+}
+
+.timeline-audit > li > .timeline-icon {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  line-height: 32px;
+  position: absolute;
+  color: #fff;
+  background: #6c757d;
+  border-radius: 50%;
+  text-align: center;
+  left: 4px;
+  top: 0;
+}
+
+.timeline-audit > li > .timeline-item {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  border-radius: 4px;
+  background: #fff;
+  color: #495057;
+  margin-left: 50px;
+  margin-right: 0;
+  padding: 0;
+  position: relative;
+  border: 1px solid var(--sahay-border);
+}
+
+.timeline-audit > li > .timeline-item > .time {
+  color: #999;
+  float: right;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.timeline-audit > li > .timeline-item > .timeline-header {
+  margin: 0;
+  color: #495057;
+  border-bottom: 1px solid var(--sahay-border-light);
+  padding: 10px 15px;
+  font-size: 14px;
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+.timeline-audit > li > .timeline-item > .timeline-body {
+  padding: 10px 15px;
+  font-size: 13px;
+}
+
+/* Auth Login Page (AdminLTE 4) */
+body.login-page {
+  background-color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.login-box {
+  width: 400px;
+  max-width: 92%;
+  margin: 2rem auto;
+}
+
+.login-box .card {
+  border: 1px solid #cbd5e1;
+  border-top: 3px solid var(--sahay-blue);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.login-logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.login-logo a {
+  color: var(--sahay-navy);
+  text-decoration: none;
+}
+
+.login-card-body {
+  padding: 1.75rem;
+}
+
+/* Pagination */
+.pagination .page-link {
+  color: var(--sahay-blue);
+  border-color: var(--sahay-border);
+  font-size: 0.85rem;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--sahay-blue);
+  border-color: var(--sahay-blue);
+  color: #ffffff;
+}

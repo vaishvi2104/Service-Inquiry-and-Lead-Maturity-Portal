@@ -1,0 +1,102 @@
+<aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+  <!-- Sidebar Brand -->
+  <div class="sidebar-brand">
+    <a href="{% url 'dashboard:overview' %}" class="brand-link">
+      <div class="brand-icon-box">
+        <i class="bi bi-briefcase-fill"></i>
+      </div>
+      <div class="d-flex flex-column lh-1">
+        <span class="brand-text fw-bold text-white fs-6">Sahay LeadFlow</span>
+        <span class="text-white-50 small mt-1" style="font-size: 0.65rem; letter-spacing: 0.05em;">START-UP SAHAY CRM</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Sidebar Navigation Menu -->
+  <div class="sidebar-wrapper">
+    <nav class="mt-2">
+      <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="false">
+        
+        <!-- Section: CRM Management -->
+        <li class="nav-header">CRM WORKFLOW</li>
+
+        <!-- 1. Main Dashboard -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard:overview' %}" class="nav-link {% if request.resolver_match.url_name == 'overview' %}active{% endif %}">
+            <i class="nav-icon bi bi-speedometer2"></i>
+            <p>Main Dashboard</p>
+          </a>
+        </li>
+
+        <!-- 2. Leads Directory -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard:leads' %}" class="nav-link {% if request.resolver_match.url_name == 'leads' or request.resolver_match.url_name == 'lead_detail' or request.resolver_match.url_name == 'lead_edit' %}active{% endif %}">
+            <i class="nav-icon bi bi-people-fill"></i>
+            <p>Leads Directory</p>
+          </a>
+        </li>
+
+        <!-- 3. Pipeline / Kanban -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard:kanban' %}" class="nav-link {% if request.resolver_match.url_name == 'kanban' %}active{% endif %}">
+            <i class="nav-icon bi bi-kanban"></i>
+            <p>Pipeline / Kanban</p>
+          </a>
+        </li>
+
+        <!-- 4. Follow-up Desk -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard:follow_ups' %}" class="nav-link {% if request.resolver_match.url_name == 'follow_ups' %}active{% endif %}">
+            <i class="nav-icon bi bi-alarm"></i>
+            <p>Follow-up Desk</p>
+          </a>
+        </li>
+
+        <!-- 5. Add New Lead -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard:lead_create' %}" class="nav-link {% if request.resolver_match.url_name == 'lead_create' %}active{% endif %}">
+            <i class="nav-icon bi bi-person-plus"></i>
+            <p>Add New Lead</p>
+          </a>
+        </li>
+
+        <!-- Section: Audit & Search -->
+        <li class="nav-header">AUDIT & UTILITIES</li>
+
+        <!-- 6. Search & Filters -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard:advanced_search' %}" class="nav-link {% if request.resolver_match.url_name == 'advanced_search' %}active{% endif %}">
+            <i class="nav-icon bi bi-search"></i>
+            <p>Search & Filters</p>
+          </a>
+        </li>
+
+        <!-- 7. Status History Audit Log -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard:status_history' %}" class="nav-link {% if request.resolver_match.url_name == 'status_history' %}active{% endif %}">
+            <i class="nav-icon bi bi-clock-history"></i>
+            <p>Status Audit History</p>
+          </a>
+        </li>
+
+        <!-- 8. Profile & Settings -->
+        <li class="nav-item">
+          <a href="{% url 'dashboard:profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+            <i class="nav-icon bi bi-gear"></i>
+            <p>Profile & Settings</p>
+          </a>
+        </li>
+
+        <li class="nav-divider my-2 border-top border-secondary border-opacity-25"></li>
+
+        <!-- External Link to Public Website -->
+        <li class="nav-item">
+          <a href="{% url 'public:home' %}" class="nav-link" target="_blank" rel="noopener">
+            <i class="nav-icon bi bi-box-arrow-up-right"></i>
+            <p>Public Website</p>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</aside>

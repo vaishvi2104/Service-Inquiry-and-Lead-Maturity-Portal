@@ -77,6 +77,7 @@ def get_dashboard_metrics() -> Dict[str, Any]:
         'stage_series': stage_series,
         'service_labels': service_labels,
         'service_series': service_series,
+        'service_breakdown': [{'service_label': l, 'count': c} for l, c in zip(service_labels, service_series)],
         'month_labels': month_labels,
         'month_series': month_series,
     }
