@@ -1,0 +1,41 @@
+<header class="sticky-top">
+  <nav class="navbar navbar-expand-lg sahay-navbar" aria-label="Main Navigation">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'public:home' %}">
+        <span class="sahay-brand-text">Start-Up Sahay</span>
+        <span class="badge sahay-brand-badge rounded-pill">Pvt Ltd</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+          <li class="nav-item">
+            <a class="nav-link sahay-nav-link" href="{% url 'public:home' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn nav-link sahay-nav-link text-start" data-scroll-target="services-section">Services</button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn nav-link sahay-nav-link text-start" data-scroll-target="about-section">About</button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn nav-link sahay-nav-link text-start" data-scroll-target="contact-section">Contact</button>
+          </li>
+          <li class="nav-item ms-lg-2">
+            <button type="button" class="btn btn-sahay-accent btn-sm text-white" data-scroll-target="inquiry-form-section">
+              <i class="bi bi-send-fill me-1"></i> Submit Inquiry
+            </button>
+          </li>
+          <li class="nav-item ms-lg-1">
+            <a class="btn btn-sahay-outline btn-sm" href="{% url 'dashboard:overview' %}">
+              <i class="bi bi-lock-fill me-1"></i> Staff Portal
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

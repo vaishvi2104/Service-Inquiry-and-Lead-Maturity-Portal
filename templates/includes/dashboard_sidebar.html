@@ -1,0 +1,58 @@
+<aside class="dash-sidebar" aria-label="Staff Dashboard Navigation">
+  <div class="dash-sidebar-brand">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-briefcase-fill text-primary fs-4"></i>
+      <div>
+        <h2 class="dash-sidebar-title">Start-Up Sahay</h2>
+        <div class="dash-sidebar-subtitle">Lead Management</div>
+      </div>
+    </div>
+  </div>
+
+  <ul class="dash-nav">
+    <li class="dash-nav-item">
+      <a href="{% url 'dashboard:overview' %}" class="dash-nav-link {% if request.resolver_match.url_name == 'overview' %}active{% endif %}">
+        <i class="bi bi-speedometer2"></i>
+        <span>Overview</span>
+      </a>
+    </li>
+    <li class="dash-nav-item">
+      <a href="{% url 'dashboard:leads' %}" class="dash-nav-link {% if request.resolver_match.url_name == 'leads' or request.resolver_match.url_name == 'lead_detail' %}active{% endif %}">
+        <i class="bi bi-people-fill"></i>
+        <span>Customer Leads</span>
+      </a>
+    </li>
+    <li class="dash-nav-item mt-3 pt-3 border-top border-secondary">
+      <a href="{% url 'public:home' %}" class="dash-nav-link" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-box-arrow-up-right"></i>
+        <span>View Public Portal</span>
+      </a>
+    </li>
+    <li class="dash-nav-item">
+      <a href="{% url 'admin:index' %}" class="dash-nav-link" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-shield-lock-fill"></i>
+        <span>Django Admin</span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- Current Staff User & Logout -->
+  <div class="p-3 border-top border-secondary mt-auto bg-dark bg-opacity-25">
+    <div class="d-flex align-items-center gap-2 mb-2">
+      <div class="dash-user-avatar">
+        {{ request.user.username|slice:":1"|upper }}
+      </div>
+      <div class="text-truncate">
+        <div class="small fw-semibold text-white text-truncate">{{ request.user.get_full_name|default:request.user.username }}</div>
+        <div class="text-secondary small">Staff Member</div>
+      </div>
+    </div>
+    <form method="post" action="{% url 'dashboard:logout' %}" class="m-0">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-light btn-sm w-100 text-start d-flex align-items-center justify-content-center gap-2">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Log Out</span>
+      </button>
+    </form>
+  </div>
+</aside>

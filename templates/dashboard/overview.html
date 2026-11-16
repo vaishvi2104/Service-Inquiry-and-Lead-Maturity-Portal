@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Overview — Start-Up Sahay Private Limited{% endblock %}
+
+{% block body_class %}dashboard-body{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dash-wrapper">
+  <!-- Sidebar Navigation -->
+  {% include 'includes/dashboard_sidebar.html' %}
+
+  <!-- Main Content View -->
+  <div class="dash-main">
+    <!-- Topbar -->
+    <header class="dash-topbar">
+      <div>
+        <h1 class="h5 mb-0 fw-bold">Executive Lead Overview</h1>
+        <small class="text-muted">Dynamic pipeline metrics & inquiry tracking</small>
+      </div>
+      <div class="dash-user-badge">
+        <a href="{% url 'dashboard:leads' %}" class="btn btn-sahay-primary btn-sm">
+          <i class="bi bi-people-fill me-1"></i> View All Leads
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="dash-content">
+      <!-- Aggregation Metric Cards -->
+      <div class="row g-3 mb-4">
+        <!-- Total Inquiries -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="dash-metric-card border-primary border-opacity-25">
+            <div class="dash-metric-label text-primary">Total Inquiries</div>
+            <div class="dash-metric-value text-primary">{{ metrics.total }}</div>
+            <small class="text-muted mt-2 d-block">All customer submissions</small>
+          </div>
+        </div>
+
+        <!-- New Inquiries -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">New Inquiries</div>
+            <div class="dash-metric-value text-primary">{{ metrics.new }}</div>
+            <small class="text-muted mt-2 d-block">Pending first outreach</small>
+          </div>
+        </div>
+
+        <!-- Contacted -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">Contacted</div>
+            <div class="dash-metric-value text-info">{{ metrics.contacted }}</div>
+            <small class="text-muted mt-2 d-block">Initial engagement made</small>
+          </div>
+        </div>
+
+        <!-- Follow-up -->
+        <div class="col-sm-6 col-xl-3">
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">Follow-up</div>
+            <div class="dash-metric-value text-warning">{{ metrics.follow_up }}</div>
+            <small class="text-muted mt-2 d-block">Scheduled discussions</small>
+          </div>
+        </div>
+
+        <!-- Proposal Sent -->
+        <div class="col-sm-6 col-xl-4">
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">Proposal Sent</div>
+            <div class="dash-metric-value text-secondary">{{ metrics.proposal_sent }}</div>
+            <small class="text-muted mt-2 d-block">Scope & deliverables shared</small>
+          </div>
+        </div>
+
+        <!-- Mature -->
+        <div class="col-sm-6 col-xl-4">
+          <div class="dash-metric-card border-success border-opacity-50">
+            <div class="dash-metric-label text-success">Mature / Converted</div>
+            <div class="dash-metric-value text-success">{{ metrics.mature }}</div>
+            <small class="text-muted mt-2 d-block">Qualified for onboarding</small>
+          </div>
+        </div>
+
+        <!-- Closed -->
+        <div class="col-sm-6 col-xl-4">
+          <div class="dash-metric-card">
+            <div class="dash-metric-label">Closed</div>
+            <div class="dash-metric-value text-dark">{{ metrics.closed }}</div>
+            <small class="text-muted mt-2 d-block">Completed or archived</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Submissions Table -->
+      <div class="dash-table-card">
+        <div class="dash-table-header d-flex align-items-center justify-content-between">
+          <div>
+            <h2 class="h6 mb-0 fw-bold">Recent Customer Inquiries</h2>
+            <small class="text-muted">Latest submissions received across all service categories</small>
+          </div>
+          <a href="{% url 'dashboard:leads' %}" class="btn btn-outline-secondary btn-sm">
+            Manage All Leads <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+
+        {% if recent_leads %}
+        <div class="table-responsive">
+          <table class="table dash-table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Reference ID</th>
+                <th>Customer Name</th>
+                <th>Service Track</th>
+                <th>Mobile Number</th>
+                <th>Status</th>
+                <th>Received On</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for lead in recent_leads %}
+              <tr>
+                <td>
+                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="dash-ref-link">
+                    {{ lead.reference_id }}
+                  </a>
+                </td>
+                <td class="fw-semibold">{{ lead.full_name }}</td>
+                <td>{{ lead.get_service_display }}</td>
+                <td>{{ lead.mobile_number }}</td>
+                <td>
+                  <span class="badge {{ lead.status_badge_class }} rounded-pill px-2 py-1">
+                    {{ lead.get_status_display }}
+                  </span>
+                </td>
+                <td class="text-muted small">{{ lead.created_at|date:"d M Y, h:i A" }}</td>
+                <td class="text-end">
+                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-eye me-1"></i> Review
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="p-5 text-center text-muted">
+          <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+          <h3 class="h6 fw-bold">No Inquiries Found</h3>
+          <p class="small mb-0">No customer submissions have been registered yet.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

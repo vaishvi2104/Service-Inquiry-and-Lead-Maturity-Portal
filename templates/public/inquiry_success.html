@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inquiry Submitted — Start-Up Sahay Private Limited{% endblock %}
+
+{% block site_header %}
+  {% include 'includes/public_navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="sahay-success-card">
+          <div class="sahay-success-icon">
+            <i class="bi bi-check2"></i>
+          </div>
+
+          <h1 class="h3 fw-bold mb-2">Inquiry Submitted Successfully</h1>
+          <p class="text-muted">
+            Thank you for reaching out to Start-Up Sahay Private Limited. Your inquiry has been received by our client advisory desk.
+          </p>
+
+          <div class="sahay-ref-box">
+            <div class="small text-muted text-uppercase fw-semibold mb-1">Your Inquiry Reference ID</div>
+            <div id="js-ref-code" class="sahay-ref-code">{{ reference_id }}</div>
+            <div class="mt-2">
+              <button type="button" id="js-copy-ref-btn" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-clipboard me-1"></i> Copy Reference ID
+              </button>
+              <div id="js-copy-feedback" class="small text-success fw-semibold mt-1" role="status" aria-live="polite"></div>
+            </div>
+          </div>
+
+          {% if service_name %}
+          <div class="alert alert-light border small text-start mx-auto mt-2" style="max-width: 480px;">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted">Selected Service:</span>
+              <span class="fw-bold">{{ service_name }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Status:</span>
+              <span class="badge bg-primary">New Inquiry</span>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="text-muted small mt-4 mb-4" style="max-width: 520px; margin: 0 auto;">
+            Please preserve your Reference ID for future communications. Our compliance team will review your query and contact you at your registered mobile number or email address.
+          </div>
+
+          <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'public:home' %}" class="btn btn-sahay-primary">
+              <i class="bi bi-house-door-fill me-1"></i> Return to Homepage
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block site_footer %}
+<footer class="sahay-footer mt-0">
+  <div class="container text-center text-secondary small">
+    <div>&copy; 2026 Start-Up Sahay Private Limited. All rights reserved.</div>
+    <div class="mt-1">Inquiry Reference Desk: {{ company.email }} | {{ company.phone }}</div>
+  </div>
+</footer>
+{% endblock %}

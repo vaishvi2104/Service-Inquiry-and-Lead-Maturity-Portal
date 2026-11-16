@@ -1,0 +1,325 @@
+/* ==========================================================================
+   Start-Up Sahay — Public Customer Portal Stylesheet
+   Design System: Clean, professional, business-first corporate aesthetic
+   Zero destructive overrides — strictly scoped class selectors
+   ========================================================================== */
+
+:root {
+  --sahay-primary: rgb(24, 76, 120);
+  --sahay-primary-dark: rgb(16, 52, 84);
+  --sahay-primary-light: rgb(238, 244, 250);
+  --sahay-accent: rgb(234, 112, 34);
+  --sahay-accent-hover: rgb(212, 98, 24);
+  --sahay-bg-light: rgb(248, 250, 252);
+  --sahay-surface: rgb(255, 255, 255);
+  --sahay-border: rgb(226, 232, 240);
+  --sahay-text-dark: rgb(30, 41, 59);
+  --sahay-text-muted: rgb(100, 116, 139);
+  --sahay-success: rgb(22, 101, 52);
+  --sahay-success-bg: rgb(240, 253, 244);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--sahay-text-dark);
+  background-color: var(--sahay-bg-light);
+  line-height: 1.6;
+}
+
+/* Navbar */
+.sahay-navbar {
+  background-color: var(--sahay-surface);
+  border-bottom: 1px solid var(--sahay-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.sahay-brand-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--sahay-primary);
+  letter-spacing: -0.02em;
+}
+
+.sahay-brand-badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--sahay-primary-light);
+  color: var(--sahay-primary);
+  border: 1px solid var(--sahay-border);
+}
+
+.sahay-nav-link {
+  font-weight: 500;
+  color: var(--sahay-text-dark);
+  padding: 0.5rem 1rem;
+  transition: color 0.15s ease-in-out;
+}
+
+.sahay-nav-link:hover,
+.sahay-nav-link:focus {
+  color: var(--sahay-primary);
+}
+
+/* Hero Section */
+.sahay-hero-section {
+  background: linear-gradient(135deg, rgb(238, 244, 250) 0%, rgb(255, 255, 255) 100%);
+  border-bottom: 1px solid var(--sahay-border);
+  padding: 4.5rem 0 3.5rem;
+}
+
+.sahay-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  background-color: var(--sahay-surface);
+  border: 1px solid var(--sahay-border);
+  font-size: 0.85rem;
+  color: var(--sahay-primary);
+  font-weight: 600;
+}
+
+.sahay-hero-title {
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.2;
+  color: var(--sahay-text-dark);
+  margin-top: 1rem;
+}
+
+.sahay-hero-lead {
+  font-size: 1.15rem;
+  color: var(--sahay-text-muted);
+  max-width: 650px;
+}
+
+/* Buttons */
+.btn-sahay-primary {
+  background-color: var(--sahay-primary);
+  border-color: var(--sahay-primary);
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  padding: 0.65rem 1.4rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.btn-sahay-primary:hover,
+.btn-sahay-primary:focus {
+  background-color: var(--sahay-primary-dark);
+  border-color: var(--sahay-primary-dark);
+  color: rgb(255, 255, 255);
+}
+
+.btn-sahay-accent {
+  background-color: var(--sahay-accent);
+  border-color: var(--sahay-accent);
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  padding: 0.65rem 1.4rem;
+  border-radius: 0.5rem;
+}
+
+.btn-sahay-accent:hover,
+.btn-sahay-accent:focus {
+  background-color: var(--sahay-accent-hover);
+  border-color: var(--sahay-accent-hover);
+  color: rgb(255, 255, 255);
+}
+
+.btn-sahay-outline {
+  border: 1px solid var(--sahay-border);
+  background-color: var(--sahay-surface);
+  color: var(--sahay-text-dark);
+  font-weight: 600;
+  padding: 0.65rem 1.4rem;
+  border-radius: 0.5rem;
+}
+
+.btn-sahay-outline:hover {
+  background-color: var(--sahay-primary-light);
+  color: var(--sahay-primary);
+  border-color: var(--sahay-primary);
+}
+
+/* Section Header */
+.sahay-section-header {
+  margin-bottom: 2.5rem;
+}
+
+.sahay-section-eyebrow {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--sahay-accent);
+}
+
+.sahay-section-title {
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--sahay-text-dark);
+}
+
+/* Service Cards */
+.sahay-service-card {
+  background-color: var(--sahay-surface);
+  border: 1px solid var(--sahay-border);
+  border-radius: 0.75rem;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sahay-service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.sahay-service-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.6rem;
+  background-color: var(--sahay-primary-light);
+  color: var(--sahay-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.sahay-service-title {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--sahay-text-dark);
+  margin-bottom: 0.75rem;
+}
+
+.sahay-service-desc {
+  font-size: 0.95rem;
+  color: var(--sahay-text-muted);
+  flex-grow: 1;
+  margin-bottom: 1.25rem;
+}
+
+.sahay-service-disclaimer {
+  font-size: 0.78rem;
+  color: var(--sahay-text-muted);
+  background-color: var(--sahay-bg-light);
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 1.25rem;
+  border-left: 3px solid var(--sahay-border);
+}
+
+/* Compliance Disclaimer Box */
+.sahay-compliance-box {
+  background-color: var(--sahay-surface);
+  border: 1px solid var(--sahay-border);
+  border-left: 4px solid var(--sahay-accent);
+  border-radius: 0.5rem;
+  padding: 1.25rem 1.5rem;
+}
+
+/* Inquiry Form Card */
+.sahay-form-card {
+  background-color: var(--sahay-surface);
+  border: 1px solid var(--sahay-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  padding: 2.25rem;
+}
+
+.sahay-form-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--sahay-text-dark);
+  margin-bottom: 0.4rem;
+}
+
+.form-control-hp {
+  display: none;
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Success Card */
+.sahay-success-card {
+  background-color: var(--sahay-surface);
+  border: 1px solid var(--sahay-border);
+  border-radius: 1rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  padding: 3rem 2.5rem;
+  text-align: center;
+}
+
+.sahay-success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: var(--sahay-success-bg);
+  color: var(--sahay-success);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.sahay-ref-box {
+  background-color: var(--sahay-primary-light);
+  border: 1px dashed var(--sahay-primary);
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  display: inline-block;
+  margin: 1.5rem 0;
+}
+
+.sahay-ref-code {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--sahay-primary);
+  letter-spacing: 0.08em;
+}
+
+/* Footer */
+.sahay-footer {
+  background-color: rgb(15, 23, 42);
+  color: rgb(203, 213, 225);
+  padding: 3.5rem 0 2rem;
+  margin-top: 5rem;
+}
+
+.sahay-footer-heading {
+  font-weight: 700;
+  font-size: 1rem;
+  color: rgb(255, 255, 255);
+  margin-bottom: 1rem;
+}
+
+.sahay-footer-link {
+  color: rgb(148, 163, 184);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.sahay-footer-link:hover {
+  color: rgb(255, 255, 255);
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sahay-service-card,
+  .btn-sahay-primary,
+  .sahay-nav-link {
+    transition: none;
+  }
+}

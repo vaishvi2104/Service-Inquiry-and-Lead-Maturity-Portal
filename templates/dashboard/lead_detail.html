@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Lead {{ inquiry.reference_id }} — Start-Up Sahay Staff Portal{% endblock %}
+
+{% block body_class %}dashboard-body{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dash-wrapper">
+  <!-- Sidebar Navigation -->
+  {% include 'includes/dashboard_sidebar.html' %}
+
+  <!-- Main Content View -->
+  <div class="dash-main">
+    <!-- Topbar -->
+    <header class="dash-topbar">
+      <div class="d-flex align-items-center gap-2">
+        <a href="{% url 'dashboard:leads' %}" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> All Leads
+        </a>
+        <div>
+          <h1 class="h5 mb-0 fw-bold font-monospace">{{ inquiry.reference_id }}</h1>
+          <small class="text-muted">{{ inquiry.full_name }} &bull; {{ inquiry.get_service_display }}</small>
+        </div>
+      </div>
+      <div>
+        <span class="badge {{ inquiry.status_badge_class }} px-3 py-2 rounded-pill fs-6">
+          {{ inquiry.get_status_display }}
+        </span>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <div class="dash-content">
+      <div class="row g-4">
+        <!-- Left Column: Lead Information & Customer Query -->
+        <div class="col-lg-7">
+          <!-- Information Card -->
+          <div class="card border-0 shadow-sm rounded-3 p-4 mb-4 bg-white">
+            <h2 class="h6 fw-bold border-bottom pb-2 mb-3">Customer Information</h2>
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <small class="text-muted d-block">Full Legal / Contact Name</small>
+                <div class="fw-semibold fs-6">{{ inquiry.full_name }}</div>
+              </div>
+              <div class="col-sm-6">
+                <small class="text-muted d-block">Primary Email Address</small>
+                <div class="fw-semibold">
+                  <a href="mailto:{{ inquiry.email }}" class="text-decoration-none">
+                    {{ inquiry.email }} <i class="bi bi-box-arrow-up-right small"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <small class="text-muted d-block">Mobile Number (India)</small>
+                <div class="fw-semibold font-monospace">
+                  <a href="tel:+91{{ inquiry.mobile_number }}" class="text-decoration-none">
+                    +91 {{ inquiry.mobile_number }} <i class="bi bi-telephone small"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <small class="text-muted d-block">Service Required</small>
+                <div class="fw-semibold">
+                  <span class="badge bg-light text-dark border">{{ inquiry.get_service_display }}</span>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <small class="text-muted d-block">Initial Submission Date</small>
+                <div class="small text-dark">{{ inquiry.created_at|date:"d M Y, h:i A" }}</div>
+              </div>
+              <div class="col-sm-6">
+                <small class="text-muted d-block">Last Stage Update</small>
+                <div class="small text-dark">{{ inquiry.updated_at|date:"d M Y, h:i A" }}</div>
+              </div>
+            </div>
+
+            <!-- Customer Message / Query -->
+            <div class="mt-4 pt-3 border-top">
+              <small class="text-muted fw-semibold d-block mb-1">Customer Query / Message</small>
+              <div class="p-3 bg-light rounded-3 text-secondary small" style="white-space: pre-wrap; word-break: break-word;">
+                {% if inquiry.message %}
+                  {{ inquiry.message }}
+                {% else %}
+                  <em class="text-muted">No additional message was submitted by the customer.</em>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- WhatsApp Direct Engagement Action -->
+            <div class="mt-4 pt-3 border-top">
+              <small class="text-muted fw-semibold d-block mb-2">Direct Customer Outreach</small>
+              {% if whatsapp_url %}
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+                  <i class="bi bi-whatsapp fs-5"></i> Connect on WhatsApp
+                </a>
+                <span class="small text-muted">Prefills inquiry reference ID & service track</span>
+              </div>
+              {% else %}
+              <div class="badge bg-secondary">
+                <i class="bi bi-slash-circle me-1"></i> WhatsApp unavailable (invalid number format)
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Status Audit History Timeline -->
+          <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+            <h2 class="h6 fw-bold border-bottom pb-2 mb-4">Stage Transition Audit History</h2>
+
+            {% if history_records %}
+            <ul class="dash-timeline">
+              {% for record in history_records %}
+              <li class="dash-timeline-item">
+                <div class="dash-timeline-dot"></div>
+                <div class="dash-timeline-content">
+                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-1">
+                    <div>
+                      <span class="badge bg-secondary me-1">{{ record.get_previous_status_display }}</span>
+                      <i class="bi bi-arrow-right small text-muted"></i>
+                      <span class="badge bg-primary ms-1">{{ record.get_new_status_display }}</span>
+                    </div>
+                    <small class="text-muted">{{ record.created_at|date:"d M Y, h:i A" }}</small>
+                  </div>
+                  <div class="small text-muted mt-1">
+                    Updated by: <strong>{{ record.updated_by.username|default:"Public Submission System" }}</strong>
+                  </div>
+                  {% if record.remarks %}
+                  <div class="mt-2 pt-2 border-top small text-secondary">
+                    <i class="bi bi-chat-left-quote me-1"></i> {{ record.remarks }}
+                  </div>
+                  {% endif %}
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <div class="text-muted small p-3 text-center">No audit transitions recorded yet.</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Right Column: Status Transition Action Card -->
+        <div class="col-lg-5">
+          <div class="card border-0 shadow-sm rounded-3 p-4 bg-white sticky-top" style="top: 1.5rem;">
+            <h2 class="h6 fw-bold border-bottom pb-2 mb-3">Update Lead Status</h2>
+            <p class="small text-muted mb-3">
+              Advance this inquiry through the 6-stage maturity pipeline. Every change is logged with your administrator identity.
+            </p>
+
+            <form method="post" action="{% url 'dashboard:lead_status_update' inquiry.reference_id %}">
+              {% csrf_token %}
+
+              <div class="mb-3">
+                <label for="id_new_status" class="form-label small fw-semibold">New Stage</label>
+                {{ update_form.new_status }}
+                {% if update_form.new_status.errors %}
+                <div class="text-danger small mt-1">
+                  {{ update_form.new_status.errors|striptags }}
+                </div>
+                {% endif %}
+              </div>
+
+              <div class="mb-4">
+                <label for="id_remarks" class="form-label small fw-semibold">Audit Remarks (Optional)</label>
+                {{ update_form.remarks }}
+                <div class="form-text small">Explain reason for status change (max 500 characters).</div>
+                {% if update_form.remarks.errors %}
+                <div class="text-danger small mt-1">
+                  {{ update_form.remarks.errors|striptags }}
+                </div>
+                {% endif %}
+              </div>
+
+              <button type="submit" class="btn btn-sahay-primary w-100">
+                <i class="bi bi-check2-circle me-1"></i> Apply Status Update
+              </button>
+            </form>
+
+            <div class="alert alert-light border small text-muted mt-3 mb-0">
+              <i class="bi bi-shield-check text-primary me-1"></i>
+              <strong>Atomic Audit Guarantee:</strong> No-op transitions (updating to the same status) are rejected to keep history clean and transparent.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

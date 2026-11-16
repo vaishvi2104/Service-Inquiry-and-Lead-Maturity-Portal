@@ -1,0 +1,341 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Start-Up Sahay Private Limited — Consultancy & Advisory Services{% endblock %}
+
+{% block site_header %}
+  {% include 'includes/public_navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="sahay-hero-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <div class="sahay-hero-badge">
+          <i class="bi bi-shield-check text-primary"></i>
+          <span>Professional Corporate Advisory</span>
+        </div>
+        <h1 class="sahay-hero-title">
+          Guiding Indian Entrepreneurs from Entity Incorporation to Regulatory Maturity
+        </h1>
+        <p class="sahay-hero-lead mt-3">
+          Start-Up Sahay Private Limited provides expert consultancy and compliance documentation assistance for startups, micro-enterprises, and growing corporations across India.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <button type="button" class="btn btn-sahay-primary" data-scroll-target="services-section">
+            <i class="bi bi-grid-fill me-1"></i> Explore Services
+          </button>
+          <button type="button" class="btn btn-sahay-accent" data-scroll-target="inquiry-form-section">
+            <i class="bi bi-chat-text-fill me-1"></i> Submit Inquiry
+          </button>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="sahay-service-icon-box mb-0">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <div>
+              <h5 class="mb-0 fw-bold">Strategic Consultancy</h5>
+              <small class="text-muted">Documentation & Filing Support</small>
+            </div>
+          </div>
+          <p class="text-muted small mb-3">
+            Navigating regulatory readiness, intellectual property documentation, and entity registration requires structured preparation. Connect with our dedicated advisory team.
+          </p>
+          <div class="bg-light p-3 rounded-3 small">
+            <div class="d-flex align-items-center gap-2 mb-2 text-dark fw-semibold">
+              <i class="bi bi-check-circle-fill text-success"></i> Structured Guidance
+            </div>
+            <div class="d-flex align-items-center gap-2 mb-2 text-dark fw-semibold">
+              <i class="bi bi-check-circle-fill text-success"></i> Clear Document Checklists
+            </div>
+            <div class="d-flex align-items-center gap-2 text-dark fw-semibold">
+              <i class="bi bi-check-circle-fill text-success"></i> Prompt Lead Follow-up
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services Section -->
+<section id="services-section" class="py-5">
+  <div class="container py-4">
+    <div class="sahay-section-header text-center">
+      <span class="sahay-section-eyebrow">Our Advisory Portfolio</span>
+      <h2 class="sahay-section-title mt-1">Specialized Business Services</h2>
+      <p class="text-muted mx-auto" style="max-width: 650px;">
+        Explore our four core consultancy areas tailored to support your business lifecycle with compliance readiness and documentation expertise.
+      </p>
+    </div>
+
+    <div class="row g-4">
+      {% for service in services %}
+      <div class="col-md-6 col-lg-3">
+        <article class="sahay-service-card">
+          <div class="sahay-service-icon-box">
+            <i class="bi {{ service.icon }}"></i>
+          </div>
+          <h3 class="sahay-service-title">{{ service.title }}</h3>
+          <p class="sahay-service-desc">{{ service.short_desc }}</p>
+          <div class="sahay-service-disclaimer">
+            <i class="bi bi-info-circle me-1"></i>
+            {{ service.disclaimer_note }}
+          </div>
+          <button type="button" class="btn btn-sahay-outline btn-sm w-100 js-select-service mt-auto" data-service-key="{{ service.key }}">
+            <i class="bi bi-arrow-right-circle me-1"></i> Enquire Now
+          </button>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Trust & About Section -->
+<section id="about-section" class="py-5 bg-white border-top border-bottom">
+  <div class="container py-4">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="sahay-section-eyebrow">About the Company</span>
+        <h2 class="sahay-section-title mt-1">Start-Up Sahay Private Limited</h2>
+        <p class="mt-3 text-muted">
+          Headquartered in Ahmedabad, Gujarat, Start-Up Sahay Private Limited is a registered private corporate consultancy dedicated to helping aspiring entrepreneurs, MSMEs, and established enterprises streamline their commercial documentation, trademark classification, and corporate compliance filings.
+        </p>
+        <p class="text-muted">
+          Our team focuses on structured processes, transparent procedural reviews, and prompt customer assistance. We bridge information gaps for founders working toward regulatory maturity.
+        </p>
+
+        <!-- Mandatory Non-Affiliation Disclaimer -->
+        <div class="sahay-compliance-box mt-4">
+          <div class="d-flex gap-2">
+            <i class="bi bi-shield-exclamation text-warning fs-4"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Important Statutory Notice</h6>
+              <p class="small text-muted mb-0">
+                {{ company.disclaimer }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="p-4 rounded-3 border bg-light h-100">
+              <i class="bi bi-building text-primary fs-3 mb-2 d-block"></i>
+              <h6 class="fw-bold">Corporate Governance</h6>
+              <p class="small text-muted mb-0">Assistance with structuring documents in accordance with applicable MCA provisions.</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-4 rounded-3 border bg-light h-100">
+              <i class="bi bi-patch-check text-primary fs-3 mb-2 d-block"></i>
+              <h6 class="fw-bold">Process Diligence</h6>
+              <p class="small text-muted mb-0">Document verification and checklist preparation prior to formal submission.</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-4 rounded-3 border bg-light h-100">
+              <i class="bi bi-shield-shaded text-primary fs-3 mb-2 d-block"></i>
+              <h6 class="fw-bold">Brand Safeguarding</h6>
+              <p class="small text-muted mb-0">Pre-filing trademark search and proper Nice classification guidance.</p>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="p-4 rounded-3 border bg-light h-100">
+              <i class="bi bi-headset text-primary fs-3 mb-2 d-block"></i>
+              <h6 class="fw-bold">Dedicated Inquiry Desk</h6>
+              <p class="small text-muted mb-0">Timely follow-ups and transparent status updates for every prospective inquiry.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Inquiry Form Section -->
+<section id="inquiry-form-section" class="py-5">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="sahay-form-card">
+          <div class="text-center mb-4">
+            <span class="sahay-section-eyebrow">Direct Contact</span>
+            <h2 class="sahay-section-title mt-1">Submit Your Service Inquiry</h2>
+            <p class="text-muted small">
+              Fill out the form below. Our consultancy desk will review your requirements and connect with you shortly.
+            </p>
+          </div>
+
+          <form method="post" action="{% url 'public:home' %}" novalidate>
+            {% csrf_token %}
+
+            <!-- Anti-bot honeypot field (hidden from ordinary users) -->
+            <div class="form-control-hp" aria-hidden="true">
+              {{ form.website_url }}
+            </div>
+
+            <div class="row g-3">
+              <!-- Full Name -->
+              <div class="col-md-6">
+                <label for="id_full_name" class="sahay-form-label">Full Name <span class="text-danger">*</span></label>
+                {{ form.full_name }}
+                {% if form.full_name.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.full_name.errors|striptags }}
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Mobile Number -->
+              <div class="col-md-6">
+                <label for="id_mobile_number" class="sahay-form-label">10-Digit Mobile Number <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0 text-muted">+91</span>
+                  {{ form.mobile_number }}
+                </div>
+                <div class="form-text small">Enter 10 numeric digits without spaces or leading zero.</div>
+                {% if form.mobile_number.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.mobile_number.errors|striptags }}
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Email Address -->
+              <div class="col-md-6">
+                <label for="id_email" class="sahay-form-label">Email Address <span class="text-danger">*</span></label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.email.errors|striptags }}
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Selected Service -->
+              <div class="col-md-6">
+                <label for="id_service" class="sahay-form-label">Service Required <span class="text-danger">*</span></label>
+                {{ form.service }}
+                {% if form.service.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.service.errors|striptags }}
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Message / Query -->
+              <div class="col-12">
+                <label for="id_message" class="sahay-form-label">Your Message or Requirements (Optional)</label>
+                {{ form.message }}
+                <div class="form-text small">Maximum 2,000 characters.</div>
+                {% if form.message.errors %}
+                <div class="text-danger small mt-1">
+                  {{ form.message.errors|striptags }}
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Submit Button -->
+              <div class="col-12 text-center mt-4">
+                <button type="submit" class="btn btn-sahay-primary btn-lg px-5">
+                  <i class="bi bi-send-fill me-2"></i> Submit Inquiry
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact & Information Section -->
+<section id="contact-section" class="py-5 bg-white border-top">
+  <div class="container py-3">
+    <div class="row g-4 text-center text-md-start">
+      <div class="col-md-4">
+        <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3">
+          <div class="sahay-service-icon-box mb-0">
+            <i class="bi bi-geo-alt-fill"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1">Corporate Office</h6>
+            <p class="small text-muted mb-0">{{ company.address }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3">
+          <div class="sahay-service-icon-box mb-0">
+            <i class="bi bi-envelope-fill"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1">Email Inquiries</h6>
+            <p class="small text-muted mb-0">{{ company.email }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-3">
+          <div class="sahay-service-icon-box mb-0">
+            <i class="bi bi-telephone-fill"></i>
+          </div>
+          <div>
+            <h6 class="fw-bold mb-1">Direct Helpline</h6>
+            <p class="small text-muted mb-0">{{ company.phone }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block site_footer %}
+<footer class="sahay-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <h5 class="sahay-footer-heading">{{ company.name }}</h5>
+        <p class="small text-secondary mb-3">
+          Independent private consultancy providing compliance documentation and procedural advisory for Indian businesses.
+        </p>
+        <p class="small text-secondary mb-0">
+          CIN / Legal Entity: Private Limited Company. Not affiliated with any government department or regulatory body.
+        </p>
+      </div>
+      <div class="col-lg-3 col-6">
+        <h6 class="sahay-footer-heading">Services</h6>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><button type="button" class="btn p-0 sahay-footer-link" data-scroll-target="services-section">Company Incorporation</button></li>
+          <li class="mb-2"><button type="button" class="btn p-0 sahay-footer-link" data-scroll-target="services-section">Startup India DPIIT</button></li>
+          <li class="mb-2"><button type="button" class="btn p-0 sahay-footer-link" data-scroll-target="services-section">Trademark Registration</button></li>
+          <li class="mb-2"><button type="button" class="btn p-0 sahay-footer-link" data-scroll-target="services-section">Seed Fund Support</button></li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-6">
+        <h6 class="sahay-footer-heading">Quick Actions</h6>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><button type="button" class="btn p-0 sahay-footer-link" data-scroll-target="inquiry-form-section">Submit Inquiry</button></li>
+          <li class="mb-2"><a class="sahay-footer-link" href="{% url 'dashboard:overview' %}">Staff Admin Portal</a></li>
+          <li class="mb-2"><a class="sahay-footer-link" href="{{ company.website }}" target="_blank" rel="noopener noreferrer">Official Corporate Website</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="border-secondary mt-4 mb-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center small text-secondary">
+      <div>&copy; 2026 Start-Up Sahay Private Limited. All rights reserved.</div>
+      <div>Strictly for corporate consultation. Approvals subject to competent statutory authorities.</div>
+    </div>
+  </div>
+</footer>
+{% endblock %}
