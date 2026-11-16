@@ -321,6 +321,35 @@ OK (63 passed, 0 failures, 0 errors, 0 skips)
   62. `test_profile_update_changes_name` — PASS
   63. `test_all_tabler_pages_require_staff_auth` — PASS
 
+### 8.4 Comprehensive Visible Live Browser Field Verification (22 / 22 Steps Verified)
+
+Executed live against `http://127.0.0.1:8000/` using Playwright Chromium with visual animation (`slow_mo=600`) directly on the Windows interactive desktop:
+
+| Step # | Field / Workflow Tested | Verification Action | Result |
+| :---: | :--- | :--- | :---: |
+| 1 | Public Advisory Services | 4 service cards (*Company Incorporation, DPIIT, Trademark, Seed Fund*) verified present | **PASS** |
+| 2 | Public Form Controls Presence | Full Name, Mobile, Email, Service dropdown, Message, Honeypot input controls verified | **PASS** |
+| 3 | Public Required Field Validation | Blank form submission intercepted by HTML5 validation (`valueMissing=true`) | **PASS** |
+| 4 | Mobile Regex Validation | Submitting 5-digit number triggers regex constraint (`patternMismatch=true`) | **PASS** |
+| 5 | Public Inquiry Submission | Valid customer form submitted; persisted to SQLite and redirected to `/inquiry/success/` with unique Reference ID (`SS-YYYYMMDD-XXXX`) | **PASS** |
+| 6 | Staff Invalid Auth Handling | Invalid password rejected with dismissible `.alert-danger` banner | **PASS** |
+| 7 | Staff Valid Authentication | `admin` / `AdminPassword123!` authenticated and redirected to `/dashboard/` | **PASS** |
+| 8 | Dashboard KPI Cards & Charts | 8 KPI cards verified; 2 ApexCharts containers (`#chart-stage-distribution`, `#chart-service-breakdown`) loaded | **PASS** |
+| 9 | Recent Inquiries Desk | Real-time database query verified; newly submitted lead displayed in recent activity table | **PASS** |
+| 10 | Leads Search Input Field | Keyword search by customer name filters directory to matching records | **PASS** |
+| 11 | Leads Stage Filter Dropdown | Selecting stage `new` filters query to only New Inquiries | **PASS** |
+| 12 | Leads Directory CSV Export | Filter preservation and CSV export link verified | **PASS** |
+| 13 | Add Lead Form (`/leads/create/`) | Filled all 8 administrative fields; created new walk-in lead with immediate audit history generation | **PASS** |
+| 14 | Lead Detail Datagrid & WhatsApp | Verified Datagrid customer attributes and WhatsApp direct outreach CTA (`https://wa.me/91...`) | **PASS** |
+| 15 | Stage Update & Audit History | Updated stage to *Proposal Sent* with custom remarks; audit trail recorded acting staff user and timestamp | **PASS** |
+| 16 | Follow-up Date/Time Scheduler | Scheduled consultation for lead; datetime and objective saved | **PASS** |
+| 17 | Kanban 6-Stage Pipeline Board | Verified all 6 Kanban columns; card moved to *Mature* column via quick action menu | **PASS** |
+| 18 | Follow-up Desk Queues | Verified *Overdue*, *Due Today*, *Upcoming*, and *Unscheduled* queues | **PASS** |
+| 19 | Lead Status History Audit Log | Filtered global audit trail by Lead Reference ID | **PASS** |
+| 20 | Advanced Search & Query Builder | Multi-criteria search (keyword + service track) filtered records accurately | **PASS** |
+| 21 | Admin Profile Name Fields | Updated staff first and last names in user profile; changes persisted to User model | **PASS** |
+| 22 | Tabler Dark Mode Switch | Toggled theme engine; attribute `data-bs-theme="dark"` applied cleanly | **PASS** |
+
 ---
 
 ## 9. Windows & Linux Operational Commands
