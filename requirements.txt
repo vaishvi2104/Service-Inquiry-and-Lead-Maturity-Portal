@@ -1,0 +1,6 @@
+# Production & Local Requirements for Start-Up Sahay Portal
+# Minimal, robust, vetted dependencies
+Django>=5.0.0,<6.0.0
+python-dotenv>=1.0.0
+asgiref>=3.8.0
+sqlparse>=0.5.0
