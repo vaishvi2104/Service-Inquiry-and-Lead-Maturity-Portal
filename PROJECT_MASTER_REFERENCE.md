@@ -67,35 +67,50 @@ startupsahay-portal/
 │   ├── apps.py                               # App configuration
 │   ├── forms.py                              # StaffLoginForm and LeadStatusUpdateForm
 │   ├── services.py                           # Metric aggregation, parameterized search/filter, atomic update
-│   ├── urls.py                               # Protected admin routes (login, logout, overview, leads, detail)
+│   ├── urls.py                               # Protected admin routes (overview, leads, detail, kanban, follow-ups, etc.)
 │   ├── views.py                              # staff_required views, authentication, status transitions
 │   └── tests/
 │       ├── __init__.py
 │       ├── test_auth.py                      # Anonymous redirection, staff permissions, safe logout
 │       ├── test_leads.py                     # Search, filter, pagination, atomic status transitions
-│       └── test_security.py                  # CSRF enforcement, SQL injection immunity, output escaping
+│       ├── test_security.py                  # CSRF enforcement, SQL injection immunity, output escaping
+│       └── test_tabler_features.py           # Kanban, follow-ups, lead create/edit, CSV export, profile
 ├── templates/
-│   ├── base.html                             # Base template with Bootstrap 5 and semantic landmarks
+│   ├── base.html                             # Base template for public portal with semantic landmarks
+│   ├── tabler_base.html                      # Primary Tabler admin dashboard base layout
 │   ├── includes/
-│   │   ├── messages.html                     # Dismissible Bootstrap alert banners
-│   │   ├── public_navbar.html                # Responsive header with smooth navigation
-│   │   └── dashboard_sidebar.html            # Staff navigation sidebar with active user info & logout
+│   │   ├── messages.html                     # Public dismissible Bootstrap alert banners
+│   │   ├── public_navbar.html                # Responsive public header with smooth navigation
+│   │   ├── tabler_sidebar.html               # Tabler sidebar navigation with active highlights
+│   │   ├── tabler_header.html                # Tabler top bar with dark mode toggle & user menu
+│   │   └── tabler_messages.html              # Tabler dismissible alert toasts
 │   ├── public/
 │   │   ├── home.html                         # Public landing page, 4 services, disclaimer, inquiry form
 │   │   └── inquiry_success.html              # Reference ID confirmation with copy-to-clipboard button
 │   └── dashboard/
-│       ├── login.html                        # Secure staff login page
-│       ├── overview.html                     # Metric aggregation cards & recent leads table
-│       ├── leads.html                        # Lead directory with search, filter, and pagination
-│       └── lead_detail.html                  # Lead profile, message, WhatsApp action, audit history
+│       ├── login.html                        # Tabler Admin Login page
+│       ├── overview.html                     # Tabler Main Dashboard (8 KPIs + 2 ApexCharts + Recent Leads)
+│       ├── leads.html                        # Tabler All Inquiries / Leads (Filters, pagination, CSV)
+│       ├── lead_detail.html                  # Tabler Lead Details (Datagrid, WhatsApp, status update, timeline)
+│       ├── lead_form.html                    # Tabler Add / Edit Lead Form
+│       ├── kanban.html                       # Tabler Lead Pipeline / 6-Stage Kanban Board
+│       ├── follow_ups.html                   # Tabler Follow-up Management Desk (Overdue, Due Today, Upcoming)
+│       ├── status_history.html               # Tabler Lead Status History Full Audit Trail
+│       ├── advanced_search.html              # Tabler Search & Advanced Query Builder
+│       └── profile.html                      # Tabler Admin Profile, Password Change & System Settings
 ├── static/
+│   ├── tabler/                               # Official pinned Tabler Core assets (v1.6.1)
+│   │   ├── css/                              # tabler.min.css, tabler-icons.min.css, 48 offline woff2 fonts
+│   │   ├── js/                               # tabler.min.js, apexcharts.min.js
+│   │   └── LICENSE.md                        # Dependency licenses (MIT)
 │   ├── css/
 │   │   ├── style.css                         # Scoped public portal styles (zero destructive overrides)
-│   │   └── dashboard.css                     # Corporate CRM & timeline styles
+│   │   └── dashboard.css                     # Minimal Tabler enhancements
 │   ├── js/
 │   │   ├── main.js                           # Vanilla JS: input masking, service selector, clipboard copy
-│   │   └── dashboard.js                      # Vanilla JS: alert auto-dismiss, UI helpers
+│   │   └── dashboard.js                      # Vanilla JS: Tabler theme initialization, alert helpers
 │   └── images/
+│       └── tabler_screenshots/               # 12 Full-page browser test capture PNGs
 └── docs/
     ├── SECURITY_REVIEW.md                    # In-depth security analysis and threat review
     └── AI_CHAT_HISTORY.md                    # Authentic AI development history & transcript access
@@ -292,6 +307,19 @@ OK (63 passed, 0 failures, 0 errors, 0 skips)
   49. `test_sql_injection_probe_strings_handled_safely` — PASS
   50. `test_template_autoescaping_prevents_xss` — PASS
   51. `test_security_cookie_configurations` — PASS
+* **`dashboard/tests/test_tabler_features.py` (12 tests):**
+  52. `test_kanban_view_renders_all_six_columns` — PASS
+  53. `test_kanban_move_updates_stage_and_creates_history` — PASS
+  54. `test_follow_ups_view_renders_categories` — PASS
+  55. `test_schedule_follow_up_action` — PASS
+  56. `test_lead_create_view_creates_inquiry_and_history` — PASS
+  57. `test_lead_edit_view_updates_fields` — PASS
+  58. `test_status_history_view_renders_and_filters` — PASS
+  59. `test_advanced_search_view_filters_and_renders` — PASS
+  60. `test_csv_export_returns_csv_file` — PASS
+  61. `test_profile_view_renders_user_data` — PASS
+  62. `test_profile_update_changes_name` — PASS
+  63. `test_all_tabler_pages_require_staff_auth` — PASS
 
 ---
 
