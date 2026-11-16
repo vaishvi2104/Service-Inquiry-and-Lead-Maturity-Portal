@@ -1,82 +1,90 @@
-{% extends 'base.html' %}
-{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Sign In — Sahay LeadFlow</title>
+  {% load static %}
+  <!-- Tabler Core CSS -->
+  <link rel="stylesheet" href="{% static 'tabler/css/tabler.min.css' %}">
+  <link rel="stylesheet" href="{% static 'tabler/css/tabler-icons.min.css' %}">
+  <script>
+    (function() {
+      var theme = localStorage.getItem('tablerTheme') || 'light';
+      document.documentElement.setAttribute('data-bs-theme', theme);
+    })();
+  </script>
+</head>
+<body class="d-flex flex-column">
+  <div class="page page-center">
+    <div class="container container-tight py-4">
+      <div class="text-center mb-4">
+        <a href="{% url 'public:home' %}" class="d-inline-flex align-items-center gap-2 text-decoration-none">
+          <span class="avatar avatar-md bg-primary text-white rounded">
+            <i class="ti ti-layers-linked fs-1"></i>
+          </span>
+          <div class="text-start">
+            <h1 class="h2 mb-0 fw-bold text-primary">Sahay LeadFlow</h1>
+            <span class="badge bg-blue-lt text-uppercase">Start-Up Sahay Staff Portal</span>
+          </div>
+        </a>
+      </div>
 
-{% block title %}Staff Login — Start-Up Sahay Private Limited{% endblock %}
+      <div class="card card-md shadow-sm">
+        <div class="card-body">
+          <h2 class="h2 text-center mb-4">Login to your account</h2>
 
-{% block body_class %}bg-light{% endblock %}
+          {% include 'includes/tabler_messages.html' %}
 
-{% block content %}
-<div class="min-vh-100 d-flex align-items-center justify-content-center py-5">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-7 col-lg-5 col-xl-4">
-        <div class="text-center mb-4">
-          <a href="{% url 'public:home' %}" class="d-inline-flex align-items-center gap-2 text-decoration-none mb-2">
-            <span class="sahay-brand-text fs-3">Start-Up Sahay</span>
-          </a>
-          <div class="badge sahay-brand-badge rounded-pill px-3 py-1">Staff Administration Portal</div>
-          <p class="text-muted small mt-2">Sign in to manage service inquiries and lead workflows</p>
-        </div>
-
-        <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
-          <h2 class="h5 fw-bold text-center mb-4">Staff Authentication</h2>
-
-          <form method="post" action="{% url 'dashboard:login' %}" novalidate>
+          <form action="{% url 'dashboard:login' %}" method="post" autocomplete="off" novalidate>
             {% csrf_token %}
             {% if next %}
             <input type="hidden" name="next" value="{{ next }}">
             {% endif %}
 
             <div class="mb-3">
-              <label for="id_username" class="form-label small fw-semibold">Username</label>
-              <div class="input-group">
-                <span class="input-group-text bg-light text-muted border-end-0">
-                  <i class="bi bi-person"></i>
-                </span>
+              <label class="form-label" for="id_username">Username</label>
+              <div class="input-icon">
+                <span class="input-icon-addon"><i class="ti ti-user"></i></span>
                 {{ form.username }}
               </div>
               {% if form.username.errors %}
-              <div class="text-danger small mt-1">
-                {{ form.username.errors|striptags }}
-              </div>
+              <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
               {% endif %}
             </div>
 
             <div class="mb-4">
-              <label for="id_password" class="form-label small fw-semibold">Password</label>
-              <div class="input-group">
-                <span class="input-group-text bg-light text-muted border-end-0">
-                  <i class="bi bi-lock"></i>
-                </span>
+              <label class="form-label" for="id_password">Password</label>
+              <div class="input-icon">
+                <span class="input-icon-addon"><i class="ti ti-lock"></i></span>
                 {{ form.password }}
               </div>
               {% if form.password.errors %}
-              <div class="text-danger small mt-1">
-                {{ form.password.errors|striptags }}
-              </div>
+              <div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>
               {% endif %}
             </div>
 
-            <button type="submit" class="btn btn-sahay-primary w-100 py-2 fw-semibold">
-              <i class="bi bi-box-arrow-in-right me-1"></i> Sign In to Portal
-            </button>
-          </form>
-
-          <div class="border-top mt-4 pt-3 text-center">
-            <div class="small text-muted mb-2">
-              <i class="bi bi-shield-lock me-1"></i> Restricted Area: Staff Accounts Only
+            <div class="form-footer">
+              <button type="submit" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                <i class="ti ti-login fs-2"></i> Sign In to Portal
+              </button>
             </div>
-            <a href="{% url 'public:home' %}" class="small text-decoration-none text-muted">
-              <i class="bi bi-arrow-left me-1"></i> Back to Public Website
-            </a>
-          </div>
+          </form>
         </div>
+        <div class="card-footer bg-transparent text-secondary text-center small py-3">
+          <i class="ti ti-shield-lock me-1"></i> Restricted Area &bull; Staff accounts only
+        </div>
+      </div>
 
-        <div class="text-center text-muted small mt-4">
-          &copy; 2026 Start-Up Sahay Private Limited
-        </div>
+      <div class="text-center text-secondary mt-3 small">
+        <a href="{% url 'public:home' %}" class="text-secondary text-decoration-none">
+          <i class="ti ti-arrow-left me-1"></i> Return to Public Customer Website
+        </a>
       </div>
     </div>
   </div>
-</div>
-{% endblock %}
+
+  <script src="{% static 'tabler/js/tabler.min.js' %}"></script>
+</body>
+</html>

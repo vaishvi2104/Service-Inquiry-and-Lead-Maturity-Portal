@@ -1,53 +1,46 @@
-# Start-Up Sahay Private Limited — Service Inquiry & Lead Maturity Portal
+# Start-Up Sahay Private Limited — Sahay LeadFlow Portal
 
-> **Full-Stack Developer Technical Assignment**  
+> **Full-Stack Developer Technical Assignment & Admin Design System**  
 > Built for: **Start-Up Sahay Private Limited**  
-> Technology: Django 5.2 | SQLite | Bootstrap 5 | Vanilla JavaScript  
+> Admin Design Framework: **Official Tabler UI (`@tabler/core` + Tabler Icons + ApexCharts)**  
+> Backend: Django 5.2 | SQLite | Python 3.12 | Vanilla JavaScript  
 
 ---
 
 ## 1. Project Overview & Objective
 
-This repository contains the production-ready implementation of the **Service Inquiry & Lead Maturity Portal** for **Start-Up Sahay Private Limited**.
+This repository contains the complete, production-ready implementation of the **Sahay LeadFlow** Service Inquiry & Lead Maturity Portal for **Start-Up Sahay Private Limited**.
 
-The portal serves two distinct user groups:
-1. **Public Customer Portal**: Prospective clients explore corporate advisory services, understand statutory boundaries, and submit structured inquiries protected by server-side validation and anti-bot measures.
-2. **Restricted Admin Portal**: Authorized staff sign in, monitor pipeline metrics across six maturity stages, inspect customer inquiries, communicate directly via WhatsApp, and advance lead status with complete audit history tracking.
-
----
-
-## 2. Key Features
-
-* **Public Portal**:
-  * Professional, mobile-first responsive design using corporate blue and warm accent palettes.
-  * Dedicated service cards for all four core tracks:
-    1. *Company Incorporation*
-    2. *Startup India DPIIT Recognition*
-    3. *Trademark Registration*
-    4. *Seed Fund Support*
-  * Prominent statutory disclaimers highlighting the company's independent advisory status and non-government affiliation.
-  * Authoritative server-side validation for customer name, email, and 10-digit Indian mobile numbers.
-  * Anti-bot honeypot field and IP-based rate limiting.
-  * Non-guessable, collision-resistant reference IDs (e.g. `SS-20261116-A8F2`).
-  * Post/Redirect/Get flow with one-click copy of reference ID.
-* **Staff Dashboard**:
-  * Role-based access control requiring active staff permissions (`@staff_required`).
-  * Dynamic pipeline aggregation cards: Total Inquiries, New, Contacted, Follow-up, Proposal Sent, Mature, Closed.
-  * Leads directory ordered newest-first with search (name, mobile, reference ID) and stage filtering.
-  * Query-string-preserving pagination.
-  * Lead profile view with complete audit trail timeline (previous status, new status, acting admin, remarks, timestamp).
-  * Direct WhatsApp engagement link (`wa.me/91...`) with prefilled, URL-encoded template.
-  * Atomic status transition engine with row-level locking (`select_for_update`) and no-op transition prevention.
+The portal consists of:
+1. **Public Customer Portal**: Prospective clients explore corporate advisory services (Company Incorporation, Startup India DPIIT Recognition, Trademark Registration, Seed Fund Support), review mandatory statutory disclaimers, and submit structured inquiries protected by server-side validation and anti-bot measures.
+2. **Tabler Admin Management Portal**: Authorized staff sign in to a fully integrated **Tabler UI** dashboard featuring 10 dedicated management pages, dynamic KPI cards, interactive ApexCharts analytics, a visual 6-stage Kanban board, follow-up desk, lead creation/editing, audit history log, multi-criteria search, CSV export, and profile settings with Light/Dark mode.
 
 ---
 
-## 3. Technology Stack
+## 2. Tabler Admin Interface Pages
+
+1. **Admin Login** (`/dashboard/login/`): Tabler single-card layout with brand treatment and error handling.
+2. **Main Dashboard** (`/dashboard/`): 8 KPI metric cards (Total Inquiries, New, Contacted, Follow-ups Due, Proposals Sent, Mature, Closed, Conversion Rate) + ApexCharts for stage distribution and service statistics + recent inquiries table + follow-up desk widget.
+3. **All Inquiries / Leads** (`/dashboard/leads/`): Tabler striped table with search, stage filter, service filter, date range filter, pagination, quick actions, and CSV export.
+4. **Lead Details** (`/dashboard/leads/<ref>/`): Full customer profile, datagrid, prefilled WhatsApp outreach link (`wa.me/91...`), stage transition form, follow-up scheduling, and stage transition audit timeline.
+5. **Add / Edit Lead** (`/dashboard/leads/create/` & `.../edit/`): Full form for manually registering new inquiries and editing existing leads.
+6. **Lead Pipeline / Kanban** (`/dashboard/kanban/`): Visual 6-stage Kanban board with column counts and 1-click stage transition action menus.
+7. **Follow-up Desk** (`/dashboard/follow-ups/`): Dedicated follow-up management categorizing Overdue, Due Today, and Upcoming follow-ups.
+8. **Lead Status History** (`/dashboard/history/`): Full organizational audit trail table tracking all transitions across all leads.
+9. **Search & Advanced Filters** (`/dashboard/search/`): Multi-criteria query builder with date ranges, service/stage filters, and CSV export.
+10. **Admin Profile & Settings** (`/dashboard/profile/`): Staff credentials, profile update form, password change form, and system parameters.
+
+---
+
+## 3. Technology Stack & Licensing
 
 * **Backend**: Python 3.12, Django 5.2.5
-* **Database**: SQLite (configured with relational constraints and indexes; PostgreSQL-ready)
-* **Frontend**: HTML5, CSS3 (scoped classes, no destructive overrides), Vanilla JavaScript, Bootstrap 5.3, Bootstrap Icons 1.11
-* **Authentication**: Django built-in auth framework with PBKDF2 password hashing
-* **Configuration**: Hybrid environment loader (`config/env.py`) supporting `python-dotenv` and standard library `.env` parsing
+* **Database**: SQLite (relational schema with constraints and row-level locking)
+* **Admin Design System**: Official Tabler UI (`@tabler/core@1.6.1`, MIT License)
+* **Icons**: Tabler Icons Webfont (`@tabler/icons-webfont@3.51.0`, MIT License)
+* **Charts**: ApexCharts (`apexcharts@3.54.1`, MIT License)
+* **Public Website**: Dedicated custom CSS (`static/css/style.css`) and Vanilla JavaScript (zero framework dependencies)
+* **Licenses**: Permissive MIT licenses across all bundled libraries; documented in `static/tabler/LICENSE.md`.
 
 ---
 

@@ -1,196 +1,224 @@
-{% extends 'base.html' %}
+{% extends 'tabler_base.html' %}
 {% load static %}
 {% load dashboard_tags %}
 
-{% block title %}Customer Leads — Start-Up Sahay Staff Portal{% endblock %}
-
-{% block body_class %}dashboard-body{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-{% endblock %}
+{% block title %}All Inquiries & Leads — Sahay LeadFlow{% endblock %}
 
 {% block content %}
-<div class="dash-wrapper">
-  <!-- Sidebar Navigation -->
-  {% include 'includes/dashboard_sidebar.html' %}
-
-  <!-- Main Content View -->
-  <div class="dash-main">
-    <!-- Topbar -->
-    <header class="dash-topbar">
-      <div>
-        <h1 class="h5 mb-0 fw-bold">Customer Lead Directory</h1>
-        <small class="text-muted">Search, filter, and mature inquiries across service tracks</small>
+<div class="page-body">
+  <div class="container-xl">
+    <!-- Page Header -->
+    <div class="page-header d-print-none mb-3">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <div class="page-pretitle text-uppercase">Management</div>
+          <h2 class="page-title d-flex align-items-center gap-2">
+            <span>Customer Inquiries Directory</span>
+            <span class="badge bg-blue-lt">{{ total_results }} Total</span>
+          </h2>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+            <a href="{% url 'dashboard:export_csv' %}?q={{ search_query }}&status={{ status_filter }}&service={{ service_filter }}&from_date={{ date_from }}&to_date={{ date_to }}" class="btn btn-outline-secondary">
+              <i class="ti ti-download me-1"></i> Export CSV
+            </a>
+            <a href="{% url 'dashboard:lead_create' %}" class="btn btn-primary">
+              <i class="ti ti-plus me-1"></i> Add Lead
+            </a>
+          </div>
+        </div>
       </div>
-      <div>
-        <span class="badge bg-light text-dark border px-3 py-2">
-          Total Leads: <strong class="text-primary">{{ total_results }}</strong>
-        </span>
-      </div>
-    </header>
+    </div>
 
-    <!-- Main Workspace -->
-    <div class="dash-content">
-      <!-- Search & Filter Bar -->
-      <div class="card border-0 shadow-sm rounded-3 p-3 mb-4 bg-white">
+    <!-- Filter & Search Card -->
+    <div class="card mb-3 shadow-sm">
+      <div class="card-body py-3">
         <form method="get" action="{% url 'dashboard:leads' %}" class="row g-2 align-items-center">
-          <!-- Search input -->
-          <div class="col-md-6 col-lg-5">
-            <div class="input-group">
-              <span class="input-group-text bg-light text-muted border-end-0">
-                <i class="bi bi-search"></i>
-              </span>
-              <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search by customer name, phone, or reference ID..." aria-label="Search leads">
+          <!-- Search Text -->
+          <div class="col-md-4 col-lg-3">
+            <div class="input-icon">
+              <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+              <input type="text" name="q" value="{{ search_query }}" class="form-control" placeholder="Search name, phone, ref…" aria-label="Search">
             </div>
           </div>
 
-          <!-- Status filter dropdown -->
-          <div class="col-md-4 col-lg-4">
-            <select name="status" class="form-select" aria-label="Filter by lead status">
-              <option value="">All Statuses (Pipeline)</option>
+          <!-- Stage Filter -->
+          <div class="col-md-3 col-lg-2">
+            <select name="status" class="form-select" aria-label="Filter by stage">
+              <option value="">All Stages</option>
               {% for val, label in status_choices %}
               <option value="{{ val }}" {% if status_filter == val %}selected{% endif %}>{{ label }}</option>
               {% endfor %}
             </select>
           </div>
 
-          <!-- Actions -->
-          <div class="col-md-2 col-lg-3 d-flex gap-2">
-            <button type="submit" class="btn btn-sahay-primary w-100">
-              <i class="bi bi-funnel-fill me-1"></i> Filter
+          <!-- Service Filter -->
+          <div class="col-md-3 col-lg-3">
+            <select name="service" class="form-select" aria-label="Filter by service">
+              <option value="">All Services</option>
+              {% for val, label in service_choices %}
+              <option value="{{ val }}" {% if service_filter == val %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- Date Filters -->
+          <div class="col-md-3 col-lg-2">
+            <input type="date" name="from_date" value="{{ date_from }}" class="form-control" title="From date" placeholder="From date">
+          </div>
+          <div class="col-md-3 col-lg-2 d-flex gap-1">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="ti ti-filter"></i> Apply
             </button>
-            {% if search_query or status_filter %}
-            <a href="{% url 'dashboard:leads' %}" class="btn btn-outline-secondary" title="Clear Filters">
-              <i class="bi bi-x-circle"></i>
+            {% if search_query or status_filter or service_filter or date_from or date_to %}
+            <a href="{% url 'dashboard:leads' %}" class="btn btn-ghost-secondary btn-icon" title="Reset Filters">
+              <i class="ti ti-x"></i>
             </a>
             {% endif %}
           </div>
         </form>
       </div>
+    </div>
 
-      <!-- Leads Data Table Card -->
-      <div class="dash-table-card">
-        <div class="dash-table-header d-flex justify-content-between align-items-center">
-          <h2 class="h6 mb-0 fw-bold">
-            {% if search_query or status_filter %}Filtered Inquiry Results{% else %}All Customer Inquiries{% endif %}
-          </h2>
-          <small class="text-muted">Showing {{ leads.start_index|default:0 }} to {{ leads.end_index|default:0 }} of {{ total_results }} entries</small>
+    <!-- Leads Table Card -->
+    <div class="card shadow-sm">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title mb-0">Inquiry Records</h3>
+        <div class="text-secondary small">
+          Showing {{ leads.start_index|default:0 }}–{{ leads.end_index|default:0 }} of {{ total_results }}
         </div>
+      </div>
 
-        {% if leads %}
-        <div class="table-responsive">
-          <table class="table dash-table table-hover align-middle">
-            <thead>
-              <tr>
-                <th>Reference ID</th>
-                <th>Customer Name</th>
-                <th>Mobile Number</th>
-                <th>Email Address</th>
-                <th>Service Track</th>
-                <th>Submission Date</th>
-                <th>Current Status</th>
-                <th class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for lead in leads %}
-              <tr>
-                <td>
-                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="dash-ref-link">
-                    {{ lead.reference_id }}
+      {% if leads %}
+      <div class="table-responsive">
+        <table class="table table-vcenter card-table table-hover table-striped">
+          <thead>
+            <tr>
+              <th>Lead Reference ID</th>
+              <th>Customer Name</th>
+              <th>Mobile Number</th>
+              <th>Email</th>
+              <th>Selected Service</th>
+              <th>Current Stage</th>
+              <th>Assigned Date</th>
+              <th>Last Updated</th>
+              <th class="w-1 text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lead in leads %}
+            <tr>
+              <td>
+                <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="text-reset font-monospace fw-bold">
+                  {{ lead.reference_id }}
+                </a>
+              </td>
+              <td class="font-weight-medium">{{ lead.full_name }}</td>
+              <td>
+                <span class="font-monospace text-secondary">{{ lead.mobile_number }}</span>
+              </td>
+              <td class="text-secondary text-truncate" style="max-width: 170px;">
+                {{ lead.email }}
+              </td>
+              <td>
+                <span class="badge badge-outline text-secondary">{{ lead.get_service_display }}</span>
+              </td>
+              <td>
+                <span class="badge {{ lead.tabler_badge_class }}">
+                  {{ lead.get_status_display }}
+                </span>
+              </td>
+              <td class="text-secondary small text-nowrap">
+                {{ lead.created_at|date:"d M Y" }}
+              </td>
+              <td class="text-secondary small text-nowrap">
+                {{ lead.updated_at|date:"d M Y, h:i A" }}
+              </td>
+              <td class="text-end text-nowrap">
+                <div class="btn-list flex-nowrap justify-content-end">
+                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-outline-primary" title="Review Details">
+                    <i class="ti ti-eye me-1"></i> Review
                   </a>
-                </td>
-                <td class="fw-semibold">{{ lead.full_name }}</td>
-                <td>
-                  <span class="font-monospace text-nowrap">{{ lead.mobile_number }}</span>
-                </td>
-                <td class="text-muted small text-truncate" style="max-width: 180px;">
-                  {{ lead.email }}
-                </td>
-                <td>
-                  <span class="badge bg-light text-dark border">{{ lead.get_service_display }}</span>
-                </td>
-                <td class="text-muted small text-nowrap">
-                  {{ lead.created_at|date:"d M Y, h:i A" }}
-                </td>
-                <td>
-                  <span class="badge {{ lead.status_badge_class }} rounded-pill px-2 py-1">
-                    {{ lead.get_status_display }}
-                  </span>
-                </td>
-                <td class="text-end text-nowrap">
-                  <div class="d-inline-flex gap-1">
-                    <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-outline-primary" title="View details & history">
-                      <i class="bi bi-eye-fill"></i> Review
-                    </a>
-                    {% if lead.get_whatsapp_url %}
-                    <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-success" title="Open WhatsApp chat with prefilled template">
-                      <i class="bi bi-whatsapp"></i>
-                    </a>
-                    {% endif %}
+                  {% if lead.get_whatsapp_url %}
+                  <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-success" title="WhatsApp Outreach">
+                    <i class="ti ti-brand-whatsapp"></i>
+                  </a>
+                  {% endif %}
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-ghost-secondary btn-icon" data-bs-toggle="dropdown" aria-expanded="false" title="More Actions">
+                      <i class="ti ti-dots-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                      <a class="dropdown-item" href="{% url 'dashboard:lead_edit' lead.reference_id %}">
+                        <i class="ti ti-pencil me-2 text-secondary"></i> Edit Lead
+                      </a>
+                      <a class="dropdown-item" href="{% url 'dashboard:lead_detail' lead.reference_id %}">
+                        <i class="ti ti-calendar me-2 text-secondary"></i> Schedule Follow-up
+                      </a>
+                    </div>
                   </div>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Pagination Bar -->
-        {% if leads.has_other_pages %}
-        <nav class="p-3 border-top d-flex justify-content-between align-items-center" aria-label="Leads pagination">
-          <div class="small text-muted">
-            Page {{ leads.number }} of {{ leads.paginator.num_pages }}
-          </div>
-          <ul class="pagination pagination-sm m-0">
-            {% if leads.has_previous %}
-            <li class="page-item">
-              <a class="page-link" href="{% query_transform page=leads.previous_page_number %}" aria-label="Previous">
-                &laquo; Prev
-              </a>
-            </li>
-            {% else %}
-            <li class="page-item disabled"><span class="page-link">&laquo; Prev</span></li>
-            {% endif %}
-
-            {% for p in leads.paginator.page_range %}
-              {% if p == leads.number %}
-              <li class="page-item active" aria-current="page"><span class="page-link">{{ p }}</span></li>
-              {% elif p >= leads.number|add:"-2" and p <= leads.number|add:"2" %}
-              <li class="page-item">
-                <a class="page-link" href="{% query_transform page=p %}">{{ p }}</a>
-              </li>
-              {% endif %}
+                </div>
+              </td>
+            </tr>
             {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
-            {% if leads.has_next %}
-            <li class="page-item">
-              <a class="page-link" href="{% query_transform page=leads.next_page_number %}" aria-label="Next">
-                Next &raquo;
-              </a>
-            </li>
-            {% else %}
-            <li class="page-item disabled"><span class="page-link">Next &raquo;</span></li>
-            {% endif %}
-          </ul>
-        </nav>
-        {% endif %}
-
-        {% else %}
-        <!-- Empty State -->
-        <div class="p-5 text-center text-muted">
-          <i class="bi bi-search fs-1 d-block mb-2 text-secondary"></i>
-          <h3 class="h6 fw-bold">No Leads Match Criteria</h3>
-          <p class="small mb-3">No inquiry records match your search or filter settings.</p>
-          {% if search_query or status_filter %}
-          <a href="{% url 'dashboard:leads' %}" class="btn btn-sm btn-outline-secondary">
-            Reset Filters
-          </a>
+      <!-- Tabler Pagination Bar -->
+      {% if leads.has_other_pages %}
+      <div class="card-footer d-flex align-items-center">
+        <p class="m-0 text-secondary small">
+          Page <span>{{ leads.number }}</span> of <span>{{ leads.paginator.num_pages }}</span>
+        </p>
+        <ul class="pagination m-0 ms-auto">
+          {% if leads.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="{% query_transform page=leads.previous_page_number %}" tabindex="-1">
+              <i class="ti ti-chevron-left me-1"></i> prev
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <span class="page-link"><i class="ti ti-chevron-left me-1"></i> prev</span>
+          </li>
           {% endif %}
-        </div>
+
+          {% for p in leads.paginator.page_range %}
+            {% if p == leads.number %}
+            <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+            {% elif p >= leads.number|add:"-2" and p <= leads.number|add:"2" %}
+            <li class="page-item">
+              <a class="page-link" href="{% query_transform page=p %}">{{ p }}</a>
+            </li>
+            {% endif %}
+          {% endfor %}
+
+          {% if leads.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{% query_transform page=leads.next_page_number %}">
+              next <i class="ti ti-chevron-right ms-1"></i>
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">next <i class="ti ti-chevron-right ms-1"></i></span>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% else %}
+      <div class="p-5 text-center text-secondary">
+        <i class="ti ti-search fs-1 d-block mb-2"></i>
+        <h3 class="h4">No Inquiries Found</h3>
+        <p class="text-secondary mb-3">No lead records match your search or filter criteria.</p>
+        {% if search_query or status_filter or service_filter or date_from or date_to %}
+        <a href="{% url 'dashboard:leads' %}" class="btn btn-outline-secondary">Reset Filters</a>
         {% endif %}
       </div>
+      {% endif %}
     </div>
   </div>
 </div>

@@ -74,6 +74,26 @@ class Inquiry(models.Model):
         db_index=True,
         help_text='Current maturity stage of this inquiry.'
     )
+    follow_up_date = models.DateTimeField(
+        null=True,
+        blank=True,
+        db_index=True,
+        help_text='Scheduled follow-up date and time for customer contact.'
+    )
+    assigned_to = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='assigned_inquiries',
+        help_text='Staff member assigned to manage this lead.'
+    )
+    internal_notes = models.TextField(
+        max_length=2000,
+        blank=True,
+        default='',
+        help_text='Internal staff notes and requirement details.'
+    )
     created_at = models.DateTimeField(
         auto_now_add=True,
         db_index=True,
@@ -117,6 +137,27 @@ class Inquiry(models.Model):
             LeadStatus.CLOSED: 'bg-dark text-white',
         }
         return badge_map.get(self.status, 'bg-secondary text-white')
+
+    @property
+    def tabler_badge_class(self) -> str:
+        """Return modern Tabler light badge class for the current lead status."""
+        badge_map = {
+            LeadStatus.NEW: 'bg-blue-lt',
+            LeadStatus.CONTACTED: 'bg-azure-lt',
+            LeadStatus.FOLLOW_UP: 'bg-yellow-lt',
+            LeadStatus.PROPOSAL_SENT: 'bg-purple-lt',
+            LeadStatus.MATURE: 'bg-green-lt',
+            LeadStatus.CLOSED: 'bg-secondary-lt',
+        }
+        return badge_map.get(self.status, 'bg-secondary-lt')
+
+    @property
+    def is_follow_up_due(self) -> bool:
+        """Check if a follow-up is scheduled and due."""
+        from django.utils import timezone
+        if not self.follow_up_date:
+            return False
+        return self.follow_up_date <= timezone.now() and self.status not in (LeadStatus.MATURE, LeadStatus.CLOSED)
 
     def get_whatsapp_url(self) -> str | None:
         """

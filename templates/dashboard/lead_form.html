@@ -1,0 +1,129 @@
+{% extends 'tabler_base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} — Sahay LeadFlow{% endblock %}
+
+{% block content %}
+<div class="page-body">
+  <div class="container-xl">
+    <div class="page-header d-print-none mb-3">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard:overview' %}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'dashboard:leads' %}">Leads</a></li>
+              <li class="breadcrumb-item active" aria-current="page">{{ title }}</li>
+            </ol>
+          </nav>
+          <h2 class="page-title">{{ title }}</h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-9">
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-file-pencil text-primary"></i> Lead Profile Details
+            </h3>
+          </div>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="card-body">
+              <div class="row g-3">
+                <!-- Customer Name -->
+                <div class="col-md-6">
+                  <label class="form-label required" for="id_full_name">Customer Full Name</label>
+                  {{ form.full_name }}
+                  {% if form.full_name.errors %}
+                  <div class="text-danger small mt-1">{{ form.full_name.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <!-- Mobile Number -->
+                <div class="col-md-6">
+                  <label class="form-label required" for="id_mobile_number">Mobile Number (India, 10 Digits)</label>
+                  <div class="input-group">
+                    <span class="input-group-text">+91</span>
+                    {{ form.mobile_number }}
+                  </div>
+                  {% if form.mobile_number.errors %}
+                  <div class="text-danger small mt-1">{{ form.mobile_number.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <!-- Email Address -->
+                <div class="col-md-6">
+                  <label class="form-label required" for="id_email">Email Address</label>
+                  {{ form.email }}
+                  {% if form.email.errors %}
+                  <div class="text-danger small mt-1">{{ form.email.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <!-- Service Track -->
+                <div class="col-md-6">
+                  <label class="form-label required" for="id_service">Service Track</label>
+                  {{ form.service }}
+                  {% if form.service.errors %}
+                  <div class="text-danger small mt-1">{{ form.service.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <!-- Current Stage -->
+                <div class="col-md-6">
+                  <label class="form-label" for="id_status">Pipeline Stage</label>
+                  {{ form.status }}
+                  {% if form.status.errors %}
+                  <div class="text-danger small mt-1">{{ form.status.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <!-- Scheduled Follow-up -->
+                <div class="col-md-6">
+                  <label class="form-label" for="id_follow_up_date">Scheduled Follow-up Date/Time</label>
+                  {{ form.follow_up_date }}
+                  {% if form.follow_up_date.errors %}
+                  <div class="text-danger small mt-1">{{ form.follow_up_date.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+
+                <!-- Internal Notes -->
+                <div class="col-12">
+                  <label class="form-label" for="id_internal_notes">Internal Staff Notes</label>
+                  {{ form.internal_notes }}
+                  <div class="form-text small">Internal confidential notes, budget, or engagement history.</div>
+                </div>
+
+                <!-- Message / Query -->
+                <div class="col-12">
+                  <label class="form-label" for="id_message">Customer Inquiry / Requirements</label>
+                  {{ form.message }}
+                  <div class="form-text small">Original customer query text.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer d-flex justify-content-between align-items-center">
+              {% if is_edit %}
+              <a href="{% url 'dashboard:lead_detail' inquiry.reference_id %}" class="btn btn-outline-secondary">
+                Cancel
+              </a>
+              {% else %}
+              <a href="{% url 'dashboard:leads' %}" class="btn btn-outline-secondary">
+                Cancel
+              </a>
+              {% endif %}
+              <button type="submit" class="btn btn-primary d-flex align-items-center gap-1">
+                <i class="ti ti-check"></i> Save Lead Record
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

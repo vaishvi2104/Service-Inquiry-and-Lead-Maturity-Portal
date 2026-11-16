@@ -1,0 +1,151 @@
+{% extends 'tabler_base.html' %}
+{% load static %}
+{% load dashboard_tags %}
+
+{% block title %}Lead Status History Audit Log — Sahay LeadFlow{% endblock %}
+
+{% block content %}
+<div class="page-body">
+  <div class="container-xl">
+    <div class="page-header d-print-none mb-3">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <div class="page-pretitle text-uppercase">Audit Trail</div>
+          <h2 class="page-title d-flex align-items-center gap-2">
+            <span>Organizational Lead Status History</span>
+            <span class="badge bg-blue-lt">{{ total_count }} Log Entries</span>
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="card mb-3 shadow-sm">
+      <div class="card-body py-3">
+        <form method="get" action="{% url 'dashboard:status_history' %}" class="row g-2 align-items-center">
+          <div class="col-md-5">
+            <div class="input-icon">
+              <span class="input-icon-addon"><i class="ti ti-hash"></i></span>
+              <input type="text" name="ref" value="{{ ref_filter }}" class="form-control" placeholder="Filter by Lead Reference ID (e.g. SS-20261116-…)">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="input-icon">
+              <span class="input-icon-addon"><i class="ti ti-user"></i></span>
+              <input type="text" name="user" value="{{ user_filter }}" class="form-control" placeholder="Filter by staff username…">
+            </div>
+          </div>
+          <div class="col-md-3 d-flex gap-1">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="ti ti-filter"></i> Filter Logs
+            </button>
+            {% if ref_filter or user_filter %}
+            <a href="{% url 'dashboard:status_history' %}" class="btn btn-ghost-secondary btn-icon" title="Clear Filter">
+              <i class="ti ti-x"></i>
+            </a>
+            {% endif %}
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- History Audit Table -->
+    <div class="card shadow-sm">
+      <div class="card-header">
+        <h3 class="card-title d-flex align-items-center gap-2">
+          <i class="ti ti-history text-primary"></i> Stage Transition Audit Events
+        </h3>
+      </div>
+      {% if history_records %}
+      <div class="table-responsive">
+        <table class="table table-vcenter card-table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Inquiry Reference</th>
+              <th>Customer Name</th>
+              <th>Stage Transition</th>
+              <th>Acting Administrator</th>
+              <th>Remarks / Context</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in history_records %}
+            <tr>
+              <td class="text-secondary small text-nowrap">
+                {{ record.created_at|date:"d M Y, h:i A" }}
+              </td>
+              <td>
+                <a href="{% url 'dashboard:lead_detail' record.inquiry.reference_id %}" class="font-monospace fw-bold text-reset">
+                  {{ record.inquiry.reference_id }}
+                </a>
+              </td>
+              <td class="font-weight-medium">{{ record.inquiry.full_name }}</td>
+              <td>
+                <div class="d-inline-flex align-items-center gap-1">
+                  <span class="badge bg-secondary-lt">{{ record.get_previous_status_display }}</span>
+                  <i class="ti ti-arrow-narrow-right text-secondary"></i>
+                  <span class="badge bg-primary-lt fw-bold">{{ record.get_new_status_display }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="avatar avatar-xs bg-primary-lt me-1">{{ record.updated_by.username|default:"S"|slice:":1"|upper }}</span>
+                <strong>{{ record.updated_by.username|default:"Public Portal System" }}</strong>
+              </td>
+              <td class="text-secondary small">
+                {{ record.remarks|default:"—" }}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      {% if history_records.has_other_pages %}
+      <div class="card-footer d-flex align-items-center">
+        <p class="m-0 text-secondary small">
+          Page {{ history_records.number }} of {{ history_records.paginator.num_pages }}
+        </p>
+        <ul class="pagination m-0 ms-auto">
+          {% if history_records.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="{% query_transform page=history_records.previous_page_number %}">
+              <i class="ti ti-chevron-left me-1"></i> prev
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link"><i class="ti ti-chevron-left me-1"></i> prev</span></li>
+          {% endif %}
+
+          {% for p in history_records.paginator.page_range %}
+            {% if p == history_records.number %}
+            <li class="page-item active"><span class="page-link">{{ p }}</span></li>
+            {% elif p >= history_records.number|add:"-2" and p <= history_records.number|add:"2" %}
+            <li class="page-item"><a class="page-link" href="{% query_transform page=p %}">{{ p }}</a></li>
+            {% endif %}
+          {% endfor %}
+
+          {% if history_records.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{% query_transform page=history_records.next_page_number %}">
+              next <i class="ti ti-chevron-right ms-1"></i>
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item disabled"><span class="page-link">next <i class="ti ti-chevron-right ms-1"></i></span></li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% else %}
+      <div class="p-5 text-center text-secondary">
+        <i class="ti ti-history-off fs-1 d-block mb-2"></i>
+        No transition records found.
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

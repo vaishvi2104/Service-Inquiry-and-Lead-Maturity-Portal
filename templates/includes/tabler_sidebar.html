@@ -1,0 +1,126 @@
+<aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu" aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Sahay LeadFlow Brand -->
+    <h1 class="navbar-brand navbar-brand-autodark">
+      <a href="{% url 'dashboard:overview' %}" class="d-flex align-items-center gap-2 text-decoration-none">
+        <span class="avatar avatar-sm bg-primary text-white rounded">
+          <i class="ti ti-layers-linked fs-2"></i>
+        </span>
+        <div class="d-flex flex-column text-start">
+          <span class="fw-bold fs-3 text-white tracking-tight">Sahay LeadFlow</span>
+          <span class="badge bg-blue-lt text-uppercase" style="font-size: 0.65rem; width: fit-content;">Start-Up Sahay</span>
+        </div>
+      </a>
+    </h1>
+
+    <!-- Mobile User Nav -->
+    <div class="navbar-nav flex-row d-lg-none">
+      <div class="nav-item">
+        <a href="{% url 'dashboard:profile' %}" class="nav-link d-flex lh-1 text-reset p-0">
+          <span class="avatar avatar-sm bg-primary-lt">{{ request.user.username|slice:":1"|upper }}</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Sidebar Navigation Menu -->
+    <div class="collapse navbar-collapse" id="sidebar-menu">
+      <ul class="navbar-nav pt-lg-3">
+        <!-- 1. Main Dashboard -->
+        <li class="nav-item {% if request.resolver_match.url_name == 'overview' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'dashboard:overview' %}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-dashboard fs-2"></i>
+            </span>
+            <span class="nav-link-title">Main Dashboard</span>
+          </a>
+        </li>
+
+        <!-- 2. All Inquiries / Leads -->
+        <li class="nav-item {% if request.resolver_match.url_name == 'leads' or request.resolver_match.url_name == 'lead_detail' or request.resolver_match.url_name == 'lead_edit' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'dashboard:leads' %}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-users fs-2"></i>
+            </span>
+            <span class="nav-link-title">All Inquiries / Leads</span>
+          </a>
+        </li>
+
+        <!-- 3. Lead Pipeline / Kanban -->
+        <li class="nav-item {% if request.resolver_match.url_name == 'kanban' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'dashboard:kanban' %}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-layout-kanban fs-2"></i>
+            </span>
+            <span class="nav-link-title">Pipeline / Kanban</span>
+          </a>
+        </li>
+
+        <!-- 4. Follow-up Management -->
+        <li class="nav-item {% if request.resolver_match.url_name == 'follow_ups' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'dashboard:follow_ups' %}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-calendar-time fs-2"></i>
+            </span>
+            <span class="nav-link-title">Follow-up Desk</span>
+          </a>
+        </li>
+
+        <!-- 5. Add New Lead -->
+        <li class="nav-item {% if request.resolver_match.url_name == 'lead_create' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'dashboard:lead_create' %}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-user-plus fs-2"></i>
+            </span>
+            <span class="nav-link-title">Add New Lead</span>
+          </a>
+        </li>
+
+        <!-- 6. Search and Advanced Filters -->
+        <li class="nav-item {% if request.resolver_match.url_name == 'advanced_search' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'dashboard:advanced_search' %}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-filter-search fs-2"></i>
+            </span>
+            <span class="nav-link-title">Search & Filters</span>
+          </a>
+        </li>
+
+        <!-- 7. Lead Status History -->
+        <li class="nav-item {% if request.resolver_match.url_name == 'status_history' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'dashboard:status_history' %}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-history fs-2"></i>
+            </span>
+            <span class="nav-link-title">Lead Status History</span>
+          </a>
+        </li>
+
+        <!-- 8. Admin Profile and Settings -->
+        <li class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+          <a class="nav-link" href="{% url 'dashboard:profile' %}">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-settings fs-2"></i>
+            </span>
+            <span class="nav-link-title">Profile & Settings</span>
+          </a>
+        </li>
+
+        <hr class="my-3 opacity-25">
+
+        <!-- External Quick Links -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'public:home' %}" target="_blank" rel="noopener">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i class="ti ti-external-link fs-2"></i>
+            </span>
+            <span class="nav-link-title">Public Portal</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</aside>

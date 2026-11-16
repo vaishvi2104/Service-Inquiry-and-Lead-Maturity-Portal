@@ -1,21 +1,24 @@
 """
 Forms for the staff management dashboard.
-Includes secure login and atomic lead status update forms.
+Includes secure login, lead creation/editing, follow-up scheduling, and profile settings.
 """
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
-from inquiries.models import LeadStatus
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth import get_user_model
+from inquiries.models import Inquiry, LeadStatus, ServiceChoices
+from inquiries.validators import validate_mobile_number, validate_full_name
+
+User = get_user_model()
 
 
 class StaffLoginForm(AuthenticationForm):
     """
-    Styled login form for staff authentication.
-    Applies Bootstrap classes and security attributes.
+    Tabler-styled login form for staff authentication.
     """
     username = forms.CharField(
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter your username',
+            'placeholder': 'Enter username',
             'autocomplete': 'username',
             'autofocus': True,
         })
@@ -23,7 +26,7 @@ class StaffLoginForm(AuthenticationForm):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter your password',
+            'placeholder': 'Enter password',
             'autocomplete': 'current-password',
         })
     )
@@ -45,7 +48,7 @@ class LeadStatusUpdateForm(forms.Form):
         widget=forms.Textarea(attrs={
             'class': 'form-control',
             'rows': 3,
-            'placeholder': 'Optional internal notes explaining this status update (up to 500 characters)',
+            'placeholder': 'Add internal notes or customer conversation context (up to 500 characters)',
         })
     )
 
@@ -54,3 +57,78 @@ class LeadStatusUpdateForm(forms.Form):
         if len(remarks) > 500:
             raise forms.ValidationError('Remarks cannot exceed 500 characters.')
         return remarks
+
+
+class LeadForm(forms.ModelForm):
+    """
+    Form for creating new leads manually by staff and editing existing leads.
+    """
+    class Meta:
+        model = Inquiry
+        fields = [
+            'full_name',
+            'mobile_number',
+            'email',
+            'service',
+            'status',
+            'follow_up_date',
+            'internal_notes',
+            'message',
+        ]
+        widgets = {
+            'full_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Full legal or business name'}),
+            'mobile_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '10-digit mobile (e.g. 9876543210)', 'maxlength': '10'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'client@example.com'}),
+            'service': forms.Select(attrs={'class': 'form-select'}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'follow_up_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'internal_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Internal strategy, client budget, or requirements'}),
+            'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Customer query / requirement description'}),
+        }
+
+    def clean_full_name(self) -> str:
+        name = self.cleaned_data.get('full_name', '')
+        normalized = ' '.join(name.strip().split())
+        validate_full_name(normalized)
+        return normalized
+
+    def clean_mobile_number(self) -> str:
+        mobile = self.cleaned_data.get('mobile_number', '').strip()
+        validate_mobile_number(mobile)
+        return mobile
+
+    def clean_email(self) -> str:
+        return self.cleaned_data.get('email', '').strip().lower()
+
+
+class FollowUpScheduleForm(forms.Form):
+    """
+    Form for scheduling or updating a follow-up date and adding follow-up remarks.
+    """
+    follow_up_date = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        required=True
+    )
+    remarks = forms.CharField(
+        max_length=500,
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Follow-up objective or discussion summary (e.g., Send revised quote, demo call)'
+        })
+    )
+
+
+class AdminProfileForm(forms.ModelForm):
+    """
+    Form for staff users to update their profile information.
+    """
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+        }

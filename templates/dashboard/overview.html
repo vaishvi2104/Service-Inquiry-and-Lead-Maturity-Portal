@@ -1,164 +1,400 @@
-{% extends 'base.html' %}
+{% extends 'tabler_base.html' %}
 {% load static %}
 
-{% block title %}Dashboard Overview — Start-Up Sahay Private Limited{% endblock %}
-
-{% block body_class %}dashboard-body{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-{% endblock %}
+{% block title %}Main Dashboard — Sahay LeadFlow{% endblock %}
 
 {% block content %}
-<div class="dash-wrapper">
-  <!-- Sidebar Navigation -->
-  {% include 'includes/dashboard_sidebar.html' %}
-
-  <!-- Main Content View -->
-  <div class="dash-main">
-    <!-- Topbar -->
-    <header class="dash-topbar">
-      <div>
-        <h1 class="h5 mb-0 fw-bold">Executive Lead Overview</h1>
-        <small class="text-muted">Dynamic pipeline metrics & inquiry tracking</small>
+<div class="page-body">
+  <div class="container-xl">
+    <!-- Page Header -->
+    <div class="page-header d-print-none mb-4">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <div class="page-pretitle text-uppercase">Overview</div>
+          <h2 class="page-title d-flex align-items-center gap-2">
+            <span>Executive Lead Dashboard</span>
+            <span class="badge bg-green-lt fs-5 fw-normal">Live System</span>
+          </h2>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+            <a href="{% url 'dashboard:lead_create' %}" class="btn btn-primary d-none d-sm-inline-block">
+              <i class="ti ti-plus me-1"></i> Add New Lead
+            </a>
+            <a href="{% url 'dashboard:kanban' %}" class="btn btn-outline-secondary">
+              <i class="ti ti-layout-kanban me-1"></i> View Kanban
+            </a>
+          </div>
+        </div>
       </div>
-      <div class="dash-user-badge">
-        <a href="{% url 'dashboard:leads' %}" class="btn btn-sahay-primary btn-sm">
-          <i class="bi bi-people-fill me-1"></i> View All Leads
-        </a>
-      </div>
-    </header>
+    </div>
 
-    <!-- Main Workspace -->
-    <div class="dash-content">
-      <!-- Aggregation Metric Cards -->
-      <div class="row g-3 mb-4">
-        <!-- Total Inquiries -->
-        <div class="col-sm-6 col-xl-3">
-          <div class="dash-metric-card border-primary border-opacity-25">
-            <div class="dash-metric-label text-primary">Total Inquiries</div>
-            <div class="dash-metric-value text-primary">{{ metrics.total }}</div>
-            <small class="text-muted mt-2 d-block">All customer submissions</small>
-          </div>
-        </div>
-
-        <!-- New Inquiries -->
-        <div class="col-sm-6 col-xl-3">
-          <div class="dash-metric-card">
-            <div class="dash-metric-label">New Inquiries</div>
-            <div class="dash-metric-value text-primary">{{ metrics.new }}</div>
-            <small class="text-muted mt-2 d-block">Pending first outreach</small>
-          </div>
-        </div>
-
-        <!-- Contacted -->
-        <div class="col-sm-6 col-xl-3">
-          <div class="dash-metric-card">
-            <div class="dash-metric-label">Contacted</div>
-            <div class="dash-metric-value text-info">{{ metrics.contacted }}</div>
-            <small class="text-muted mt-2 d-block">Initial engagement made</small>
-          </div>
-        </div>
-
-        <!-- Follow-up -->
-        <div class="col-sm-6 col-xl-3">
-          <div class="dash-metric-card">
-            <div class="dash-metric-label">Follow-up</div>
-            <div class="dash-metric-value text-warning">{{ metrics.follow_up }}</div>
-            <small class="text-muted mt-2 d-block">Scheduled discussions</small>
-          </div>
-        </div>
-
-        <!-- Proposal Sent -->
-        <div class="col-sm-6 col-xl-4">
-          <div class="dash-metric-card">
-            <div class="dash-metric-label">Proposal Sent</div>
-            <div class="dash-metric-value text-secondary">{{ metrics.proposal_sent }}</div>
-            <small class="text-muted mt-2 d-block">Scope & deliverables shared</small>
-          </div>
-        </div>
-
-        <!-- Mature -->
-        <div class="col-sm-6 col-xl-4">
-          <div class="dash-metric-card border-success border-opacity-50">
-            <div class="dash-metric-label text-success">Mature / Converted</div>
-            <div class="dash-metric-value text-success">{{ metrics.mature }}</div>
-            <small class="text-muted mt-2 d-block">Qualified for onboarding</small>
-          </div>
-        </div>
-
-        <!-- Closed -->
-        <div class="col-sm-6 col-xl-4">
-          <div class="dash-metric-card">
-            <div class="dash-metric-label">Closed</div>
-            <div class="dash-metric-value text-dark">{{ metrics.closed }}</div>
-            <small class="text-muted mt-2 d-block">Completed or archived</small>
+    <!-- 7 KPI Cards & Conversion Metric -->
+    <div class="row row-cards mb-4">
+      <!-- 1. Total Inquiries -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <span class="bg-primary text-white avatar">
+                  <i class="ti ti-folders fs-2"></i>
+                </span>
+              </div>
+              <div class="col">
+                <div class="font-weight-medium text-secondary">Total Inquiries</div>
+                <div class="h1 mb-0 fw-bold">{{ metrics.total }}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Recent Submissions Table -->
-      <div class="dash-table-card">
-        <div class="dash-table-header d-flex align-items-center justify-content-between">
-          <div>
-            <h2 class="h6 mb-0 fw-bold">Recent Customer Inquiries</h2>
-            <small class="text-muted">Latest submissions received across all service categories</small>
+      <!-- 2. New Inquiries -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <span class="bg-blue-lt avatar">
+                  <i class="ti ti-bell-ringing fs-2"></i>
+                </span>
+              </div>
+              <div class="col">
+                <div class="font-weight-medium text-secondary">New Inquiries</div>
+                <div class="h1 mb-0 fw-bold text-blue">{{ metrics.new }}</div>
+              </div>
+            </div>
           </div>
-          <a href="{% url 'dashboard:leads' %}" class="btn btn-outline-secondary btn-sm">
-            Manage All Leads <i class="bi bi-arrow-right ms-1"></i>
-          </a>
         </div>
+      </div>
 
-        {% if recent_leads %}
-        <div class="table-responsive">
-          <table class="table dash-table table-hover align-middle">
-            <thead>
-              <tr>
-                <th>Reference ID</th>
-                <th>Customer Name</th>
-                <th>Service Track</th>
-                <th>Mobile Number</th>
-                <th>Status</th>
-                <th>Received On</th>
-                <th class="text-end">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for lead in recent_leads %}
-              <tr>
-                <td>
-                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="dash-ref-link">
-                    {{ lead.reference_id }}
-                  </a>
-                </td>
-                <td class="fw-semibold">{{ lead.full_name }}</td>
-                <td>{{ lead.get_service_display }}</td>
-                <td>{{ lead.mobile_number }}</td>
-                <td>
-                  <span class="badge {{ lead.status_badge_class }} rounded-pill px-2 py-1">
-                    {{ lead.get_status_display }}
-                  </span>
-                </td>
-                <td class="text-muted small">{{ lead.created_at|date:"d M Y, h:i A" }}</td>
-                <td class="text-end">
-                  <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-eye me-1"></i> Review
-                  </a>
-                </td>
-              </tr>
+      <!-- 3. Contacted -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <span class="bg-azure-lt avatar">
+                  <i class="ti ti-phone-call fs-2"></i>
+                </span>
+              </div>
+              <div class="col">
+                <div class="font-weight-medium text-secondary">Contacted</div>
+                <div class="h1 mb-0 fw-bold text-azure">{{ metrics.contacted }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Follow-ups Due -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <span class="bg-yellow-lt avatar">
+                  <i class="ti ti-clock-alert fs-2"></i>
+                </span>
+              </div>
+              <div class="col">
+                <div class="font-weight-medium text-secondary">Follow-ups Due</div>
+                <div class="h1 mb-0 fw-bold text-yellow">{{ metrics.follow_ups_due }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Proposals Sent -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <span class="bg-purple-lt avatar">
+                  <i class="ti ti-file-text fs-2"></i>
+                </span>
+              </div>
+              <div class="col">
+                <div class="font-weight-medium text-secondary">Proposals Sent</div>
+                <div class="h1 mb-0 fw-bold text-purple">{{ metrics.proposal_sent }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Mature Leads -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <span class="bg-green-lt avatar">
+                  <i class="ti ti-trophy fs-2"></i>
+                </span>
+              </div>
+              <div class="col">
+                <div class="font-weight-medium text-secondary">Mature / Qualified</div>
+                <div class="h1 mb-0 fw-bold text-green">{{ metrics.mature }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Closed Leads -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <span class="bg-secondary-lt avatar">
+                  <i class="ti ti-archive fs-2"></i>
+                </span>
+              </div>
+              <div class="col">
+                <div class="font-weight-medium text-secondary">Closed</div>
+                <div class="h1 mb-0 fw-bold">{{ metrics.closed }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. Conversion Rate -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm bg-primary-lt">
+          <div class="card-body">
+            <div class="row align-items-center">
+              <div class="col-auto">
+                <span class="bg-primary text-white avatar">
+                  <i class="ti ti-chart-line fs-2"></i>
+                </span>
+              </div>
+              <div class="col">
+                <div class="font-weight-medium text-secondary">Conversion Rate</div>
+                <div class="h1 mb-0 fw-bold text-primary">{{ metrics.conversion_rate }}%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row row-cards mb-4">
+      <!-- Chart 1: Stage Distribution Donut -->
+      <div class="col-lg-5">
+        <div class="card h-100">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-chart-donut text-primary"></i> Lead Stage Distribution
+            </h3>
+          </div>
+          <div class="card-body">
+            <div id="chart-stage-distribution" style="min-height: 280px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 2: Service-Wise Statistics Bar Chart -->
+      <div class="col-lg-7">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-chart-bar text-primary"></i> Service Track Breakdown
+            </h3>
+            <span class="badge bg-blue-lt">Real Database Queries</span>
+          </div>
+          <div class="card-body">
+            <div id="chart-service-breakdown" style="min-height: 280px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row: Recent Inquiries & Upcoming Follow-ups -->
+    <div class="row row-cards">
+      <!-- Recent Inquiries Table -->
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-clock text-primary"></i> Recent Customer Inquiries
+            </h3>
+            <a href="{% url 'dashboard:leads' %}" class="btn btn-sm btn-outline-primary">
+              View All <i class="ti ti-arrow-right ms-1"></i>
+            </a>
+          </div>
+          {% if recent_leads %}
+          <div class="table-responsive">
+            <table class="table table-vcenter card-table table-hover">
+              <thead>
+                <tr>
+                  <th>Reference ID</th>
+                  <th>Customer</th>
+                  <th>Service</th>
+                  <th>Stage</th>
+                  <th>Received</th>
+                  <th class="w-1">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for lead in recent_leads %}
+                <tr>
+                  <td>
+                    <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="text-reset fw-bold font-monospace">
+                      {{ lead.reference_id }}
+                    </a>
+                  </td>
+                  <td>
+                    <div class="font-weight-medium">{{ lead.full_name }}</div>
+                    <div class="text-secondary small">{{ lead.mobile_number }}</div>
+                  </td>
+                  <td>
+                    <span class="badge badge-outline text-secondary">{{ lead.get_service_display }}</span>
+                  </td>
+                  <td>
+                    <span class="badge {{ lead.tabler_badge_class }}">
+                      {{ lead.get_status_display }}
+                    </span>
+                  </td>
+                  <td class="text-secondary small">{{ lead.created_at|date:"d M, h:i A" }}</td>
+                  <td>
+                    <div class="btn-list flex-nowrap">
+                      <a href="{% url 'dashboard:lead_detail' lead.reference_id %}" class="btn btn-sm btn-ghost-primary" title="Review">
+                        <i class="ti ti-eye"></i>
+                      </a>
+                      {% if lead.get_whatsapp_url %}
+                      <a href="{{ lead.get_whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-ghost-success" title="WhatsApp">
+                        <i class="ti ti-brand-whatsapp"></i>
+                      </a>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="p-5 text-center text-secondary">
+            <i class="ti ti-inbox fs-1 d-block mb-2"></i>
+            <div>No inquiries registered yet.</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Upcoming Follow-ups Desk Widget -->
+      <div class="col-lg-4">
+        <div class="card h-100">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-calendar-event text-yellow"></i> Follow-up Desk
+            </h3>
+            <a href="{% url 'dashboard:follow_ups' %}" class="btn btn-sm btn-ghost-secondary">
+              Manage Desk
+            </a>
+          </div>
+          <div class="card-body card-body-scrollable card-body-scrollable-shadow" style="max-height: 380px;">
+            {% if upcoming_follow_ups %}
+            <div class="divide-y">
+              {% for item in upcoming_follow_ups %}
+              <div class="py-2">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="avatar avatar-sm {% if item.is_follow_up_due %}bg-red-lt{% else %}bg-yellow-lt{% endif %}">
+                      <i class="ti ti-clock"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <a href="{% url 'dashboard:lead_detail' item.reference_id %}" class="text-reset d-block fw-semibold">
+                      {{ item.full_name }}
+                    </a>
+                    <div class="text-secondary small">
+                      <i class="ti ti-calendar me-1"></i>
+                      {{ item.follow_up_date|date:"d M Y, h:i A" }}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <a href="{% url 'dashboard:lead_detail' item.reference_id %}" class="btn btn-sm btn-ghost-primary">
+                      Act
+                    </a>
+                  </div>
+                </div>
+              </div>
               {% endfor %}
-            </tbody>
-          </table>
+            </div>
+            {% else %}
+            <div class="text-center text-secondary py-4">
+              <i class="ti ti-calendar-check fs-1 text-green d-block mb-2"></i>
+              <div class="fw-semibold">All Caught Up!</div>
+              <small>No pending follow-ups due right now.</small>
+            </div>
+            {% endif %}
+          </div>
         </div>
-        {% else %}
-        <div class="p-5 text-center text-muted">
-          <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
-          <h3 class="h6 fw-bold">No Inquiries Found</h3>
-          <p class="small mb-0">No customer submissions have been registered yet.</p>
-        </div>
-        {% endif %}
       </div>
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Stage Distribution Donut Chart
+    var stageOptions = {
+      chart: {
+        type: 'donut',
+        height: 280,
+        fontFamily: 'inherit',
+      },
+      series: {{ metrics.stage_series|safe }},
+      labels: {{ metrics.stage_labels|safe }},
+      colors: ['#206bc4', '#4299e1', '#f59f00', '#ae3ec9', '#2fb344', '#6c7a9c'],
+      legend: {
+        position: 'bottom',
+      },
+      tooltip: {
+        theme: document.documentElement.getAttribute('data-bs-theme') || 'light'
+      }
+    };
+    var stageChart = new ApexCharts(document.querySelector("#chart-stage-distribution"), stageOptions);
+    stageChart.render();
+
+    // Service Breakdown Bar Chart
+    var serviceOptions = {
+      chart: {
+        type: 'bar',
+        height: 280,
+        fontFamily: 'inherit',
+        toolbar: { show: false }
+      },
+      plotOptions: {
+        bar: {
+          borderRadius: 4,
+          horizontal: true,
+        }
+      },
+      colors: ['#206bc4'],
+      series: [{
+        name: 'Inquiries',
+        data: {{ metrics.service_series|safe }}
+      }],
+      xaxis: {
+        categories: {{ metrics.service_labels|safe }},
+      },
+      tooltip: {
+        theme: document.documentElement.getAttribute('data-bs-theme') || 'light'
+      }
+    };
+    var serviceChart = new ApexCharts(document.querySelector("#chart-service-breakdown"), serviceOptions);
+    serviceChart.render();
+  });
+</script>
 {% endblock %}

@@ -1,191 +1,253 @@
-{% extends 'base.html' %}
+{% extends 'tabler_base.html' %}
 {% load static %}
 
-{% block title %}Lead {{ inquiry.reference_id }} — Start-Up Sahay Staff Portal{% endblock %}
-
-{% block body_class %}dashboard-body{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-{% endblock %}
+{% block title %}Lead {{ inquiry.reference_id }} — Sahay LeadFlow{% endblock %}
 
 {% block content %}
-<div class="dash-wrapper">
-  <!-- Sidebar Navigation -->
-  {% include 'includes/dashboard_sidebar.html' %}
-
-  <!-- Main Content View -->
-  <div class="dash-main">
-    <!-- Topbar -->
-    <header class="dash-topbar">
-      <div class="d-flex align-items-center gap-2">
-        <a href="{% url 'dashboard:leads' %}" class="btn btn-sm btn-outline-secondary">
-          <i class="bi bi-arrow-left"></i> All Leads
-        </a>
-        <div>
-          <h1 class="h5 mb-0 fw-bold font-monospace">{{ inquiry.reference_id }}</h1>
-          <small class="text-muted">{{ inquiry.full_name }} &bull; {{ inquiry.get_service_display }}</small>
+<div class="page-body">
+  <div class="container-xl">
+    <!-- Page Header -->
+    <div class="page-header d-print-none mb-3">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="{% url 'dashboard:overview' %}">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'dashboard:leads' %}">Leads</a></li>
+              <li class="breadcrumb-item active" aria-current="page">{{ inquiry.reference_id }}</li>
+            </ol>
+          </nav>
+          <h2 class="page-title d-flex align-items-center gap-2">
+            <span class="font-monospace">{{ inquiry.reference_id }}</span>
+            <span class="badge {{ inquiry.tabler_badge_class }} fs-4">{{ inquiry.get_status_display }}</span>
+          </h2>
+        </div>
+        <div class="col-auto ms-auto d-print-none">
+          <div class="btn-list">
+            <a href="{% url 'dashboard:lead_edit' inquiry.reference_id %}" class="btn btn-outline-secondary">
+              <i class="ti ti-pencil me-1"></i> Edit Lead
+            </a>
+            <a href="{% url 'dashboard:leads' %}" class="btn btn-outline-secondary">
+              <i class="ti ti-arrow-left me-1"></i> Back to Directory
+            </a>
+          </div>
         </div>
       </div>
-      <div>
-        <span class="badge {{ inquiry.status_badge_class }} px-3 py-2 rounded-pill fs-6">
-          {{ inquiry.get_status_display }}
-        </span>
-      </div>
-    </header>
+    </div>
 
-    <!-- Main Workspace -->
-    <div class="dash-content">
-      <div class="row g-4">
-        <!-- Left Column: Lead Information & Customer Query -->
-        <div class="col-lg-7">
-          <!-- Information Card -->
-          <div class="card border-0 shadow-sm rounded-3 p-4 mb-4 bg-white">
-            <h2 class="h6 fw-bold border-bottom pb-2 mb-3">Customer Information</h2>
-            <div class="row g-3">
-              <div class="col-sm-6">
-                <small class="text-muted d-block">Full Legal / Contact Name</small>
-                <div class="fw-semibold fs-6">{{ inquiry.full_name }}</div>
+    <div class="row row-cards">
+      <!-- Left Column: Customer Profile, Query, Follow-up, Audit Trail -->
+      <div class="col-lg-8">
+        <!-- Customer Profile Card -->
+        <div class="card mb-3 shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-id text-primary"></i> Customer Information
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="datagrid">
+              <div class="datagrid-item">
+                <div class="datagrid-title">Customer Name</div>
+                <div class="datagrid-content fw-bold fs-3">{{ inquiry.full_name }}</div>
               </div>
-              <div class="col-sm-6">
-                <small class="text-muted d-block">Primary Email Address</small>
-                <div class="fw-semibold">
-                  <a href="mailto:{{ inquiry.email }}" class="text-decoration-none">
-                    {{ inquiry.email }} <i class="bi bi-box-arrow-up-right small"></i>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Mobile Number (India)</div>
+                <div class="datagrid-content">
+                  <a href="tel:+91{{ inquiry.mobile_number }}" class="text-reset font-monospace">
+                    +91 {{ inquiry.mobile_number }} <i class="ti ti-phone small text-secondary"></i>
                   </a>
                 </div>
               </div>
-              <div class="col-sm-6">
-                <small class="text-muted d-block">Mobile Number (India)</small>
-                <div class="fw-semibold font-monospace">
-                  <a href="tel:+91{{ inquiry.mobile_number }}" class="text-decoration-none">
-                    +91 {{ inquiry.mobile_number }} <i class="bi bi-telephone small"></i>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Email Address</div>
+                <div class="datagrid-content">
+                  <a href="mailto:{{ inquiry.email }}" class="text-reset">
+                    {{ inquiry.email }} <i class="ti ti-mail small text-secondary"></i>
                   </a>
                 </div>
               </div>
-              <div class="col-sm-6">
-                <small class="text-muted d-block">Service Required</small>
-                <div class="fw-semibold">
-                  <span class="badge bg-light text-dark border">{{ inquiry.get_service_display }}</span>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Requested Service</div>
+                <div class="datagrid-content">
+                  <span class="badge bg-blue-lt">{{ inquiry.get_service_display }}</span>
                 </div>
               </div>
-              <div class="col-sm-6">
-                <small class="text-muted d-block">Initial Submission Date</small>
-                <div class="small text-dark">{{ inquiry.created_at|date:"d M Y, h:i A" }}</div>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Received Date</div>
+                <div class="datagrid-content text-secondary">{{ inquiry.created_at|date:"d M Y, h:i A" }}</div>
               </div>
-              <div class="col-sm-6">
-                <small class="text-muted d-block">Last Stage Update</small>
-                <div class="small text-dark">{{ inquiry.updated_at|date:"d M Y, h:i A" }}</div>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Scheduled Follow-up</div>
+                <div class="datagrid-content">
+                  {% if inquiry.follow_up_date %}
+                    <span class="badge {% if inquiry.is_follow_up_due %}bg-red-lt{% else %}bg-yellow-lt{% endif %}">
+                      <i class="ti ti-clock me-1"></i> {{ inquiry.follow_up_date|date:"d M Y, h:i A" }}
+                    </span>
+                  {% else %}
+                    <span class="text-secondary small">Not scheduled</span>
+                  {% endif %}
+                </div>
               </div>
             </div>
 
-            <!-- Customer Message / Query -->
+            <!-- WhatsApp Direct Outreach Banner -->
             <div class="mt-4 pt-3 border-top">
-              <small class="text-muted fw-semibold d-block mb-1">Customer Query / Message</small>
-              <div class="p-3 bg-light rounded-3 text-secondary small" style="white-space: pre-wrap; word-break: break-word;">
-                {% if inquiry.message %}
-                  {{ inquiry.message }}
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                <div>
+                  <div class="fw-semibold">Direct Customer Outreach</div>
+                  <div class="text-secondary small">Pre-fills customer name, inquiry reference ID, and requested service.</div>
+                </div>
+                {% if whatsapp_url %}
+                <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-success d-flex align-items-center gap-1 shadow-sm">
+                  <i class="ti ti-brand-whatsapp fs-2"></i> Connect on WhatsApp
+                </a>
                 {% else %}
-                  <em class="text-muted">No additional message was submitted by the customer.</em>
+                <span class="badge bg-secondary-lt">WhatsApp Unavailable (Invalid Number)</span>
                 {% endif %}
               </div>
             </div>
+          </div>
+        </div>
 
-            <!-- WhatsApp Direct Engagement Action -->
-            <div class="mt-4 pt-3 border-top">
-              <small class="text-muted fw-semibold d-block mb-2">Direct Customer Outreach</small>
-              {% if whatsapp_url %}
-              <div class="d-flex flex-wrap align-items-center gap-2">
-                <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
-                  <i class="bi bi-whatsapp fs-5"></i> Connect on WhatsApp
-                </a>
-                <span class="small text-muted">Prefills inquiry reference ID & service track</span>
-              </div>
+        <!-- Customer Message Card -->
+        <div class="card mb-3 shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-message-2 text-primary"></i> Customer Inquiry Message
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="p-3 bg-body-tertiary rounded text-secondary" style="white-space: pre-wrap; word-break: break-word;">
+              {% if inquiry.message %}
+                {{ inquiry.message }}
               {% else %}
-              <div class="badge bg-secondary">
-                <i class="bi bi-slash-circle me-1"></i> WhatsApp unavailable (invalid number format)
-              </div>
+                <em class="text-secondary">No customer query message was included in the submission.</em>
               {% endif %}
             </div>
           </div>
+        </div>
 
-          <!-- Status Audit History Timeline -->
-          <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
-            <h2 class="h6 fw-bold border-bottom pb-2 mb-4">Stage Transition Audit History</h2>
+        <!-- Internal Staff Notes (if present) -->
+        {% if inquiry.internal_notes %}
+        <div class="card mb-3 shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-notes text-yellow"></i> Internal Staff Notes
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="p-3 bg-body-tertiary rounded small font-monospace" style="white-space: pre-wrap;">
+              {{ inquiry.internal_notes }}
+            </div>
+          </div>
+        </div>
+        {% endif %}
 
+        <!-- Stage Transition Audit History -->
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-history text-primary"></i> Stage Transition Audit History
+            </h3>
+          </div>
+          <div class="card-body">
             {% if history_records %}
-            <ul class="dash-timeline">
+            <div class="divide-y">
               {% for record in history_records %}
-              <li class="dash-timeline-item">
-                <div class="dash-timeline-dot"></div>
-                <div class="dash-timeline-content">
-                  <div class="d-flex flex-wrap justify-content-between align-items-center mb-1">
-                    <div>
-                      <span class="badge bg-secondary me-1">{{ record.get_previous_status_display }}</span>
-                      <i class="bi bi-arrow-right small text-muted"></i>
-                      <span class="badge bg-primary ms-1">{{ record.get_new_status_display }}</span>
+              <div class="py-3">
+                <div class="row align-items-center">
+                  <div class="col-auto">
+                    <span class="avatar avatar-sm bg-primary-lt">
+                      <i class="ti ti-arrow-right"></i>
+                    </span>
+                  </div>
+                  <div class="col">
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="badge bg-secondary-lt">{{ record.get_previous_status_display }}</span>
+                      <i class="ti ti-arrow-narrow-right text-secondary"></i>
+                      <span class="badge bg-primary-lt fw-bold">{{ record.get_new_status_display }}</span>
                     </div>
-                    <small class="text-muted">{{ record.created_at|date:"d M Y, h:i A" }}</small>
+                    <div class="text-secondary small mt-1">
+                      Updated by <strong>{{ record.updated_by.username|default:"Public Portal System" }}</strong> on {{ record.created_at|date:"d M Y, h:i A" }}
+                    </div>
+                    {% if record.remarks %}
+                    <div class="text-secondary small mt-2 p-2 bg-body-tertiary rounded">
+                      <i class="ti ti-quote me-1"></i> {{ record.remarks }}
+                    </div>
+                    {% endif %}
                   </div>
-                  <div class="small text-muted mt-1">
-                    Updated by: <strong>{{ record.updated_by.username|default:"Public Submission System" }}</strong>
-                  </div>
-                  {% if record.remarks %}
-                  <div class="mt-2 pt-2 border-top small text-secondary">
-                    <i class="bi bi-chat-left-quote me-1"></i> {{ record.remarks }}
-                  </div>
-                  {% endif %}
                 </div>
-              </li>
+              </div>
               {% endfor %}
-            </ul>
+            </div>
             {% else %}
-            <div class="text-muted small p-3 text-center">No audit transitions recorded yet.</div>
+            <div class="text-secondary text-center py-4">No audit transitions recorded yet.</div>
             {% endif %}
           </div>
         </div>
+      </div>
 
-        <!-- Right Column: Status Transition Action Card -->
-        <div class="col-lg-5">
-          <div class="card border-0 shadow-sm rounded-3 p-4 bg-white sticky-top" style="top: 1.5rem;">
-            <h2 class="h6 fw-bold border-bottom pb-2 mb-3">Update Lead Status</h2>
-            <p class="small text-muted mb-3">
-              Advance this inquiry through the 6-stage maturity pipeline. Every change is logged with your administrator identity.
-            </p>
-
-            <form method="post" action="{% url 'dashboard:lead_status_update' inquiry.reference_id %}">
+      <!-- Right Column: Status Update & Follow-up Scheduling Forms -->
+      <div class="col-lg-4">
+        <!-- 1. Stage Transition Action Card -->
+        <div class="card mb-3 shadow-sm border-primary border-opacity-25">
+          <div class="card-header bg-primary-lt">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-refresh text-primary"></i> Update Lead Stage
+            </h3>
+          </div>
+          <div class="card-body">
+            <form action="{% url 'dashboard:lead_status_update' inquiry.reference_id %}" method="post">
               {% csrf_token %}
-
               <div class="mb-3">
-                <label for="id_new_status" class="form-label small fw-semibold">New Stage</label>
+                <label class="form-label" for="id_new_status">Next Pipeline Stage</label>
                 {{ update_form.new_status }}
                 {% if update_form.new_status.errors %}
-                <div class="text-danger small mt-1">
-                  {{ update_form.new_status.errors|striptags }}
-                </div>
+                <div class="text-danger small mt-1">{{ update_form.new_status.errors|striptags }}</div>
                 {% endif %}
               </div>
-
-              <div class="mb-4">
-                <label for="id_remarks" class="form-label small fw-semibold">Audit Remarks (Optional)</label>
+              <div class="mb-3">
+                <label class="form-label" for="id_remarks">Stage Change Remarks</label>
                 {{ update_form.remarks }}
-                <div class="form-text small">Explain reason for status change (max 500 characters).</div>
+                <div class="form-text small">Log client feedback or reason for stage change.</div>
                 {% if update_form.remarks.errors %}
-                <div class="text-danger small mt-1">
-                  {{ update_form.remarks.errors|striptags }}
-                </div>
+                <div class="text-danger small mt-1">{{ update_form.remarks.errors|striptags }}</div>
                 {% endif %}
               </div>
-
-              <button type="submit" class="btn btn-sahay-primary w-100">
-                <i class="bi bi-check2-circle me-1"></i> Apply Status Update
+              <button type="submit" class="btn btn-primary w-100">
+                <i class="ti ti-check me-1"></i> Apply Status Update
               </button>
             </form>
+          </div>
+          <div class="card-footer bg-transparent text-secondary small py-2">
+            <i class="ti ti-shield-check text-green me-1"></i>
+            No-op updates (same status) are rejected to preserve clean audit integrity.
+          </div>
+        </div>
 
-            <div class="alert alert-light border small text-muted mt-3 mb-0">
-              <i class="bi bi-shield-check text-primary me-1"></i>
-              <strong>Atomic Audit Guarantee:</strong> No-op transitions (updating to the same status) are rejected to keep history clean and transparent.
-            </div>
+        <!-- 2. Schedule Follow-up Card -->
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-calendar-plus text-yellow"></i> Schedule Follow-up
+            </h3>
+          </div>
+          <div class="card-body">
+            <form action="{% url 'dashboard:schedule_follow_up' inquiry.reference_id %}" method="post">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label class="form-label" for="id_follow_up_date">Date & Time</label>
+                {{ follow_up_form.follow_up_date }}
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="id_remarks_fu">Follow-up Objective</label>
+                {{ follow_up_form.remarks }}
+              </div>
+              <button type="submit" class="btn btn-outline-warning w-100">
+                <i class="ti ti-clock-check me-1"></i> Save Follow-up Schedule
+              </button>
+            </form>
           </div>
         </div>
       </div>

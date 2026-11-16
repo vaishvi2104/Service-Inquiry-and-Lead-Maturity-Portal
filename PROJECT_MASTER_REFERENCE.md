@@ -13,7 +13,8 @@
 * **Technology Stack:**
   * **Backend:** Python 3.12, Django 5.2.5 (ORM, templates, forms, auth, sessions, messages).
   * **Database:** SQLite (relational schema with indexes, transactions, and foreign key constraints; PostgreSQL-ready).
-  * **Frontend:** HTML5, CSS3, Vanilla JavaScript (zero TypeScript, zero framework dependencies), Bootstrap 5.3, Bootstrap Icons 1.11.
+  * **Frontend (Admin Portal):** Official **Tabler UI** (`@tabler/core` 1.6.1), Tabler Icons (`@tabler/icons-webfont`), ApexCharts (MIT), Dark/Light mode theme engine, zero frontend framework build dependency.
+  * **Frontend (Public Portal):** Dedicated clean corporate landing page using custom modular CSS (`static/css/style.css`), Vanilla JavaScript, responsive service cards, and anti-bot protections.
   * **Environment Management:** Hybrid environment loader supporting `python-dotenv` and standard library fallback.
 
 ---
@@ -212,24 +213,26 @@ The lead maturity pipeline strictly uses the 6 required stages:
 
 ---
 
-## 8. Automated Testing Evidence (51 Tests + 10 E2E Browser Steps)
+## 8. Automated Testing Evidence (63 Tests + 12 Tabler Live Browser Pages)
 
 ```text
-Ran 51 tests in 23.698s
-OK (0 failures, 0 errors, 0 skips)
+Ran 63 tests in 39.620s
+OK (63 passed, 0 failures, 0 errors, 0 skips)
 ```
 
-### Live Browser End-to-End Verification (10 / 10 Steps Passed)
-* **Step 1:** Public Homepage loaded, verified brand title, hero headline, 4 service cards, and mandatory statutory disclaimer.
-* **Step 2:** "Enquire Now" button clicked on Company Incorporation card; verified smooth-scroll and dropdown auto-selection (`company_incorporation`).
-* **Step 3:** Filled public inquiry form for "Vaishvi Shah" (`9876543210`, `vaishvi@example.com`); verified CSRF and client numeric masking; submitted form.
-* **Step 4:** Redirection to confirmation page via Post/Redirect/Get; generated reference ID `SS-20261116-D9AF` displayed; verified copy-to-clipboard button.
-* **Step 5:** Accessed `/dashboard/`; unauthenticated access safely redirected to `/dashboard/login/?next=/dashboard/`; authenticated using staff credentials (`admin` / `AdminPassword123!`).
-* **Step 6:** Executive overview verified; dynamic metrics calculated; submitted lead `SS-20261116-D9AF` confirmed in recent inquiries table.
-* **Step 7:** Customer leads directory search tested with query "Vaishvi"; verified search filter cleanly isolated the target record.
-* **Step 8:** Lead detail page inspected; customer message displayed safely escaped; prefilled WhatsApp action verified (`wa.me/919876543210?text=...`).
-* **Step 9:** Atomic status transition executed: advanced stage to "Contacted", entered audit remarks; verified success alert banner, status badge updated to "Contacted", and stage transition timeline recorded previous/new status, `admin` actor, remarks, and timestamp.
-* **Step 10:** Logout executed via POST; verified session invalidation and redirection to login page.
+### Tabler UI Live Browser Verification (12 / 12 Pages Verified)
+* **Page 1:** Public Corporate Website (`/`)
+* **Page 2:** Tabler Admin Login (`/dashboard/login/`)
+* **Page 3:** Main Dashboard with 8 KPI cards & ApexCharts (`/dashboard/`)
+* **Page 4:** All Inquiries / Leads Directory with filters (`/dashboard/leads/`)
+* **Page 5:** Lead Details with WhatsApp button & status update (`/dashboard/leads/<ref>/`)
+* **Page 6:** Add New Lead Form (`/dashboard/leads/create/`)
+* **Page 7:** Lead Pipeline / 6-Stage Kanban Board (`/dashboard/kanban/`)
+* **Page 8:** Follow-up Management Desk (`/dashboard/follow-ups/`)
+* **Page 9:** Lead Status History Audit Log (`/dashboard/history/`)
+* **Page 10:** Advanced Search & Query Builder with CSV Export (`/dashboard/search/`)
+* **Page 11:** Admin Profile & System Settings (`/dashboard/profile/`)
+* **Page 12:** Tabler Dark Mode Switch (`data-bs-theme="dark"`)
 
 ### Breakdown of Unit & Integration Test Suites
 * **`inquiries/tests/test_models.py` (7 tests):**

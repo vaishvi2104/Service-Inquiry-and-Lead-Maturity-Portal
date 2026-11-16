@@ -1,0 +1,173 @@
+{% extends 'tabler_base.html' %}
+{% load static %}
+
+{% block title %}Admin Profile & Settings — Sahay LeadFlow{% endblock %}
+
+{% block content %}
+<div class="page-body">
+  <div class="container-xl">
+    <div class="page-header d-print-none mb-3">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <div class="page-pretitle text-uppercase">Account & Administration</div>
+          <h2 class="page-title d-flex align-items-center gap-2">
+            <span>Staff Profile & Platform Settings</span>
+          </h2>
+        </div>
+      </div>
+    </div>
+
+    <div class="row row-cards">
+      <!-- Left Column: User Profile Card & System Settings -->
+      <div class="col-lg-4">
+        <!-- User Identity Card -->
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body text-center py-4">
+            <span class="avatar avatar-xl bg-primary text-white rounded-circle fs-1 mb-3">
+              {{ user_obj.username|slice:":1"|upper }}
+            </span>
+            <h3 class="mb-1">{{ user_obj.get_full_name|default:user_obj.username }}</h3>
+            <div class="text-secondary small mb-3">{{ user_obj.email|default:"No email configured" }}</div>
+            <div>
+              {% if user_obj.is_superuser %}
+              <span class="badge bg-purple-lt fs-5">Super Administrator</span>
+              {% else %}
+              <span class="badge bg-blue-lt fs-5">Staff Consultant</span>
+              {% endif %}
+            </div>
+          </div>
+          <div class="d-flex border-top text-center">
+            <div class="p-3 w-50 border-end">
+              <div class="text-secondary small">Joined</div>
+              <div class="fw-bold">{{ user_obj.date_joined|date:"d M Y" }}</div>
+            </div>
+            <div class="p-3 w-50">
+              <div class="text-secondary small">Last Login</div>
+              <div class="fw-bold">{{ user_obj.last_login|date:"d M Y"|default:"Active Now" }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System & Security Configuration Card -->
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-server text-primary"></i> System Parameters
+            </h3>
+          </div>
+          <div class="card-body">
+            <div class="datagrid">
+              <div class="datagrid-item">
+                <div class="datagrid-title">Platform</div>
+                <div class="datagrid-content">Django 5.2.5 (Python 3.12)</div>
+              </div>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Database</div>
+                <div class="datagrid-content">SQLite3 Relational Storage</div>
+              </div>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Session Security</div>
+                <div class="datagrid-content">HTTPOnly &bull; SameSite=Lax</div>
+              </div>
+              <div class="datagrid-item">
+                <div class="datagrid-title">CSRF Protection</div>
+                <div class="datagrid-content text-green">
+                  <i class="ti ti-shield-check me-1"></i> Active Global Middleware
+                </div>
+              </div>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Spam Defense</div>
+                <div class="datagrid-content">Honeypot + IP Rate Limiting</div>
+              </div>
+              <div class="datagrid-item">
+                <div class="datagrid-title">Theme System</div>
+                <div class="datagrid-content">Tabler Light / Dark Mode</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Profile Edit & Password Change -->
+      <div class="col-lg-8">
+        <!-- 1. Profile Information Update -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-user-edit text-primary"></i> Edit Profile Information
+            </h3>
+          </div>
+          <form method="post" action="{% url 'dashboard:profile' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="update_profile">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="id_first_name">First Name</label>
+                  {{ profile_form.first_name }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="id_last_name">Last Name</label>
+                  {{ profile_form.last_name }}
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="id_email">Official Email Address</label>
+                  {{ profile_form.email }}
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-end">
+              <button type="submit" class="btn btn-primary">
+                <i class="ti ti-device-floppy me-1"></i> Update Profile Details
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 2. Security & Password Change -->
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <h3 class="card-title d-flex align-items-center gap-2">
+              <i class="ti ti-lock-access text-warning"></i> Change Password
+            </h3>
+          </div>
+          <form method="post" action="{% url 'dashboard:profile' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="change_password">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label" for="id_old_password">Current Password</label>
+                  {{ password_form.old_password }}
+                  {% if password_form.old_password.errors %}
+                  <div class="text-danger small mt-1">{{ password_form.old_password.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="id_new_password1">New Password</label>
+                  {{ password_form.new_password1 }}
+                  {% if password_form.new_password1.errors %}
+                  <div class="text-danger small mt-1">{{ password_form.new_password1.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="id_new_password2">Confirm New Password</label>
+                  {{ password_form.new_password2 }}
+                  {% if password_form.new_password2.errors %}
+                  <div class="text-danger small mt-1">{{ password_form.new_password2.errors|striptags }}</div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-end">
+              <button type="submit" class="btn btn-outline-warning">
+                <i class="ti ti-key me-1"></i> Change Password
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
