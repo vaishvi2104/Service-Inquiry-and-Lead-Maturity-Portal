@@ -33,7 +33,7 @@ if DEBUG and '*' not in ALLOWED_HOSTS:
 # CSRF Trusted Origins for tunneling (ngrok, localtunnel), Render, and remote testing
 CSRF_TRUSTED_ORIGINS = get_list_env(
     'CSRF_TRUSTED_ORIGINS',
-    default='https://*.onrender.com,https://*.ngrok-free.app,https://*.ngrok.io,https://*.loca.lt,http://127.0.0.1,http://localhost'
+    default='https://*.onrender.com,https://*.ngrok-free.app,https://*.ngrok-free.dev,https://*.ngrok.io,https://*.loca.lt,http://127.0.0.1,http://localhost'
 )
 
 # Reverse proxy SSL header (essential for Render, Heroku, AWS, etc.)
