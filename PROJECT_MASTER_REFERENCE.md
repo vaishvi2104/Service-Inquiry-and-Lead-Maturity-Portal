@@ -212,14 +212,26 @@ The lead maturity pipeline strictly uses the 6 required stages:
 
 ---
 
-## 8. Automated Testing Evidence (51 Tests)
+## 8. Automated Testing Evidence (51 Tests + 10 E2E Browser Steps)
 
 ```text
 Ran 51 tests in 23.698s
 OK (0 failures, 0 errors, 0 skips)
 ```
 
-### Breakdown of Test Suites
+### Live Browser End-to-End Verification (10 / 10 Steps Passed)
+* **Step 1:** Public Homepage loaded, verified brand title, hero headline, 4 service cards, and mandatory statutory disclaimer.
+* **Step 2:** "Enquire Now" button clicked on Company Incorporation card; verified smooth-scroll and dropdown auto-selection (`company_incorporation`).
+* **Step 3:** Filled public inquiry form for "Vaishvi Shah" (`9876543210`, `vaishvi@example.com`); verified CSRF and client numeric masking; submitted form.
+* **Step 4:** Redirection to confirmation page via Post/Redirect/Get; generated reference ID `SS-20261116-D9AF` displayed; verified copy-to-clipboard button.
+* **Step 5:** Accessed `/dashboard/`; unauthenticated access safely redirected to `/dashboard/login/?next=/dashboard/`; authenticated using staff credentials (`admin` / `AdminPassword123!`).
+* **Step 6:** Executive overview verified; dynamic metrics calculated; submitted lead `SS-20261116-D9AF` confirmed in recent inquiries table.
+* **Step 7:** Customer leads directory search tested with query "Vaishvi"; verified search filter cleanly isolated the target record.
+* **Step 8:** Lead detail page inspected; customer message displayed safely escaped; prefilled WhatsApp action verified (`wa.me/919876543210?text=...`).
+* **Step 9:** Atomic status transition executed: advanced stage to "Contacted", entered audit remarks; verified success alert banner, status badge updated to "Contacted", and stage transition timeline recorded previous/new status, `admin` actor, remarks, and timestamp.
+* **Step 10:** Logout executed via POST; verified session invalidation and redirection to login page.
+
+### Breakdown of Unit & Integration Test Suites
 * **`inquiries/tests/test_models.py` (7 tests):**
   1. `test_inquiry_string_representation` — PASS
   2. `test_default_status_is_new` — PASS
