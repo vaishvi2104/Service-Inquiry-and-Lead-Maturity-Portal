@@ -59,7 +59,7 @@ All 10 requested administrative interfaces have been implemented, styled, and ve
 
 ### 4.2 Live Browser E2E Tests (Playwright)
 * **Total Live Pages Verified:** **12 / 12 Pages**
-* **Verification Script:** `scratch/test_tabler_live.py`
+* **Verification Script:** `scratch/comprehensive_field_live_test.py`
 * **Captured Artifacts:**
   1. `1_public_website.png`: Public corporate inquiry website
   2. `2_admin_login.png`: Tabler login interface

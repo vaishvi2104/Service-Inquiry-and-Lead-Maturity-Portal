@@ -9,7 +9,9 @@
 * **Organization:** **Start-Up Sahay Private Limited**
 * **Nature of Business:** Independent corporate consultancy and advisory services firm headquartered in Ahmedabad, Gujarat.
 * **Statutory Compliance:** Private Limited entity; strictly **not affiliated with, authorized by, or a representative of any government department, regulatory agency, or statutory board**. All statutory approvals (e.g., ROC incorporation, DPIIT recognition, Trademark grants, Seed Fund allocations) remain solely under the purview and discretion of the competent government authorities.
-* **Project Directory:** `C:\Users\VAISHVI SHAH\.gemini\antigravity\scratch\startupsahay-portal`
+* **Project Directory:** `startupsahay-portal/`
+* **Application Name:** **Sahay LeadFlow Portal**
+* **Repository:** `Service-Inquiry-and-Lead-Maturity-Portal`
 * **Technology Stack:**
   * **Backend:** Python 3.12, Django 5.2.5 (ORM, templates, forms, auth, sessions, messages).
   * **Database:** SQLite (relational schema with indexes, transactions, and foreign key constraints; PostgreSQL-ready).
@@ -358,7 +360,7 @@ Executed live against `http://127.0.0.1:8000/` using Playwright Chromium with vi
 
 ```powershell
 # 1. Navigate to project directory
-cd "C:\Users\VAISHVI SHAH\.gemini\antigravity\scratch\startupsahay-portal"
+cd startupsahay-portal
 
 # 2. (Optional) Create & activate a virtual environment
 python -m venv venv
@@ -414,8 +416,10 @@ python3 manage.py runserver
 
 ---
 
-## 10. Accessing the Authentic AI Trajectory
+## 10. Authentic AI Development Disclosure
 
-The complete machine-generated conversation history is preserved on disk:
-* **Transcript:** `C:\Users\VAISHVI SHAH\.gemini\antigravity\brain\73b26742-8e19-44e8-90c1-aa58fee1e77d\.system_generated\logs\transcript.jsonl`
-* **Conversation ID:** `73b26742-8e19-44e8-90c1-aa58fee1e77d`
+AI tools were used during development for assistance with implementation, debugging, documentation, and code review.
+
+The development workflow, architectural decisions, and verification results are documented in:
+* **Development History:** [docs/AI_CHAT_HISTORY.md](docs/AI_CHAT_HISTORY.md)
+* **Conversation Session ID:** `73b26742-8e19-44e8-90c1-aa58fee1e77d`

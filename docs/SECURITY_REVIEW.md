@@ -53,11 +53,11 @@ if not DEBUG:
 
 ## 4. Verification Evidence
 
-The test suite contains **51 automated tests** covering models, forms, public views, staff authentication, leads management, and security controls:
+The test suite contains **63 automated tests** covering models, forms, public views, staff authentication, leads management, Tabler features, and security controls:
 
 ```text
-Ran 51 tests in 23.698s
-OK (0 failures, 0 errors, 0 skips)
+Ran 63 tests in 35.758s
+OK (63 passed, 0 failures, 0 errors, 0 skips)
 ```
 
 Specific security test cases verified:
