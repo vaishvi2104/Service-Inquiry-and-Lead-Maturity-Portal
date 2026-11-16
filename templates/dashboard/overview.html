@@ -3,104 +3,98 @@
 
 {% block title %}Executive Overview — Sahay LeadFlow{% endblock %}
 
-{% block page_title %}Executive Lead Dashboard{% endblock %}
+{% block page_title %}Executive CRM Dashboard{% endblock %}
 
 {% block breadcrumbs %}
 <li class="breadcrumb-item"><a href="{% url 'dashboard:overview' %}">Home</a></li>
-<li class="breadcrumb-item active" aria-current="page">Dashboard Overview</li>
+<li class="breadcrumb-item active" aria-current="page">Dashboard</li>
 {% endblock %}
 
 {% block content %}
-<!-- Action Bar -->
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <div>
-    <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 small">
-      <i class="bi bi-circle-fill me-1" style="font-size: 0.5rem;"></i> Live System Operations
-    </span>
-  </div>
-  <div class="d-flex gap-2">
-    <a href="{% url 'dashboard:lead_create' %}" class="btn btn-primary btn-sm d-flex align-items-center gap-1">
-      <i class="bi bi-plus-lg"></i> <span>Add New Lead</span>
-    </a>
-    <a href="{% url 'dashboard:kanban' %}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
-      <i class="bi bi-kanban"></i> <span>Pipeline View</span>
-    </a>
-    <a href="{% url 'dashboard:export_csv' %}" class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1">
-      <i class="bi bi-download"></i> <span>Export CSV</span>
-    </a>
-  </div>
-</div>
-
-<!-- 4 Primary KPI Summary Cards (AdminLTE Info-Boxes) -->
-<div class="row g-3 mb-3">
+<!-- 4 Iconic AdminLTE 4 Small-Boxes -->
+<div class="row g-3 mb-4">
   <!-- 1. Total Inquiries -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="info-box">
-      <span class="info-box-icon text-bg-primary">
-        <i class="bi bi-folder-fill"></i>
-      </span>
-      <div class="info-box-content">
-        <span class="info-box-text">Total Inquiries</span>
-        <span class="info-box-number">{{ metrics.total }}</span>
+  <div class="col-lg-3 col-6">
+    <div class="small-box text-bg-primary">
+      <div class="inner">
+        <h3>{{ metrics.total }}</h3>
+        <p class="mb-0">Total Inquiries</p>
       </div>
+      <i class="small-box-icon bi bi-folder-fill"></i>
+      <a href="{% url 'dashboard:leads' %}" class="small-box-footer link-light link-underline-opacity-0">
+        Directory View <i class="bi bi-arrow-right-short"></i>
+      </a>
     </div>
   </div>
 
   <!-- 2. New Inquiries -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="info-box">
-      <span class="info-box-icon text-bg-info text-white">
-        <i class="bi bi-bell-fill"></i>
-      </span>
-      <div class="info-box-content">
-        <span class="info-box-text">New Inquiries</span>
-        <span class="info-box-number text-info">{{ metrics.new }}</span>
+  <div class="col-lg-3 col-6">
+    <div class="small-box text-bg-info text-white">
+      <div class="inner">
+        <h3>{{ metrics.new }}</h3>
+        <p class="mb-0">New Inquiries</p>
       </div>
+      <i class="small-box-icon bi bi-bell-fill"></i>
+      <a href="{% url 'dashboard:leads' %}?status=new" class="small-box-footer link-light link-underline-opacity-0">
+        Review New <i class="bi bi-arrow-right-short"></i>
+      </a>
     </div>
   </div>
 
   <!-- 3. Follow-ups Due -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="info-box">
-      <span class="info-box-icon text-bg-warning text-dark">
-        <i class="bi bi-alarm-fill"></i>
-      </span>
-      <div class="info-box-content">
-        <span class="info-box-text">Follow-ups Due</span>
-        <span class="info-box-number text-warning">{{ metrics.follow_ups_due }}</span>
+  <div class="col-lg-3 col-6">
+    <div class="small-box text-bg-warning">
+      <div class="inner">
+        <h3>{{ metrics.follow_ups_due }}</h3>
+        <p class="mb-0">Follow-ups Due</p>
       </div>
+      <i class="small-box-icon bi bi-alarm-fill"></i>
+      <a href="{% url 'dashboard:follow_ups' %}" class="small-box-footer link-dark link-underline-opacity-0">
+        Follow-up Desk <i class="bi bi-arrow-right-short"></i>
+      </a>
     </div>
   </div>
 
-  <!-- 4. Mature & Conversion -->
-  <div class="col-sm-6 col-xl-3">
-    <div class="info-box">
-      <span class="info-box-icon text-bg-success">
-        <i class="bi bi-award-fill"></i>
-      </span>
-      <div class="info-box-content">
-        <span class="info-box-text">Mature ({{ metrics.conversion_rate }}%)</span>
-        <span class="info-box-number text-success">{{ metrics.mature }}</span>
+  <!-- 4. Mature Leads -->
+  <div class="col-lg-3 col-6">
+    <div class="small-box text-bg-success">
+      <div class="inner">
+        <h3>{{ metrics.mature }} <span class="fs-6 fw-normal">({{ metrics.conversion_rate }}%)</span></h3>
+        <p class="mb-0">Mature Leads</p>
       </div>
+      <i class="small-box-icon bi bi-award-fill"></i>
+      <a href="{% url 'dashboard:leads' %}?status=mature" class="small-box-footer link-light link-underline-opacity-0">
+        Qualified Leads <i class="bi bi-arrow-right-short"></i>
+      </a>
     </div>
   </div>
 </div>
 
 <!-- Middle Row: Lead Status Summary & Service Breakdown -->
-<div class="row g-3 mb-3">
+<div class="row g-3 mb-4">
   <!-- Lead Status Summary Card -->
   <div class="col-lg-5">
-    <div class="card card-outline card-primary h-100">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title text-dark">
+    <div class="card card-primary card-outline h-100 mb-0 shadow-sm">
+      <div class="card-header border-bottom">
+        <h3 class="card-title fw-bold text-dark mb-0">
           <i class="bi bi-pie-chart-fill text-primary me-2"></i> Lead Maturity Distribution
         </h3>
-        <span class="badge bg-secondary-subtle text-secondary small">All Stages</span>
+        <div class="card-tools">
+          <a href="{% url 'dashboard:kanban' %}" class="btn btn-tool" title="View Kanban">
+            <i class="bi bi-kanban"></i>
+          </a>
+        </div>
       </div>
       <div class="card-body p-3">
-        <!-- Stage Breakdown List -->
         <div class="table-responsive">
-          <table class="table table-sm table-borderless align-middle mb-0">
+          <table class="table table-sm table-bordered align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Maturity Stage</th>
+                <th>Volume Ratio</th>
+                <th class="text-end">Leads</th>
+              </tr>
+            </thead>
             <tbody>
               <tr>
                 <td style="width: 35%;">
@@ -111,7 +105,7 @@
                     <div class="progress-bar bg-primary" style="width: {% if metrics.total > 0 %}{% widthratio metrics.new metrics.total 100 %}{% else %}0{% endif %}%;"></div>
                   </div>
                 </td>
-                <td class="text-end fw-bold" style="width: 20%;">{{ metrics.new }}</td>
+                <td class="text-end fw-bold font-monospace" style="width: 20%;">{{ metrics.new }}</td>
               </tr>
               <tr>
                 <td>
@@ -122,7 +116,7 @@
                     <div class="progress-bar bg-info" style="width: {% if metrics.total > 0 %}{% widthratio metrics.contacted metrics.total 100 %}{% else %}0{% endif %}%;"></div>
                   </div>
                 </td>
-                <td class="text-end fw-bold">{{ metrics.contacted }}</td>
+                <td class="text-end fw-bold font-monospace">{{ metrics.contacted }}</td>
               </tr>
               <tr>
                 <td>
@@ -133,7 +127,7 @@
                     <div class="progress-bar bg-warning" style="width: {% if metrics.total > 0 %}{% widthratio metrics.follow_up metrics.total 100 %}{% else %}0{% endif %}%;"></div>
                   </div>
                 </td>
-                <td class="text-end fw-bold">{{ metrics.follow_up }}</td>
+                <td class="text-end fw-bold font-monospace">{{ metrics.follow_up }}</td>
               </tr>
               <tr>
                 <td>
@@ -144,7 +138,7 @@
                     <div class="progress-bar" style="background-color: var(--status-proposal); width: {% if metrics.total > 0 %}{% widthratio metrics.proposal_sent metrics.total 100 %}{% else %}0{% endif %}%;"></div>
                   </div>
                 </td>
-                <td class="text-end fw-bold">{{ metrics.proposal_sent }}</td>
+                <td class="text-end fw-bold font-monospace">{{ metrics.proposal_sent }}</td>
               </tr>
               <tr>
                 <td>
@@ -155,7 +149,7 @@
                     <div class="progress-bar bg-success" style="width: {% if metrics.total > 0 %}{% widthratio metrics.mature metrics.total 100 %}{% else %}0{% endif %}%;"></div>
                   </div>
                 </td>
-                <td class="text-end fw-bold">{{ metrics.mature }}</td>
+                <td class="text-end fw-bold font-monospace">{{ metrics.mature }}</td>
               </tr>
               <tr>
                 <td>
@@ -166,7 +160,7 @@
                     <div class="progress-bar bg-secondary" style="width: {% if metrics.total > 0 %}{% widthratio metrics.closed metrics.total 100 %}{% else %}0{% endif %}%;"></div>
                   </div>
                 </td>
-                <td class="text-end fw-bold">{{ metrics.closed }}</td>
+                <td class="text-end fw-bold font-monospace">{{ metrics.closed }}</td>
               </tr>
             </tbody>
           </table>
@@ -177,44 +171,48 @@
 
   <!-- Service Track Breakdown Card -->
   <div class="col-lg-7">
-    <div class="card card-outline card-primary h-100">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title text-dark">
+    <div class="card card-primary card-outline h-100 mb-0 shadow-sm">
+      <div class="card-header border-bottom">
+        <h3 class="card-title fw-bold text-dark mb-0">
           <i class="bi bi-bar-chart-fill text-primary me-2"></i> Service Track Breakdown
         </h3>
-        <span class="badge bg-light text-secondary border small">Database Analytics</span>
+        <div class="card-tools">
+          <span class="badge bg-light text-secondary border small">Database Analytics</span>
+        </div>
       </div>
       <div class="card-body p-3">
-        <div id="chart-service-breakdown" style="min-height: 220px;"></div>
+        <div id="chart-service-breakdown" style="min-height: 240px;"></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Bottom Row: Recent Inquiries Table & Upcoming Follow-up Desk -->
+<!-- Bottom Row: Recent Inquiries Table & Upcoming Follow-ups -->
 <div class="row g-3">
-  <!-- Recent Leads Table -->
+  <!-- Recent Customer Inquiries Table -->
   <div class="col-lg-8">
-    <div class="card card-outline card-primary mb-0">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title text-dark">
+    <div class="card card-primary card-outline mb-0 shadow-sm">
+      <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+        <h3 class="card-title fw-bold text-dark mb-0">
           <i class="bi bi-clock-history text-primary me-2"></i> Recent Inquiries
         </h3>
-        <a href="{% url 'dashboard:leads' %}" class="btn btn-outline-primary btn-sm">
-          View All Leads <i class="bi bi-arrow-right ms-1"></i>
-        </a>
+        <div class="card-tools">
+          <a href="{% url 'dashboard:leads' %}" class="btn btn-outline-primary btn-sm">
+            View All Leads <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
       </div>
       <div class="card-body p-0">
         {% if recent_leads %}
         <div class="table-responsive">
-          <table class="table table-crm table-hover align-middle mb-0">
-            <thead>
+          <table class="table table-bordered table-striped table-hover align-middle mb-0">
+            <thead class="table-light">
               <tr>
                 <th>Reference ID</th>
                 <th>Customer</th>
                 <th>Service</th>
                 <th>Stage</th>
-                <th>Date</th>
+                <th>Received</th>
                 <th class="text-end">Action</th>
               </tr>
             </thead>
@@ -275,14 +273,16 @@
 
   <!-- Follow-up Overview Column -->
   <div class="col-lg-4">
-    <div class="card card-outline card-warning mb-0">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title text-dark">
+    <div class="card card-warning card-outline mb-0 shadow-sm">
+      <div class="card-header border-bottom d-flex justify-content-between align-items-center">
+        <h3 class="card-title fw-bold text-dark mb-0">
           <i class="bi bi-alarm-fill text-warning me-2"></i> Follow-up Desk
         </h3>
-        <a href="{% url 'dashboard:follow_ups' %}" class="btn btn-outline-warning btn-sm text-dark">
-          Manage <i class="bi bi-arrow-right ms-1"></i>
-        </a>
+        <div class="card-tools">
+          <a href="{% url 'dashboard:follow_ups' %}" class="btn btn-outline-warning btn-sm text-dark">
+            Manage <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
       </div>
       <div class="card-body p-3">
         {% if upcoming_follow_ups %}
@@ -318,7 +318,6 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   if (typeof ApexCharts !== "undefined") {
-    // 1. Service Breakdown Horizontal Bar Chart
     var serviceLabels = [];
     var serviceCounts = [];
     {% for s in metrics.service_breakdown %}
@@ -333,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }],
       chart: {
         type: 'bar',
-        height: 220,
+        height: 240,
         toolbar: { show: false }
       },
       plotOptions: {

@@ -8,60 +8,55 @@
 {% endblock %}
 
 {% block content %}
-<!-- 1. Hero Section -->
+<!-- 1. Corporate Hero Section -->
 <section class="corp-hero">
   <div class="container">
-    <div class="row align-items-center g-5">
-      <div class="col-lg-7">
-        <div class="corp-badge-pill">
-          <i class="bi bi-shield-check"></i>
-          <span>Registered Corporate Consultancy Firm</span>
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8">
+        <div class="d-inline-block text-uppercase fw-bold text-primary small mb-2 tracking-wide" style="font-size: 0.78rem; letter-spacing: 0.08em;">
+          Corporate Secretarial &bull; Regulatory Diligence &bull; Statutory Compliance Advisory
         </div>
-        <h1 class="corp-hero-title">
+        <h1 class="corp-hero-title mb-3">
           Guiding Indian Entrepreneurs from Entity Incorporation to Regulatory Maturity
         </h1>
-        <p class="corp-hero-lead">
-          Start-Up Sahay Private Limited delivers procedural consultancy, statutory documentation drafting, and compliance advisory for startups, MSMEs, and expanding corporate entities across India.
+        <p class="corp-hero-lead mb-4">
+          Start-Up Sahay Private Limited delivers end-to-end procedural consultancy, statutory drafting, and regulatory filing support for startups, growing MSMEs, and established corporate entities across India.
         </p>
-        <div class="d-flex flex-wrap gap-2 mt-4">
+        <div class="d-flex flex-wrap gap-2">
           <button type="button" class="btn btn-corp-primary" data-scroll-target="services-section">
-            <i class="bi bi-folder-check me-1"></i> Our Services
+            <i class="bi bi-folder-check me-1"></i> Practice Areas
           </button>
           <button type="button" class="btn btn-corp-outline" data-scroll-target="process-section">
-            <i class="bi bi-diagram-3 me-1"></i> Advisory Process
+            <i class="bi bi-diagram-3 me-1"></i> Advisory Methodology
           </button>
           <button type="button" class="btn btn-corp-secondary" data-scroll-target="inquiry-form-section">
-            <i class="bi bi-pencil-square me-1"></i> Submit Inquiry
+            <i class="bi bi-pencil-square me-1"></i> Submit Client Inquiry
           </button>
         </div>
       </div>
 
-      <div class="col-lg-5">
-        <div class="corp-hero-aside">
-          <h2 class="corp-hero-aside-title">
-            <i class="bi bi-briefcase me-2 text-primary"></i> Practice Disciplines
+      <div class="col-lg-4">
+        <!-- Structured Practice Snapshot Box -->
+        <div class="p-3 bg-white border rounded shadow-xs">
+          <h2 class="h6 fw-bold text-dark border-bottom pb-2 mb-3">
+            <i class="bi bi-file-earmark-text text-primary me-2"></i> Practice Snapshot
           </h2>
-          <p class="small text-muted mb-3">
-            Corporate structuring and regulatory recognition require precise legal drafting and adherence to statutory guidelines.
-          </p>
           <div class="d-flex flex-column gap-2 small">
-            <div class="d-flex align-items-start gap-2 p-2 bg-white border rounded">
-              <i class="bi bi-check2-square text-primary mt-1"></i>
-              <div>
-                <strong>MCA Compliance Preparation:</strong> Entity structuring for Private Limited, LLP, and OPC registrations.
-              </div>
+            <div class="py-1 border-bottom d-flex justify-content-between">
+              <span class="text-muted">Entity Type:</span>
+              <span class="fw-semibold text-dark">Private Limited Firm</span>
             </div>
-            <div class="d-flex align-items-start gap-2 p-2 bg-white border rounded">
-              <i class="bi bi-check2-square text-primary mt-1"></i>
-              <div>
-                <strong>Statutory Recognition:</strong> Eligibility assessment and documentation under Startup India DPIIT framework.
-              </div>
+            <div class="py-1 border-bottom d-flex justify-content-between">
+              <span class="text-muted">Registered Office:</span>
+              <span class="fw-semibold text-dark">Ahmedabad, Gujarat</span>
             </div>
-            <div class="d-flex align-items-start gap-2 p-2 bg-white border rounded">
-              <i class="bi bi-check2-square text-primary mt-1"></i>
-              <div>
-                <strong>Brand Classification:</strong> Comprehensive Nice classification and preliminary registry search.
-              </div>
+            <div class="py-1 border-bottom d-flex justify-content-between">
+              <span class="text-muted">Regulatory Scope:</span>
+              <span class="fw-semibold text-dark">MCA, DPIIT, Trade Marks</span>
+            </div>
+            <div class="py-1 d-flex justify-content-between">
+              <span class="text-muted">Inquiry Desk:</span>
+              <span class="text-success fw-bold"><i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Active Assistance</span>
             </div>
           </div>
         </div>
@@ -70,21 +65,41 @@
   </div>
 </section>
 
-<!-- 2. Company Introduction -->
+<!-- Fact Strip -->
+<div class="py-2 bg-light border-bottom small text-secondary">
+  <div class="container">
+    <div class="row text-center text-md-start g-2">
+      <div class="col-md-3">
+        <i class="bi bi-building text-primary me-1"></i> SPICe+ MCA Company Incorporation
+      </div>
+      <div class="col-md-3">
+        <i class="bi bi-award text-primary me-1"></i> Startup India DPIIT Recognition
+      </div>
+      <div class="col-md-3">
+        <i class="bi bi-shield-check text-primary me-1"></i> Class 1–45 Trademark Clearance
+      </div>
+      <div class="col-md-3">
+        <i class="bi bi-cash-coin text-primary me-1"></i> Seed Fund Application Support
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Company Introduction & Statutory Disclosures -->
 <section id="about-section" class="corp-section corp-section-alt">
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-lg-7">
-        <span class="corp-section-subtitle">Corporate Background</span>
+        <span class="corp-section-subtitle">Corporate Background & Governance</span>
         <h2 class="corp-section-title">Start-Up Sahay Private Limited</h2>
         <p class="mt-3 text-muted">
-          Start-Up Sahay Private Limited is an independent corporate advisory and documentation consultancy based in Ahmedabad, Gujarat. We assist Indian founders, early-stage enterprises, and family businesses in navigating complex procedural steps associated with statutory registrations.
+          Headquartered in Ahmedabad, Gujarat, Start-Up Sahay Private Limited is an independent private consultancy firm dedicated to helping aspiring entrepreneurs, MSMEs, and established enterprises streamline their commercial documentation, trademark classification, and corporate compliance filings.
         </p>
         <p class="text-muted">
-          Our advisory approach emphasizes transparent documentation, structured checklists, and disciplined follow-up workflows. We work alongside founders to ensure their initial filings and regulatory submissions are prepared thoroughly according to current legal frameworks.
+          Our team focuses on structured processes, transparent procedural reviews, and prompt customer assistance. We bridge information gaps for founders working toward regulatory maturity.
         </p>
 
-        <!-- Mandatory Non-Affiliation Disclaimer -->
+        <!-- Mandatory Non-Affiliation Statutory Disclaimer -->
         <div class="corp-disclaimer-box">
           <div class="corp-disclaimer-title">
             <i class="bi bi-shield-exclamation me-1"></i> Important Statutory Notice
@@ -98,28 +113,28 @@
       <div class="col-lg-5">
         <div class="row g-3">
           <div class="col-sm-6">
-            <div class="p-3 bg-white border rounded text-center">
+            <div class="p-3 bg-white border rounded text-center h-100">
               <i class="bi bi-building fs-3 text-primary mb-2 d-block"></i>
               <h6 class="fw-bold mb-1">Corporate Structuring</h6>
               <p class="small text-muted mb-0">ROC & MCA procedural guidance for eligible entity formats.</p>
             </div>
           </div>
           <div class="col-sm-6">
-            <div class="p-3 bg-white border rounded text-center">
+            <div class="p-3 bg-white border rounded text-center h-100">
               <i class="bi bi-shield-lock fs-3 text-primary mb-2 d-block"></i>
               <h6 class="fw-bold mb-1">IP Diligence</h6>
               <p class="small text-muted mb-0">Class-wise trademark documentation and clearance checks.</p>
             </div>
           </div>
           <div class="col-sm-6">
-            <div class="p-3 bg-white border rounded text-center">
+            <div class="p-3 bg-white border rounded text-center h-100">
               <i class="bi bi-journal-check fs-3 text-primary mb-2 d-block"></i>
               <h6 class="fw-bold mb-1">DPIIT Preparedness</h6>
               <p class="small text-muted mb-0">Criteria review and submission dossier compilation.</p>
             </div>
           </div>
           <div class="col-sm-6">
-            <div class="p-3 bg-white border rounded text-center">
+            <div class="p-3 bg-white border rounded text-center h-100">
               <i class="bi bi-headset fs-3 text-primary mb-2 d-block"></i>
               <h6 class="fw-bold mb-1">Inquiry Tracking</h6>
               <p class="small text-muted mb-0">Dedicated tracking code issued for every client submission.</p>
@@ -131,14 +146,14 @@
   </div>
 </section>
 
-<!-- 3. Core Services -->
+<!-- 3. Specialized Practice Areas (4 Services) -->
 <section id="services-section" class="corp-section">
   <div class="container">
     <div class="corp-section-header text-center">
-      <span class="corp-section-subtitle">Consultancy Offerings</span>
-      <h2 class="corp-section-title">Specialized Advisory Services</h2>
+      <span class="corp-section-subtitle">Practice Areas</span>
+      <h2 class="corp-section-title">Specialized Corporate Services</h2>
       <p class="corp-section-desc">
-        We deliver structured consultancy across four mandatory corporate practice tracks, helping businesses meet regulatory criteria with complete documentation integrity.
+        We provide structured consultancy across four mandatory practice tracks, assisting enterprises in satisfying procedural criteria with complete documentation integrity.
       </p>
     </div>
 
@@ -165,14 +180,14 @@
   </div>
 </section>
 
-<!-- 4. Business Support Process -->
+<!-- 4. Business Support Process (4 Phases) -->
 <section id="process-section" class="corp-section corp-section-alt">
   <div class="container">
     <div class="corp-section-header text-center">
-      <span class="corp-section-subtitle">Structured Methodology</span>
+      <span class="corp-section-subtitle">Advisory Workflow</span>
       <h2 class="corp-section-title">Our Business Advisory Process</h2>
       <p class="corp-section-desc">
-        Every inquiry follows a predictable four-stage operational workflow to ensure thorough document evaluation and timely procedural delivery.
+        Every inquiry follows a predictable four-phase operational workflow to ensure thorough document evaluation and timely procedural delivery.
       </p>
     </div>
 
@@ -182,14 +197,14 @@
           <div class="corp-step-num">1</div>
           <h4 class="corp-step-title">Requirement Assessment</h4>
           <p class="corp-step-desc">
-            We review the legal status of your enterprise, business objectives, and identify the required statutory filings or regulatory registrations.
+            We evaluate entity scope, director/partner documentation, and identify required statutory filings or regulatory prerequisites under MCA or DPIIT rules.
           </p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3">
         <div class="corp-process-step">
           <div class="corp-step-num">2</div>
-          <h4 class="corp-step-title">Document Preparation</h4>
+          <h4 class="corp-step-title">Documentation Preparation</h4>
           <p class="corp-step-desc">
             Our team compiles standard draft agreements, affidavits, MOA/AOA clauses, or trademark classification schedules following official checklists.
           </p>
@@ -221,7 +236,7 @@
 <section id="faq-section" class="corp-section">
   <div class="container">
     <div class="corp-section-header text-center">
-      <span class="corp-section-subtitle">Clarifications</span>
+      <span class="corp-section-subtitle">Procedural Clarity</span>
       <h2 class="corp-section-title">Frequently Asked Questions</h2>
       <p class="corp-section-desc">
         Essential procedural guidance regarding company incorporation, startup recognition, trademarks, and government seed fund applications.
@@ -306,7 +321,7 @@
   </div>
 </section>
 
-<!-- 6. Inquiry Submission Form -->
+<!-- 6. Client Inquiry Intake Desk -->
 <section id="inquiry-form-section" class="corp-section corp-section-alt">
   <div class="container">
     <div class="row justify-content-center">
@@ -403,7 +418,7 @@
   </div>
 </section>
 
-<!-- 7. Corporate Office & Contact Details -->
+<!-- 7. Corporate Office Contact Strip -->
 <section id="contact-section" class="corp-section">
   <div class="container">
     <div class="row g-4 text-center text-md-start">
