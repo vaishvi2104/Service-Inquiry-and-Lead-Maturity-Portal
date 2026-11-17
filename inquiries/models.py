@@ -139,19 +139,6 @@ class Inquiry(models.Model):
         return badge_map.get(self.status, 'bg-secondary text-white')
 
     @property
-    def tabler_badge_class(self) -> str:
-        """Return modern Tabler light badge class for the current lead status."""
-        badge_map = {
-            LeadStatus.NEW: 'bg-blue-lt',
-            LeadStatus.CONTACTED: 'bg-azure-lt',
-            LeadStatus.FOLLOW_UP: 'bg-yellow-lt',
-            LeadStatus.PROPOSAL_SENT: 'bg-purple-lt',
-            LeadStatus.MATURE: 'bg-green-lt',
-            LeadStatus.CLOSED: 'bg-secondary-lt',
-        }
-        return badge_map.get(self.status, 'bg-secondary-lt')
-
-    @property
     def adminlte_badge_class(self) -> str:
         """Return AdminLTE 4 badge-stage class for the current lead status."""
         badge_map = {
@@ -177,9 +164,9 @@ class Inquiry(models.Model):
         Generate a wa.me URL for the 10-digit Indian mobile number.
         Under documented assignment policy, India country code '91' is prefixed
         to the normalized 10-digit number.
-        Returns None if the number is not a valid 10-digit number.
+        Returns None if the number is not a valid 10-digit ASCII number.
         """
-        raw_digits = ''.join(ch for ch in str(self.mobile_number) if ch.isdigit())
+        raw_digits = ''.join(ch for ch in str(self.mobile_number) if ch in '0123456789')
         if len(raw_digits) != 10:
             return None
 
@@ -244,3 +231,44 @@ class LeadStatusHistory(models.Model):
     def __str__(self) -> str:
         actor = self.updated_by.username if self.updated_by else 'System'
         return f"{self.inquiry.reference_id}: {self.previous_status} -> {self.new_status} by {actor}"
+
+
+class FollowUpNote(models.Model):
+    """
+    Individual follow-up notes preserving complete history, timestamps,
+    and authoring staff information without silent truncation or data loss.
+    """
+    id = models.BigAutoField(primary_key=True)
+    inquiry = models.ForeignKey(
+        Inquiry,
+        on_delete=models.CASCADE,
+        related_name='follow_up_notes',
+        help_text='Inquiry associated with this follow-up note.'
+    )
+    content = models.TextField(
+        max_length=2000,
+        help_text='Note content or customer conversation details.'
+    )
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='authored_follow_up_notes',
+        help_text='Staff member who authored this note.'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        db_index=True,
+        help_text='Timestamp when the note was added.'
+    )
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Follow-up Note'
+        verbose_name_plural = 'Follow-up Notes'
+
+    def __str__(self) -> str:
+        author = self.created_by.username if self.created_by else 'System'
+        return f"Note on {self.inquiry.reference_id} by {author} at {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+

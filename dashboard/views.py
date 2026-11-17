@@ -1,5 +1,5 @@
 """
-Views for Sahay LeadFlow Tabler Staff Management Dashboard.
+Views for Sahay LeadFlow Staff Management Dashboard.
 Provides complete CRM capabilities: authentication, KPI analytics, Kanban pipeline,
 lead lifecycle editing, follow-up desk, audit history, advanced search, and profile settings.
 """
@@ -11,8 +11,8 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, upda
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
-from inquiries.models import Inquiry, LeadStatus, ServiceChoices, LeadStatusHistory
-from inquiries.services import generate_unique_reference_id
+from inquiries.models import Inquiry, LeadStatus, ServiceChoices, LeadStatusHistory, FollowUpNote
+from inquiries.services import generate_unique_reference_id, get_client_ip
 from dashboard.forms import (
     StaffLoginForm,
     LeadStatusUpdateForm,
@@ -28,6 +28,9 @@ from dashboard.services import (
     get_kanban_columns,
     get_follow_ups_data,
     export_leads_to_csv,
+    is_login_locked,
+    record_login_failure,
+    reset_login_failures,
 )
 
 
@@ -49,19 +52,37 @@ def staff_required(view_func):
     return _wrapped_view
 
 
-# 1. Admin Login
+# 1. Admin Login with Brute-Force Protection
 def login_view(request):
-    """Staff login view styled with Tabler single-card layout."""
+    """
+    Staff login view protected against brute-force password guessing.
+    Throttles repeated failures by IP and username without revealing whether account exists.
+    """
     if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
         return redirect('dashboard:overview')
 
     redirect_to = request.GET.get('next', request.POST.get('next', ''))
+    client_ip = get_client_ip(request)
 
     if request.method == 'POST':
+        attempted_username = request.POST.get('username', '').strip()
+
+        # Check temporary lockout threshold
+        if is_login_locked(client_ip, attempted_username):
+            messages.error(
+                request,
+                'Too many failed login attempts. For security, access is temporarily locked. '
+                'Please try again in a few minutes.'
+            )
+            form = StaffLoginForm(request)
+            return render(request, 'dashboard/login.html', {'form': form, 'next': redirect_to})
+
         form = StaffLoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             if user.is_staff or user.is_superuser:
+                # Reset failure counter on successful authentication
+                reset_login_failures(client_ip, attempted_username)
                 auth_login(request, user)
                 messages.success(request, f'Welcome back, {user.get_full_name() or user.username}!')
                 if redirect_to and url_has_allowed_host_and_scheme(
@@ -72,8 +93,10 @@ def login_view(request):
                     return redirect(redirect_to)
                 return redirect('dashboard:overview')
             else:
+                record_login_failure(client_ip, attempted_username)
                 messages.error(request, 'Your account does not possess staff privileges to access this portal.')
         else:
+            record_login_failure(client_ip, attempted_username)
             messages.error(request, 'Invalid username or password. Please verify credentials.')
     else:
         form = StaffLoginForm(request)
@@ -99,7 +122,7 @@ def logout_view(request):
 @staff_required
 def overview_view(request):
     """
-    Main executive dashboard with Tabler KPI cards, ApexCharts visualizations,
+    Main executive dashboard with KPI cards, ApexCharts visualizations,
     recent inquiries list, and upcoming follow-ups.
     """
     metrics = get_dashboard_metrics()
@@ -156,6 +179,7 @@ def lead_detail_view(request, reference_id: str):
     """Comprehensive lead profile, WhatsApp link, status update, and history timeline."""
     inquiry = get_object_or_404(Inquiry, reference_id=reference_id)
     history_records = inquiry.status_history.all().select_related('updated_by').order_by('-created_at')
+    follow_up_notes = inquiry.follow_up_notes.all().select_related('created_by').order_by('-created_at')
     update_form = LeadStatusUpdateForm(initial={'new_status': inquiry.status})
     follow_up_form = FollowUpScheduleForm(initial={
         'follow_up_date': inquiry.follow_up_date.strftime('%Y-%m-%dT%H:%M') if inquiry.follow_up_date else ''
@@ -165,6 +189,7 @@ def lead_detail_view(request, reference_id: str):
     return render(request, 'dashboard/lead_detail.html', {
         'inquiry': inquiry,
         'history_records': history_records,
+        'follow_up_notes': follow_up_notes,
         'update_form': update_form,
         'follow_up_form': follow_up_form,
         'whatsapp_url': whatsapp_url,
@@ -198,7 +223,6 @@ def lead_status_update_view(request, reference_id: str):
     else:
         messages.error(request, 'Invalid status update request. Please review the form.')
 
-    # Redirect back to where requested (kanban or detail)
     redirect_target = request.POST.get('next_page', '')
     if redirect_target == 'kanban':
         return redirect('dashboard:kanban')
@@ -239,27 +263,41 @@ def lead_create_view(request):
     })
 
 
-# Edit Lead
+# Edit Lead: Centralized Status Transitions
 @staff_required
 def lead_edit_view(request, reference_id: str):
-    """Edit customer details and internal notes for an existing lead."""
+    """
+    Edit customer details and internal notes for an existing lead.
+    Guarantees every status modification passes through the centralized
+    status transition service with row locking and audit logging.
+    """
     inquiry = get_object_or_404(Inquiry, reference_id=reference_id)
+    original_status = inquiry.status
 
     if request.method == 'POST':
         form = LeadForm(request.POST, instance=inquiry)
         if form.is_valid():
-            old_status = inquiry.status
-            updated_inquiry = form.save()
+            target_status = form.cleaned_data['status']
+            status_changed = (target_status != original_status)
 
-            # If status was modified during edit, record history
-            if updated_inquiry.status != old_status:
-                LeadStatusHistory.objects.create(
-                    inquiry=updated_inquiry,
-                    previous_status=old_status,
-                    new_status=updated_inquiry.status,
-                    updated_by=request.user,
+            # Save non-status fields first
+            updated_inquiry = form.save(commit=False)
+            if status_changed:
+                # Keep original status so execute_status_transition handles transition safely
+                updated_inquiry.status = original_status
+            updated_inquiry.save()
+
+            # If status was modified, route through the central transition service
+            if status_changed:
+                success, msg, _ = execute_status_transition(
+                    inquiry_id=inquiry.id,
+                    new_status=target_status,
+                    acting_user=request.user,
                     remarks='Stage updated via lead edit form.',
                 )
+                if not success:
+                    messages.error(request, msg)
+                    return redirect('dashboard:lead_detail', reference_id=inquiry.reference_id)
 
             messages.success(request, f'Lead {inquiry.reference_id} updated successfully.')
             return redirect('dashboard:lead_detail', reference_id=inquiry.reference_id)
@@ -325,10 +363,13 @@ def follow_ups_view(request):
     })
 
 
-# Schedule Follow-up Action
+# Schedule Follow-up Action with Note Preservation
 @staff_required
 def schedule_follow_up_view(request, reference_id: str):
-    """Schedule or modify follow-up date and remarks for a lead."""
+    """
+    Schedule or modify follow-up date and remarks for a lead.
+    Preserves historical notes without silent truncation and records separate FollowUpNote entries.
+    """
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
 
@@ -337,17 +378,42 @@ def schedule_follow_up_view(request, reference_id: str):
 
     if form.is_valid():
         inquiry.follow_up_date = form.cleaned_data['follow_up_date']
-        inquiry.save(update_fields=['follow_up_date', 'updated_at'])
+        remarks = form.cleaned_data.get('remarks', '').strip()
 
-        remarks = form.cleaned_data.get('remarks', '')
         if remarks:
-            inquiry.internal_notes = (
-                f"[{timezone.now().strftime('%Y-%m-%d %H:%M')}] Follow-up note: {remarks}\n"
-                f"{inquiry.internal_notes}"
-            )[:2000]
-            inquiry.save(update_fields=['internal_notes'])
+            tz = timezone.get_current_timezone()
+            timestamp_str = timezone.now().astimezone(tz).strftime('%Y-%m-%d %H:%M')
+            author_name = request.user.username if request.user.is_authenticated else 'System'
+            new_note_entry = f"[{timestamp_str}] Follow-up note: {remarks}"
+            combined_notes = f"{new_note_entry}\n{inquiry.internal_notes}" if inquiry.internal_notes else new_note_entry
 
-        messages.success(request, f'Follow-up scheduled for {inquiry.reference_id} on {inquiry.follow_up_date.strftime("%d %b %Y, %I:%M %p")}.')
+            # Data loss protection: reject if limit would cause silent truncation
+            if len(combined_notes) > 2000:
+                messages.error(
+                    request,
+                    'Follow-up note could not be saved: internal notes limit of 2,000 characters exceeded. '
+                    'All previous historical notes have been preserved without data loss.'
+                )
+                redirect_to = request.POST.get('next', '')
+                if redirect_to == 'follow_ups':
+                    return redirect('dashboard:follow_ups')
+                return redirect('dashboard:lead_detail', reference_id=inquiry.reference_id)
+
+            # Persist note in separate FollowUpNote record
+            FollowUpNote.objects.create(
+                inquiry=inquiry,
+                content=remarks,
+                created_by=request.user if request.user.is_authenticated else None,
+            )
+            inquiry.internal_notes = combined_notes
+            inquiry.save(update_fields=['follow_up_date', 'internal_notes', 'updated_at'])
+        else:
+            inquiry.save(update_fields=['follow_up_date', 'updated_at'])
+
+        messages.success(
+            request,
+            f'Follow-up scheduled for {inquiry.reference_id} on {inquiry.follow_up_date.strftime("%d %b %Y, %I:%M %p")}.'
+        )
     else:
         messages.error(request, 'Invalid date/time provided for follow-up schedule.')
 
@@ -415,10 +481,10 @@ def advanced_search_view(request):
     })
 
 
-# Export to CSV
+# Export to CSV with Formula Injection Protection
 @staff_required
 def export_leads_csv_view(request):
-    """Export filtered leads to a clean CSV file."""
+    """Export filtered leads to a clean, sanitized CSV file."""
     search_query = request.GET.get('q', '').strip()
     status_filter = request.GET.get('status', '').strip()
     service_filter = request.GET.get('service', '').strip()

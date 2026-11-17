@@ -15,9 +15,9 @@
 * **Technology Stack:**
   * **Backend:** Python 3.12, Django 5.2.5 (ORM, templates, forms, auth, sessions, messages).
   * **Database:** SQLite (relational schema with indexes, transactions, and foreign key constraints; PostgreSQL-ready).
-  * **Frontend (Admin Portal):** Official **Tabler UI** (`@tabler/core` 1.6.1), Tabler Icons (`@tabler/icons-webfont`), ApexCharts (MIT), Dark/Light mode theme engine, zero frontend framework build dependency.
+  * **Frontend (Admin Portal):** Enterprise **AdminLTE 4** Design System (Bootstrap 5.3 + Bootstrap Icons), ApexCharts, dark/light theme support, zero frontend build overhead.
   * **Frontend (Public Portal):** Dedicated clean corporate landing page using custom modular CSS (`static/css/style.css`), Vanilla JavaScript, responsive service cards, and anti-bot protections.
-  * **Environment Management:** Hybrid environment loader supporting `python-dotenv` and standard library fallback.
+  * **Environment Management:** Robust environment loader supporting `python-dotenv` and standard library fallback.
 
 ---
 
@@ -26,38 +26,45 @@
 ```text
 startupsahay-portal/
 ├── manage.py                                 # Django CLI runner
-├── requirements.txt                          # Production & local dependencies
-├── .env.example                              # Safe environment variable template
+├── requirements.txt                          # Production & local dependencies (PostgreSQL, Redis support)
+├── .env.example                              # Safe environment variable template with full configuration
 ├── .env                                      # Local development settings (git-ignored)
 ├── .gitignore                                # Comprehensive version control exclusion rules
-├── README.md                                 # Standard GitHub / evaluator overview
+├── build.sh                                  # Idempotent production build & deployment script
+├── README.md                                 # Canonical project documentation & setup manual
 ├── PROJECT_MASTER_REFERENCE.md               # Master reference manual (this document)
 ├── FINAL_ASSIGNMENT_AUDIT_REPORT.md          # Acceptance audit report with verification evidence
 ├── config/
 │   ├── __init__.py
 │   ├── env.py                                # Hybrid environment loader with standard-library fallback
-│   ├── settings.py                           # Application settings & security configurations
+│   ├── settings.py                           # Production-hardened settings (PostgreSQL, SSL, Cookies, Redis)
 │   ├── urls.py                               # Root URL dispatcher
 │   ├── wsgi.py                               # WSGI application entrypoint
 │   └── asgi.py                               # ASGI application entrypoint
 ├── inquiries/
 │   ├── migrations/
 │   │   ├── 0001_initial.py                   # Initial database migration
+│   │   ├── 0002_inquiry_assigned_to_inquiry_follow_up_date_and_more.py
+│   │   ├── 0003_followupnote.py              # FollowUpNote model migration
 │   │   └── __init__.py
 │   ├── __init__.py
-│   ├── admin.py                              # Django Admin model registrations
+│   ├── admin.py                              # Django Admin model registrations & inlines
 │   ├── apps.py                               # App configuration
 │   ├── forms.py                              # InquirySubmissionForm with honeypot & server validation
-│   ├── models.py                             # Inquiry & LeadStatusHistory models
-│   ├── services.py                           # Collision-resistant reference ID, rate-limiting, persistence
-│   ├── validators.py                         # Strict name & 10-digit mobile number validators
+│   ├── models.py                             # Inquiry, LeadStatusHistory, FollowUpNote models
+│   ├── services.py                           # Collision-resistant reference ID, proxy-safe rate-limiting
+│   ├── validators.py                         # Strict ASCII mobile (0-9) & full name validators
 │   ├── urls.py                               # Public routes ('', 'inquiry/success/')
 │   ├── views.py                              # home_view and inquiry_success_view
 │   └── tests/
 │       ├── __init__.py
 │       ├── test_models.py                    # Model constraints, WhatsApp URL, string representation
 │       ├── test_forms.py                     # Form validations, honeypot, overlong text, mobile checks
-│       └── test_public_views.py              # Public page rendering, PRG submission, XSS prevention
+│       ├── test_public_views.py              # Public page rendering, PRG submission, XSS prevention
+│       ├── test_mobile_validation.py         # ASCII-only enforcement (Devanagari numeral rejection)
+│       ├── test_database_config.py           # Multi-database URL parser verification
+│       ├── test_proxy_rate_limit.py          # Reverse proxy IP extraction and fail-open rate limiting
+│       └── test_setup_admin.py               # Idempotent superuser initialization verification
 ├── dashboard/
 │   ├── migrations/
 │   │   └── __init__.py
@@ -67,55 +74,57 @@ startupsahay-portal/
 │   ├── __init__.py
 │   ├── admin.py                              # Dashboard admin configuration
 │   ├── apps.py                               # App configuration
-│   ├── forms.py                              # StaffLoginForm and LeadStatusUpdateForm
-│   ├── services.py                           # Metric aggregation, parameterized search/filter, atomic update
+│   ├── forms.py                              # StaffLoginForm, LeadStatusUpdateForm, LeadForm
+│   ├── services.py                           # Metric aggregation, state transitions, CSV sanitization, auth lockout
 │   ├── urls.py                               # Protected admin routes (overview, leads, detail, kanban, follow-ups, etc.)
-│   ├── views.py                              # staff_required views, authentication, status transitions
+│   ├── views.py                              # staff_required views, brute-force protection, note preservation
 │   └── tests/
 │       ├── __init__.py
 │       ├── test_auth.py                      # Anonymous redirection, staff permissions, safe logout
 │       ├── test_leads.py                     # Search, filter, pagination, atomic status transitions
 │       ├── test_security.py                  # CSRF enforcement, SQL injection immunity, output escaping
-│       └── test_tabler_features.py           # Kanban, follow-ups, lead create/edit, CSV export, profile
+│       ├── test_tabler_features.py           # Kanban, follow-ups, lead create/edit, CSV export, profile
+│       ├── test_login_security.py            # Login brute-force lockout & credential protection
+│       ├── test_csv_security.py              # CSV formula injection protection
+│       ├── test_follow_up_logic.py           # Asia/Kolkata timezone & follow-up mutual exclusivity
+│       ├── test_status_transitions.py        # Centralized state machine & form bypass prevention
+│       └── test_notes_preservation.py        # FollowUpNote model & 2000-char truncation prevention
 ├── templates/
 │   ├── base.html                             # Base template for public portal with semantic landmarks
-│   ├── tabler_base.html                      # Primary Tabler admin dashboard base layout
+│   ├── adminlte_base.html                    # AdminLTE 4 staff dashboard master layout
 │   ├── includes/
 │   │   ├── messages.html                     # Public dismissible Bootstrap alert banners
 │   │   ├── public_navbar.html                # Responsive public header with smooth navigation
-│   │   ├── tabler_sidebar.html               # Tabler sidebar navigation with active highlights
-│   │   ├── tabler_header.html                # Tabler top bar with dark mode toggle & user menu
-│   │   └── tabler_messages.html              # Tabler dismissible alert toasts
+│   │   ├── adminlte_sidebar.html             # AdminLTE sidebar navigation with active highlights
+│   │   ├── adminlte_header.html              # AdminLTE top bar with user menu & search
+│   │   └── adminlte_messages.html            # AdminLTE dismissible alert banners
 │   ├── public/
 │   │   ├── home.html                         # Public landing page, 4 services, disclaimer, inquiry form
 │   │   └── inquiry_success.html              # Reference ID confirmation with copy-to-clipboard button
 │   └── dashboard/
-│       ├── login.html                        # Tabler Admin Login page
-│       ├── overview.html                     # Tabler Main Dashboard (8 KPIs + 2 ApexCharts + Recent Leads)
-│       ├── leads.html                        # Tabler All Inquiries / Leads (Filters, pagination, CSV)
-│       ├── lead_detail.html                  # Tabler Lead Details (Datagrid, WhatsApp, status update, timeline)
-│       ├── lead_form.html                    # Tabler Add / Edit Lead Form
-│       ├── kanban.html                       # Tabler Lead Pipeline / 6-Stage Kanban Board
-│       ├── follow_ups.html                   # Tabler Follow-up Management Desk (Overdue, Due Today, Upcoming)
-│       ├── status_history.html               # Tabler Lead Status History Full Audit Trail
-│       ├── advanced_search.html              # Tabler Search & Advanced Query Builder
-│       └── profile.html                      # Tabler Admin Profile, Password Change & System Settings
+│       ├── login.html                        # Admin Login page with brute-force lockout handling
+│       ├── overview.html                     # Main Dashboard (8 KPIs + 2 ApexCharts + Recent Leads)
+│       ├── leads.html                        # All Inquiries / Leads (Filters, pagination, CSV)
+│       ├── lead_detail.html                  # Lead Details (Datagrid, WhatsApp, status update, timeline, notes)
+│       ├── lead_form.html                    # Add / Edit Lead Form
+│       ├── kanban.html                       # Lead Pipeline / 6-Stage Kanban Board
+│       ├── follow_ups.html                   # Follow-up Management Desk (Overdue, Due Today, Upcoming)
+│       ├── status_history.html               # Lead Status History Full Audit Trail
+│       ├── advanced_search.html              # Search & Advanced Query Builder
+│       └── profile.html                      # Admin Profile, Password Change & System Settings
 ├── static/
-│   ├── tabler/                               # Official pinned Tabler Core assets (v1.6.1)
-│   │   ├── css/                              # tabler.min.css, tabler-icons.min.css, 48 offline woff2 fonts
-│   │   ├── js/                               # tabler.min.js, apexcharts.min.js
-│   │   └── LICENSE.md                        # Dependency licenses (MIT)
+│   ├── adminlte/                             # Vendored AdminLTE 4 assets & icons
 │   ├── css/
-│   │   ├── style.css                         # Scoped public portal styles (zero destructive overrides)
-│   │   └── dashboard.css                     # Minimal Tabler enhancements
+│   │   ├── style.css                         # Scoped public portal styles in Startup Sahay navy
+│   │   └── adminlte_custom.css               # AdminLTE enhancements in Startup Sahay corporate brand colors
 │   ├── js/
 │   │   ├── main.js                           # Vanilla JS: input masking, service selector, clipboard copy
-│   │   └── dashboard.js                      # Vanilla JS: Tabler theme initialization, alert helpers
-│   └── images/
-│       └── tabler_screenshots/               # 12 Full-page browser test capture PNGs
+│   │   ├── adminlte_init.js                  # Vanilla JS: AdminLTE initialization
+│   │   └── apexcharts.min.js                 # Interactive charts engine
+│   └── images/                               # Brand logos and documentation screenshots
 └── docs/
     ├── SECURITY_REVIEW.md                    # In-depth security analysis and threat review
-    └── AI_CHAT_HISTORY.md                    # Authentic AI development history & transcript access
+    └── AI_CHAT_HISTORY.md                    # Authentic AI development history & disclosures
 ```
 
 ---
@@ -142,17 +151,15 @@ startupsahay-portal/
 * `inquiry_mobile_status_idx`: Composite index on `['mobile_number', 'status']` for rapid customer search.
 * `inquiry_ref_id_idx`: Index on `['reference_id']` for immediate detail lookup.
 
-### 3.2 Model: `LeadStatusHistory` (Table: `inquiries_leadstatushistory`)
+### 3.3 Model: `FollowUpNote` (Table: `inquiries_followupnote`)
 
 | Column Name | Type | Constraints / Attributes | Description |
 | :--- | :--- | :--- | :--- |
-| `id` | BigAutoField | Primary Key | History record primary key. |
-| `inquiry_id` | ForeignKey | `on_delete=CASCADE` | Related inquiry. If an inquiry is purged, its audit trail purges with it. |
-| `previous_status` | CharField(30) | Choices | Stage prior to update. |
-| `new_status` | CharField(30) | Choices | Newly applied stage. |
-| `updated_by_id` | ForeignKey | `on_delete=SET_NULL`, Nullable | Staff user who performed the update. Preserved if staff user account is removed. |
-| `remarks` | TextField(500) | Blankable, Max Length 500 | Optional internal transition notes. |
-| `created_at` | DateTimeField | Auto-now-add, Indexed | Exact timestamp of the status transition. |
+| `id` | BigAutoField | Primary Key | Note primary key. |
+| `inquiry_id` | ForeignKey | `on_delete=CASCADE` | Associated inquiry. Purged if inquiry is removed. |
+| `content` | TextField(2000) | Required, Max Length 2000 | Distinct follow-up consultation note content. |
+| `created_by_id` | ForeignKey | `on_delete=SET_NULL`, Nullable | Staff author who recorded the follow-up note. Preserved if staff user is deleted. |
+| `created_at` | DateTimeField | Auto-now-add, Indexed | Exact timestamp when note was added. |
 
 ---
 
@@ -212,102 +219,59 @@ The lead maturity pipeline strictly uses the 6 required stages:
    * Authenticated non-staff users receive HTTP 403 Forbidden.
 2. **Spam & Abuse Protection:**
    * **Honeypot:** Hidden field `website_url` styled offscreen. Any automated bot that populates this field is rejected immediately with zero database writes.
-   * **Rate Limiting:** Public inquiry submissions throttled by client IP (configurable via `INQUIRY_RATE_LIMIT_MAX_REQUESTS=5` and `INQUIRY_RATE_LIMIT_WINDOW_SECONDS=600`).
-3. **Cross-Site Request Forgery (CSRF):**
+   * **Proxy-Safe Rate Limiting:** Public inquiry submissions throttled by client IP with robust `ipaddress` syntax validation over `X-Forwarded-For` when `USE_X_FORWARDED_FOR=True`, Redis support, and graceful fail-open safety.
+3. **Login Brute-Force & Lockout Protection:**
+   * IP and username failure tracking in cache.
+   * Enforces temporary 5-minute lockout after 5 consecutive failed attempts.
+   * Generic lockout error does not reveal whether accounts exist.
+   * Resets failure counters immediately upon successful authentication.
+4. **CSV Formula Injection (CSV Injection) Protection:**
+   * Prepends a single quote `'` to cells whose stripped content starts with dangerous formula trigger characters (`=`, `+`, `-`, `@`, `\t`, `\r`, `|`, `%`).
+   * Ensures spreadsheet applications (Excel, LibreOffice, Google Sheets) interpret values as literal text rather than executable formulas.
+5. **Cross-Site Request Forgery (CSRF):**
    * `CsrfViewMiddleware` active globally.
    * `{% csrf_token %}` included in every state-changing form.
-   * Logout and status updates strictly enforce `POST` (rejecting `GET` with HTTP 405).
-4. **Cross-Site Scripting (XSS):**
+   * Logout, status updates, and Kanban moves strictly enforce `POST` (rejecting `GET` with HTTP 405).
+   * Wildcard testing origins removed; explicitly configured via `CSRF_TRUSTED_ORIGINS`.
+6. **Cross-Site Scripting (XSS):**
    * Template autoescaping active; customer message rendered as plain text.
    * Vanilla JS uses `textContent` exclusively (no `innerHTML`).
-5. **SQL Injection (SQLi):**
+7. **SQL Injection (SQLi):**
    * 100% ORM parameterized queries (`Q` objects); zero raw SQL.
-6. **Session & Cookie Hardening:**
+8. **Session & Cookie Hardening:**
    * `SESSION_COOKIE_HTTPONLY = True`
    * `CSRF_COOKIE_HTTPONLY = True`
    * `SESSION_COOKIE_SAMESITE = 'Lax'`
    * `CSRF_COOKIE_SAMESITE = 'Lax'`
+   * Production mode enables `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`, `SECURE_SSL_REDIRECT`, `SECURE_HSTS_SECONDS=31536000`, and `SECURE_HSTS_PRELOAD`.
 
 ---
 
-## 8. Automated Testing Evidence (63 Tests + 12 Tabler Live Browser Pages)
+## 8. Automated Testing Evidence (102 Tests Passing)
 
 ```text
-Ran 63 tests in 39.620s
-OK (63 passed, 0 failures, 0 errors, 0 skips)
+Ran 102 tests in 4.141s
+OK (102 passed, 0 failures, 0 errors, 0 skips)
+System check identified no issues (0 silenced).
 ```
 
-### Tabler UI Live Browser Verification (12 / 12 Pages Verified)
-* **Page 1:** Public Corporate Website (`/`)
-* **Page 2:** Tabler Admin Login (`/dashboard/login/`)
-* **Page 3:** Main Dashboard with 8 KPI cards & ApexCharts (`/dashboard/`)
-* **Page 4:** All Inquiries / Leads Directory with filters (`/dashboard/leads/`)
-* **Page 5:** Lead Details with WhatsApp button & status update (`/dashboard/leads/<ref>/`)
-* **Page 6:** Add New Lead Form (`/dashboard/leads/create/`)
-* **Page 7:** Lead Pipeline / 6-Stage Kanban Board (`/dashboard/kanban/`)
-* **Page 8:** Follow-up Management Desk (`/dashboard/follow-ups/`)
-* **Page 9:** Lead Status History Audit Log (`/dashboard/history/`)
-* **Page 10:** Advanced Search & Query Builder with CSV Export (`/dashboard/search/`)
-* **Page 11:** Admin Profile & System Settings (`/dashboard/profile/`)
-* **Page 12:** Tabler Dark Mode Switch (`data-bs-theme="dark"`)
-
 ### Breakdown of Unit & Integration Test Suites
-* **`inquiries/tests/test_models.py` (7 tests):**
-  1. `test_inquiry_string_representation` — PASS
-  2. `test_default_status_is_new` — PASS
-  3. `test_whatsapp_url_generation_for_valid_number` — PASS
-  4. `test_whatsapp_url_returns_none_for_invalid_number` — PASS
-  5. `test_status_badge_classes` — PASS
-  6. `test_lead_status_history_cascade` — PASS
-  7. `test_lead_status_history_user_set_null` — PASS
-* **`inquiries/tests/test_forms.py` (10 tests):**
-  8. `test_valid_form_submission` — PASS
-  9. `test_blank_required_fields_rejected` — PASS
-  10. `test_invalid_mobile_number_short` — PASS
-  11. `test_invalid_mobile_number_with_country_code` — PASS
-  12. `test_invalid_mobile_number_alphanumeric` — PASS
-  13. `test_invalid_email_format` — PASS
-  14. `test_unknown_service_choice_rejected` — PASS
-  15. `test_overlong_message_rejected` — PASS
-  16. `test_honeypot_filled_causes_rejection` — PASS
-  17. `test_name_whitespace_normalized` — PASS
-* **`inquiries/tests/test_public_views.py` (8 tests):**
-  18. `test_homepage_loads` — PASS
-  19. `test_all_four_required_services_present` — PASS
-  20. `test_disclaimer_rendered` — PASS
-  21. `test_valid_inquiry_submission_persists_and_redirects` — PASS
-  22. `test_success_page_displays_reference_id` — PASS
-  23. `test_success_page_direct_access_without_session_redirects` — PASS
-  24. `test_honeypot_submission_does_not_create_inquiry` — PASS
-  25. `test_xss_in_message_is_escaped` — PASS
-* **`dashboard/tests/test_auth.py` (10 tests):**
-  26. `test_anonymous_access_to_overview_redirects_to_login` — PASS
-  27. `test_anonymous_access_to_leads_redirects_to_login` — PASS
-  28. `test_anonymous_access_to_lead_detail_redirects_to_login` — PASS
-  29. `test_anonymous_access_to_status_update_redirects_to_login` — PASS
-  30. `test_authenticated_non_staff_user_denied_forbidden` — PASS
-  31. `test_valid_staff_login_succeeds` — PASS
-  32. `test_invalid_login_fails_safely` — PASS
-  33. `test_logout_via_get_method_rejected` — PASS
-  34. `test_logout_via_post_succeeds_and_invalidates_session` — PASS
-  35. `test_no_public_admin_registration_endpoint` — PASS
-* **`dashboard/tests/test_leads.py` (10 tests):**
-  36. `test_overview_metrics_aggregation` — PASS
-  37. `test_leads_ordered_newest_first` — PASS
-  38. `test_search_by_name` — PASS
-  39. `test_search_by_phone` — PASS
-  40. `test_search_by_reference_id` — PASS
-  41. `test_filter_by_status` — PASS
-  42. `test_search_and_status_combined` — PASS
-  43. `test_valid_status_transition_succeeds_and_creates_history` — PASS
-  44. `test_no_op_same_status_update_rejected` — PASS
-  45. `test_invalid_status_value_rejected` — PASS
-* **`dashboard/tests/test_security.py` (6 tests):**
-  46. `test_csrf_protection_enforced_on_status_update` — PASS
-  47. `test_csrf_protection_enforced_on_logout` — PASS
-  48. `test_get_request_cannot_change_lead_status` — PASS
-  49. `test_sql_injection_probe_strings_handled_safely` — PASS
-  50. `test_template_autoescaping_prevents_xss` — PASS
+* **`inquiries/tests/test_models.py` (7 tests):** Model constraints, WhatsApp URL, string representations, cascades.
+* **`inquiries/tests/test_forms.py` (10 tests):** Form validations, honeypot rejection, overlong text, mobile checks.
+* **`inquiries/tests/test_public_views.py` (8 tests):** Public page rendering, PRG submission, XSS prevention.
+* **`inquiries/tests/test_mobile_validation.py` (8 tests):** Strict ASCII digits `0-9` enforcement, Devanagari numerals (`०-९`) rejection, Arabic-Indic numerals rejection, fullwidth digit rejection.
+* **`inquiries/tests/test_database_config.py` (3 tests):** Dynamic database URL parsing for PostgreSQL, SQLite, and default fallback.
+* **`inquiries/tests/test_proxy_rate_limit.py` (6 tests):** Reverse proxy IP extraction, spoofing protection, fail-open cache safety.
+* **`inquiries/tests/test_setup_admin.py` (3 tests):** Idempotent superuser setup, password preservation on redeployment, elimination of hardcoded defaults.
+* **`dashboard/tests/test_auth.py` (10 tests):** Anonymous redirection, staff permissions, safe logout, no public registration.
+* **`dashboard/tests/test_leads.py` (10 tests):** Search, filter, pagination, atomic status transitions, ordering.
+* **`dashboard/tests/test_security.py` (6 tests):** CSRF enforcement, SQL injection immunity, output escaping, cookie settings.
+* **`dashboard/tests/test_tabler_features.py` (12 tests):** Kanban, follow-ups, lead create/edit, CSV export, profile settings.
+* **`dashboard/tests/test_login_security.py` (4 tests):** Brute-force lockout after 5 failures, credential protection, counter reset on success, non-enumeration.
+* **`dashboard/tests/test_csv_security.py` (2 tests):** CSV formula injection protection, sanitization of malicious prefixes, readability preservation.
+* **`dashboard/tests/test_follow_up_logic.py` (4 tests):** Asia/Kolkata timezone midnight calculation, Overdue (< today) vs Due Today (today) mutual exclusivity, boundary conditions.
+* **`dashboard/tests/test_status_transitions.py` (6 tests):** State machine enforcement, rejection of invalid jumps, form bypass prevention, audit history recording.
+* **`dashboard/tests/test_notes_preservation.py` (3 tests):** FollowUpNote model records, data loss prevention, character limit validation without truncation.
   51. `test_security_cookie_configurations` — PASS
 * **`dashboard/tests/test_tabler_features.py` (12 tests):**
   52. `test_kanban_view_renders_all_six_columns` — PASS
@@ -423,3 +387,22 @@ AI tools were used during development for assistance with implementation, debugg
 The development workflow, architectural decisions, and verification results are documented in:
 * **Development History:** [docs/AI_CHAT_HISTORY.md](docs/AI_CHAT_HISTORY.md)
 * **Conversation Session ID:** `73b26742-8e19-44e8-90c1-aa58fee1e77d`
+
+---
+
+## 11. Authentic Startup Sahay Brand Identity System
+
+In response to technical code review feedback, the complete frontend visual identity was audited against the live official company portal [https://startupsahay.com/](https://startupsahay.com/):
+
+### 11.1 Brand Tokens Extracted & Implemented
+* **Primary Brand Colour:** `#FFBA00` (Warm Golden Amber / Brand Gold extracted from live stylesheets and official logo)
+* **Contrast Charcoal / Dark Slate:** `#111111` (Official Pitch Black for typography and branding mark) & `#0F172A` (Midnight Slate for sidebar surfaces)
+* **Secondary Action Accent:** `#F4511E` (Warm Coral / Vermilion from official active navigation links)
+* **Typography:** `'Montserrat', sans-serif` & `'Poppins', sans-serif` (Loaded via Google Fonts, replacing generic system fonts)
+* **Official Logo Asset:** `static/images/startupsahay_logo.webp` (dimensions: 988x314, directly extracted from `startupsahay.com/uploads/new_image/cropped-Sahay-r-mark-logo.webp`)
+* **Interactive Elements:**
+  * Primary Buttons: `#FFBA00` with high-contrast `#111111` bold text and smooth hover elevation.
+  * Form Controls: 8px border-radius with `#FFBA00` golden focus ring (`box-shadow: 0 0 0 3px rgba(255, 186, 0, 0.25)`).
+  * Login Authentication: Branded card with official logo, subtitle, and interactive show/hide password toggle.
+  * ApexCharts: Data series updated to `#FFBA00` brand gold.
+  * Maturity Badges: 100px rounded pills with stage-specific high-contrast accessible palettes.

@@ -109,6 +109,26 @@
             </div>
           </div>
           {% endif %}
+
+          <!-- Structured Follow-up Notes History -->
+          {% if follow_up_notes %}
+          <div class="col-12">
+            <span class="text-secondary small d-block fw-semibold mb-1">
+              <i class="bi bi-journal-text text-primary me-1"></i> Dedicated Follow-up Notes History ({{ follow_up_notes.count }})
+            </span>
+            <div class="list-group list-group-flush border rounded overflow-hidden">
+              {% for n in follow_up_notes %}
+              <div class="list-group-item p-2 small bg-light">
+                <div class="d-flex justify-content-between text-muted mb-1" style="font-size: 0.75rem;">
+                  <span><i class="bi bi-person me-1"></i><strong>{{ n.created_by.get_full_name|default:n.created_by.username|default:"System" }}</strong></span>
+                  <span><i class="bi bi-clock me-1"></i>{{ n.created_at|date:"d M Y, h:i A" }}</span>
+                </div>
+                <div class="text-dark">{{ n.content|linebreaksbr }}</div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>

@@ -1,510 +1,374 @@
 /* ==========================================================================
-   Start-Up Sahay Private Limited — Corporate Portal Stylesheet
-   Design Philosophy: Traditional corporate advisory, professional consulting,
-   authoritative business typography, crisp borders, navy blue branding.
-   Zero AI-generated styling artifacts (no glassmorphism, no vibrant gradients,
-   no floating circles, no oversized bubbly cards).
+   Start-Up Sahay Private Limited — Corporate Website & Public Intake Portal
+   Authentic Visual Identity extracted from https://startupsahay.com/
+   Primary Brand Gold: #FFBA00 | Dark Pitch Black: #111111 | Coral Accent: #F4511E
+   Typography: 'Montserrat', sans-serif | 'Poppins', sans-serif
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Poppins:wght@400;500;600;700&display=swap');
+
 :root {
-  /* Corporate Palette */
-  --corp-navy: #0f2e5a;
-  --corp-navy-dark: #091c36;
-  --corp-navy-light: #184c78;
-  --corp-slate: #334155;
-  --corp-charcoal: #1e293b;
-  --corp-gray-bg: #f8fafc;
-  --corp-gray-subtle: #f1f5f9;
-  --corp-border: #e2e8f0;
-  --corp-border-dark: #cbd5e1;
-  --corp-text-main: #1e293b;
-  --corp-text-muted: #64748b;
-  --corp-accent: #b45309;
-  --corp-success: #15803d;
-  --corp-radius: 4px;
+  /* Brand Palette */
+  --corp-primary: #FFBA00;
+  --corp-primary-hover: #E6A700;
+  --corp-primary-active: #D99B00;
+  --corp-primary-light: #FFFBEB;
+  --corp-primary-subtle: #FEF3C7;
+  --corp-primary-gradient: linear-gradient(135deg, #FFBA00 0%, #FF9E00 100%);
+
+  --corp-dark: #111111;
+  --corp-dark-secondary: #1E293B;
+  --corp-dark-surface: #0F172A;
+
+  --corp-accent: #F4511E;
+  --corp-accent-hover: #D83B0B;
+
+  --corp-gray-bg: #F8FAFC;
+  --corp-gray-subtle: #F1F5F9;
+  --corp-border: #E2E8F0;
+  --corp-border-dark: #CBD5E1;
+
+  --corp-text-main: #0F172A;
+  --corp-text-muted: #64748B;
+  --corp-success: #10B981;
+
+  --corp-font: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --corp-radius-sm: 6px;
+  --corp-radius-md: 8px;
+  --corp-radius-lg: 12px;
+  --corp-radius-pill: 100px;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--corp-font) !important;
   color: var(--corp-text-main);
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   line-height: 1.6;
   font-size: 0.95rem;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Header & Navigation */
-.corp-header {
-  background-color: #ffffff;
-  border-bottom: 2px solid var(--corp-navy);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--corp-font);
+  font-weight: 700;
+  color: var(--corp-dark);
+  letter-spacing: -0.015em;
 }
 
+/* --- Top Utility Bar --- */
 .corp-topbar {
-  background-color: var(--corp-navy-dark);
-  color: #cbd5e1;
+  background-color: var(--corp-dark-surface);
+  color: #CBD5E1;
   font-size: 0.8rem;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.45rem 0;
+  border-bottom: 2px solid var(--corp-primary);
 }
 
 .corp-topbar a {
-  color: #e2e8f0;
+  color: #F8FAFC;
   text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s ease;
 }
 
 .corp-topbar a:hover {
-  text-decoration: underline;
+  color: var(--corp-primary);
+}
+
+/* --- Main Corporate Navigation --- */
+.corp-header {
+  background-color: #FFFFFF;
+  border-bottom: 1px solid var(--corp-border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
 }
 
 .corp-navbar {
-  padding: 0.85rem 0;
-  background-color: #ffffff;
+  padding: 0.75rem 0;
 }
 
 .corp-brand {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0.75rem;
   text-decoration: none;
 }
 
-.corp-brand-icon {
-  width: 38px;
-  height: 38px;
-  background-color: var(--corp-navy);
-  color: #ffffff;
-  border-radius: var(--corp-radius);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-
-.corp-brand-text {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--corp-navy);
-  letter-spacing: -0.01em;
-  line-height: 1.1;
-}
-
-.corp-brand-sub {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--corp-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+.corp-brand-img {
+  height: 42px !important;
+  max-height: 42px !important;
+  max-width: 175px !important;
+  width: auto !important;
+  object-fit: contain !important;
+  display: block !important;
 }
 
 .corp-nav-link {
+  font-family: var(--corp-font);
+  font-size: 0.88rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--corp-slate);
+  color: var(--corp-dark) !important;
   padding: 0.45rem 0.85rem !important;
-  transition: color 0.15s ease-in-out;
+  border-radius: var(--corp-radius-sm);
+  transition: all 0.2s ease;
 }
 
-.corp-nav-link:hover,
-.corp-nav-link:focus {
-  color: var(--corp-navy);
+.corp-nav-link:hover {
+  color: var(--corp-accent) !important;
+  background-color: var(--corp-primary-light);
 }
 
-/* Primary Corporate Buttons */
-.btn-corp-primary {
-  background-color: var(--corp-navy);
-  color: #ffffff;
-  border: 1px solid var(--corp-navy-dark);
-  font-weight: 600;
-  font-size: 0.88rem;
-  padding: 0.5rem 1.1rem;
-  border-radius: var(--corp-radius);
-  transition: all 0.15s ease-in-out;
-}
-
-.btn-corp-primary:hover,
-.btn-corp-primary:focus {
-  background-color: var(--corp-navy-dark);
-  color: #ffffff;
-  border-color: #051329;
-}
-
-.btn-corp-outline {
-  background-color: transparent;
-  color: var(--corp-navy);
-  border: 1px solid var(--corp-navy);
-  font-weight: 600;
-  font-size: 0.88rem;
-  padding: 0.5rem 1.1rem;
-  border-radius: var(--corp-radius);
-  transition: all 0.15s ease-in-out;
-}
-
-.btn-corp-outline:hover,
-.btn-corp-outline:focus {
-  background-color: var(--corp-navy);
-  color: #ffffff;
-}
-
-.btn-corp-secondary {
-  background-color: #f1f5f9;
-  color: var(--corp-slate);
-  border: 1px solid var(--corp-border);
-  font-weight: 600;
-  font-size: 0.88rem;
-  padding: 0.5rem 1.1rem;
-  border-radius: var(--corp-radius);
-}
-
-.btn-corp-secondary:hover,
-.btn-corp-secondary:focus {
-  background-color: #e2e8f0;
-  color: var(--corp-charcoal);
-}
-
-/* Hero Section */
+/* --- Corporate Hero Section --- */
 .corp-hero {
-  background-color: #ffffff;
+  background: radial-gradient(circle at 80% 20%, #FFFBEB 0%, #FFFFFF 70%);
+  padding: 4.5rem 0 3.5rem 0;
   border-bottom: 1px solid var(--corp-border);
-  padding: 3.5rem 0 3rem;
-}
-
-.corp-badge-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.3rem 0.75rem;
-  background-color: var(--corp-gray-subtle);
-  border: 1px solid var(--corp-border);
-  color: var(--corp-navy);
-  font-size: 0.78rem;
-  font-weight: 600;
-  border-radius: var(--corp-radius);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 1rem;
 }
 
 .corp-hero-title {
-  font-size: 2.35rem;
+  font-size: 2.75rem;
   font-weight: 800;
-  color: var(--corp-navy-dark);
-  line-height: 1.25;
+  color: var(--corp-dark);
+  line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
 .corp-hero-lead {
-  font-size: 1.05rem;
-  color: var(--corp-slate);
-  line-height: 1.65;
-  margin-top: 1rem;
-  max-width: 640px;
+  font-size: 1.1rem;
+  color: var(--corp-text-muted);
+  line-height: 1.6;
+  max-width: 680px;
 }
 
-.corp-hero-aside {
-  background-color: var(--corp-gray-bg);
-  border: 1px solid var(--corp-border);
-  border-radius: var(--corp-radius);
-  padding: 1.5rem;
+/* --- Corporate Buttons --- */
+.btn-corp-primary {
+  background: var(--corp-primary) !important;
+  border-color: var(--corp-primary) !important;
+  color: var(--corp-dark) !important;
+  font-weight: 700 !important;
+  padding: 0.55rem 1.35rem;
+  border-radius: var(--corp-radius-sm);
+  box-shadow: 0 4px 10px rgba(255, 186, 0, 0.3);
+  transition: all 0.2s ease;
 }
 
-.corp-hero-aside-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--corp-navy);
-  margin-bottom: 0.5rem;
+.btn-corp-primary:hover {
+  background: var(--corp-primary-hover) !important;
+  border-color: var(--corp-primary-hover) !important;
+  color: #000000 !important;
+  box-shadow: 0 6px 16px rgba(255, 186, 0, 0.45);
+  transform: translateY(-1px);
 }
 
-/* Section Common Styling */
+.btn-corp-secondary {
+  background: var(--corp-dark-secondary) !important;
+  border-color: var(--corp-dark-secondary) !important;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  padding: 0.55rem 1.35rem;
+  border-radius: var(--corp-radius-sm);
+  transition: all 0.2s ease;
+}
+
+.btn-corp-secondary:hover {
+  background: var(--corp-dark-surface) !important;
+  border-color: var(--corp-dark-surface) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+}
+
+.btn-corp-outline {
+  border: 1px solid var(--corp-border-dark);
+  color: var(--corp-dark);
+  font-weight: 600;
+  padding: 0.55rem 1.35rem;
+  border-radius: var(--corp-radius-sm);
+  background: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.btn-corp-outline:hover {
+  border-color: var(--corp-primary);
+  background-color: var(--corp-primary-light);
+  color: var(--corp-dark);
+}
+
+/* --- Section Headings & Cards --- */
 .corp-section {
-  padding: 4rem 0;
+  padding: 4.5rem 0;
 }
 
 .corp-section-alt {
   background-color: var(--corp-gray-bg);
-  border-top: 1px solid var(--corp-border);
-  border-bottom: 1px solid var(--corp-border);
 }
 
-.corp-section-header {
-  margin-bottom: 2.5rem;
+.corp-section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--corp-dark);
+  margin-bottom: 0.5rem;
+}
+
+.corp-card {
+  background: #FFFFFF;
+  border: 1px solid var(--corp-border);
+  border-radius: var(--corp-radius-md);
+  padding: 1.75rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.corp-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--corp-primary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.corp-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--corp-border);
+  transition: background 0.25s ease;
+}
+
+.corp-card:hover::before {
+  background: var(--corp-primary-gradient);
+}
+
+.corp-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--corp-radius-sm);
+  background: var(--corp-primary-light);
+  border: 1px solid var(--corp-primary-subtle);
+  color: var(--corp-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1.25rem;
 }
 
 .corp-section-subtitle {
   font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
   font-weight: 700;
-  color: var(--corp-navy-light);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--corp-accent);
   display: block;
   margin-bottom: 0.35rem;
-}
-
-.corp-section-title {
-  font-size: 1.85rem;
-  font-weight: 700;
-  color: var(--corp-navy-dark);
-  line-height: 1.3;
-}
-
-.corp-section-desc {
-  font-size: 0.95rem;
-  color: var(--corp-text-muted);
-  max-width: 680px;
-  margin: 0.5rem auto 0;
-}
-
-/* Service Cards */
-.corp-service-card {
-  background-color: #ffffff;
-  border: 1px solid var(--corp-border);
-  border-top: 3px solid var(--corp-navy);
-  border-radius: var(--corp-radius);
-  padding: 1.5rem;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.corp-service-card:hover {
-  border-color: var(--corp-navy);
-  box-shadow: 0 4px 12px rgba(15, 46, 90, 0.06);
 }
 
 .corp-service-icon {
   width: 44px;
   height: 44px;
-  background-color: #f0f4f9;
-  color: var(--corp-navy);
-  border: 1px solid #d0deee;
-  border-radius: var(--corp-radius);
-  display: flex;
+  border-radius: var(--corp-radius-sm);
+  background-color: var(--corp-primary-light);
+  border: 1px solid var(--corp-primary-subtle);
+  color: var(--corp-dark);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.35rem;
-  margin-bottom: 1rem;
+  font-size: 1.25rem;
 }
 
-.corp-service-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--corp-navy-dark);
-  margin-bottom: 0.65rem;
-}
-
-.corp-service-desc {
-  font-size: 0.88rem;
-  color: var(--corp-slate);
-  line-height: 1.55;
-  margin-bottom: 1rem;
-  flex-grow: 1;
-}
-
-.corp-service-notice {
-  font-size: 0.76rem;
-  color: var(--corp-text-muted);
-  background-color: var(--corp-gray-subtle);
-  border-left: 3px solid var(--corp-border-dark);
-  padding: 0.5rem 0.65rem;
-  margin-bottom: 1.25rem;
-  line-height: 1.45;
-}
-
-/* Process Section */
-.corp-process-step {
-  position: relative;
-  padding: 1.25rem;
-  background-color: #ffffff;
-  border: 1px solid var(--corp-border);
-  border-radius: var(--corp-radius);
-  height: 100%;
-}
-
-.corp-step-num {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: var(--corp-navy);
-  background-color: #e0e9f4;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  margin-bottom: 0.85rem;
-}
-
-.corp-step-title {
-  font-size: 0.98rem;
-  font-weight: 700;
-  color: var(--corp-navy-dark);
-  margin-bottom: 0.35rem;
-}
-
-.corp-step-desc {
-  font-size: 0.84rem;
-  color: var(--corp-text-muted);
-  line-height: 1.5;
-  margin-bottom: 0;
-}
-
-/* FAQ Section */
-.accordion-corp .accordion-item {
-  border: 1px solid var(--corp-border);
-  border-radius: var(--corp-radius) !important;
-  margin-bottom: 0.75rem;
-  overflow: hidden;
-}
-
-.accordion-corp .accordion-button {
-  background-color: #ffffff;
-  color: var(--corp-navy-dark);
-  font-weight: 600;
-  font-size: 0.95rem;
-  padding: 1rem 1.25rem;
-}
-
-.accordion-corp .accordion-button:not(.collapsed) {
-  background-color: #f8fafc;
-  color: var(--corp-navy);
-  box-shadow: none;
-  border-bottom: 1px solid var(--corp-border);
-}
-
-.accordion-corp .accordion-button:focus {
-  box-shadow: none;
-  border-color: var(--corp-border);
-}
-
-.accordion-corp .accordion-body {
-  font-size: 0.9rem;
-  color: var(--corp-slate);
-  line-height: 1.6;
-  padding: 1rem 1.25rem;
-  background-color: #ffffff;
-}
-
-/* Statutory Disclaimer Callout */
-.corp-disclaimer-box {
-  background-color: #fffbeb;
-  border: 1px solid #fef3c7;
-  border-left: 4px solid #d97706;
-  border-radius: var(--corp-radius);
-  padding: 1.25rem;
-  margin-top: 1.5rem;
-}
-
-.corp-disclaimer-title {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: #92400e;
-  margin-bottom: 0.35rem;
-}
-
-.corp-disclaimer-text {
-  font-size: 0.82rem;
-  color: #78350f;
-  line-height: 1.5;
-  margin-bottom: 0;
-}
-
-/* Inquiry Form Card */
 .corp-form-card {
-  background-color: #ffffff;
+  background: #FFFFFF;
   border: 1px solid var(--corp-border);
-  border-top: 3px solid var(--corp-navy);
-  border-radius: var(--corp-radius);
-  padding: 2.25rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-top: 4px solid var(--corp-primary);
+  border-radius: var(--corp-radius-lg);
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
 .corp-form-label {
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 600;
-  color: var(--corp-slate);
+  color: var(--corp-dark-secondary);
   margin-bottom: 0.35rem;
   display: block;
 }
 
-.corp-form-card .form-control,
-.corp-form-card .form-select {
-  border: 1px solid #cbd5e1;
-  border-radius: var(--corp-radius);
-  font-size: 0.9rem;
-  padding: 0.55rem 0.85rem;
-  color: var(--corp-text-main);
-}
-
-.corp-form-card .form-control:focus,
-.corp-form-card .form-select:focus {
-  border-color: var(--corp-navy);
-  box-shadow: 0 0 0 2px rgba(15, 46, 90, 0.12);
-}
-
-/* Anti-bot honeypot */
 .form-control-hp {
-  position: absolute;
-  left: -9999px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  opacity: 0;
+  display: none !important;
 }
 
-/* Corporate Success Confirmation */
-.corp-success-box {
-  background-color: #ffffff;
+/* --- Inquiry Submission Box --- */
+.corp-form-box {
+  background: #FFFFFF;
   border: 1px solid var(--corp-border);
-  border-top: 4px solid var(--corp-success);
-  border-radius: var(--corp-radius);
+  border-top: 4px solid var(--corp-primary);
+  border-radius: var(--corp-radius-lg);
   padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+.corp-form-box .form-control,
+.corp-form-box .form-select {
+  border-radius: var(--corp-radius-sm);
+  border: 1px solid var(--corp-border);
+  padding: 0.65rem 0.9rem;
+  font-size: 0.92rem;
+}
+
+.corp-form-box .form-control:focus,
+.corp-form-box .form-select:focus {
+  border-color: var(--corp-primary) !important;
+  box-shadow: 0 0 0 3px rgba(255, 186, 0, 0.25) !important;
+}
+
+/* --- Success Box --- */
+.corp-success-box {
+  background: #FFFFFF;
+  border: 1px solid var(--corp-border);
+  border-top: 4px solid var(--corp-primary);
+  border-radius: var(--corp-radius-lg);
+  padding: 3rem 2rem;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
 .corp-success-ref {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--corp-navy);
-  background-color: #f1f5f9;
-  border: 1px dashed var(--corp-border-dark);
-  border-radius: var(--corp-radius);
-  padding: 0.75rem 1.25rem;
+  font-family: ui-monospace, Menlo, Monaco, Consolas, monospace;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--corp-dark);
+  background: var(--corp-primary-light);
+  border: 2px dashed var(--corp-primary);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--corp-radius-sm);
   display: inline-block;
   margin: 1rem 0;
+  letter-spacing: 0.05em;
 }
 
-/* Footer */
+/* --- Footer --- */
 .corp-footer {
-  background-color: var(--corp-navy-dark);
-  color: #94a3b8;
-  font-size: 0.85rem;
-  padding: 3.5rem 0 1.5rem;
+  background-color: var(--corp-dark-surface);
+  color: #94A3B8;
+  padding: 3.5rem 0 1.5rem 0;
+  border-top: 4px solid var(--corp-primary);
+  font-size: 0.88rem;
 }
 
-.corp-footer-title {
-  color: #ffffff;
-  font-size: 0.92rem;
+.corp-footer h5 {
+  color: #FFFFFF;
+  font-size: 1rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .corp-footer a {
-  color: #cbd5e1;
+  color: #CBD5E1;
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .corp-footer a:hover {
-  color: #ffffff;
-  text-decoration: underline;
-}
-
-.corp-footer-divider {
-  border-color: rgba(255, 255, 255, 0.1);
-  margin: 2rem 0 1.25rem;
+  color: var(--corp-primary);
 }

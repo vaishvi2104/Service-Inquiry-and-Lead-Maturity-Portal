@@ -34,7 +34,7 @@ class TablerFeaturesTests(TestCase):
             email='aarav@example.com',
             service=ServiceChoices.COMPANY_INCORPORATION,
             status=LeadStatus.NEW,
-            follow_up_date=timezone.now() - timedelta(hours=2),  # overdue
+            follow_up_date=timezone.now() - timedelta(days=1),  # overdue (earlier than today)
         )
 
     def test_kanban_view_renders_all_six_columns(self):

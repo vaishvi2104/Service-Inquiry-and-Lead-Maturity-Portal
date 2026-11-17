@@ -34,7 +34,7 @@ class InquirySubmissionForm(forms.Form):
             'placeholder': '10-digit mobile number (e.g. 9876543210)',
             'autocomplete': 'tel',
             'inputmode': 'numeric',
-            'pattern': r'\d{10}',
+            'pattern': r'[0-9]{10}',
             'maxlength': '10',
             'required': 'required',
         })

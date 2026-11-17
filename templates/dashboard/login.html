@@ -3,45 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sign In — Sahay LeadFlow</title>
+  <title>Staff Portal Sign In — Start-Up Sahay</title>
 
-  <!-- Google Font: Source Sans 3 -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap">
+  <!-- Google Fonts: Montserrat & Poppins (Authentic Startup Sahay Brand Typography) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Poppins:wght@400;500;600;700&display=swap">
 
   {% load static %}
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="{% static 'adminlte/bootstrap-icons/bootstrap-icons.min.css' %}">
   <!-- AdminLTE 4 CSS -->
   <link rel="stylesheet" href="{% static 'adminlte/css/adminlte.min.css' %}">
-  <!-- Custom Sahay CRM Styles -->
-  <link rel="stylesheet" href="{% static 'css/adminlte_custom.css' %}">
+  <!-- Startup Sahay Brand Design System -->
+  <link rel="stylesheet" href="{% static 'css/adminlte_custom.css' %}?v=2.1">
 </head>
-<body class="login-page bg-body-tertiary">
+<body class="login-page">
   <div class="login-box">
-    <!-- Brand Title -->
-    <div class="login-logo text-center mb-3">
-      <a href="{% url 'public:home' %}" class="d-inline-flex align-items-center gap-2 text-decoration-none">
-        <div class="brand-icon-box" style="width: 38px; height: 38px;">
-          <i class="bi bi-briefcase-fill"></i>
-        </div>
-        <div class="text-start lh-1">
-          <span class="fs-4 fw-bold text-dark">Sahay LeadFlow</span>
-          <div class="small text-muted" style="font-size: 0.72rem; letter-spacing: 0.05em;">START-UP SAHAY CRM</div>
+    <!-- Official Startup Sahay Logo & Brand Header -->
+    <div class="login-logo text-center mb-4">
+      <a href="{% url 'public:home' %}" class="d-inline-block text-decoration-none">
+        <img src="{% static 'images/startupsahay_logo.webp' %}" alt="Start-Up Sahay" class="brand-logo-img mb-2" height="48" style="height: 48px !important; width: auto !important; max-width: 190px !important; object-fit: contain !important; margin: 0 auto; display: block;" onerror="this.onerror=null; this.src='{% static 'images/startupsahay_logo.png' %}';">
+        <div class="small fw-semibold text-secondary text-uppercase tracking-wider" style="font-size: 0.72rem; letter-spacing: 0.08em;">
+          Corporate Secretarial &bull; Regulatory Diligence &bull; CRM
         </div>
       </a>
     </div>
 
-    <!-- Login Card -->
-    <div class="card card-outline card-primary shadow-sm">
-      <div class="card-header text-center py-3 bg-white">
-        <h4 class="mb-0 fw-bold fs-5 text-dark">Staff Authentication</h4>
+    <!-- Login Authentication Card -->
+    <div class="card card-outline card-primary shadow-lg border-0">
+      <div class="card-header text-center bg-white py-3">
+        <h4 class="mb-1 fw-bold fs-5 text-dark">Staff Portal Sign In</h4>
+        <p class="text-secondary small mb-0">
+          Authorized personnel authentication for LeadFlow CRM
+        </p>
       </div>
 
       <div class="card-body login-card-body p-4">
-        <p class="login-box-msg text-secondary small text-center mb-3">
-          Sign in to access lead management, follow-ups, and pipeline records.
-        </p>
-
         {% include 'includes/adminlte_messages.html' %}
 
         <form action="{% url 'dashboard:login' %}" method="post" novalidate autocomplete="off">
@@ -50,46 +48,65 @@
           <input type="hidden" name="next" value="{{ next }}">
           {% endif %}
 
-          <!-- Username -->
+          <!-- Username / Email Field -->
           <div class="mb-3">
-            <label class="form-label small fw-semibold text-secondary" for="id_username">Staff Username</label>
+            <label class="form-label small fw-semibold text-secondary" for="id_username">
+              <i class="bi bi-person me-1"></i> Staff Username or Email
+            </label>
             <div class="input-group">
-              <span class="input-group-text bg-light text-muted"><i class="bi bi-person"></i></span>
+              <span class="input-group-text bg-light border-end-0 text-muted">
+                <i class="bi bi-person-fill"></i>
+              </span>
               {{ form.username }}
             </div>
             {% if form.username.errors %}
-            <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
+            <div class="text-danger small mt-1 fw-semibold">
+              <i class="bi bi-exclamation-circle me-1"></i>{{ form.username.errors|striptags }}
+            </div>
             {% endif %}
           </div>
 
-          <!-- Password -->
+          <!-- Password Field with Show/Hide Toggle -->
           <div class="mb-4">
-            <label class="form-label small fw-semibold text-secondary" for="id_password">Password</label>
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <label class="form-label small fw-semibold text-secondary mb-0" for="id_password">
+                <i class="bi bi-shield-lock me-1"></i> Account Password
+              </label>
+            </div>
             <div class="input-group">
-              <span class="input-group-text bg-light text-muted"><i class="bi bi-lock"></i></span>
+              <span class="input-group-text bg-light border-end-0 text-muted">
+                <i class="bi bi-key-fill"></i>
+              </span>
               {{ form.password }}
+              <button class="btn btn-outline-secondary password-toggle-btn border-start-0" type="button" id="togglePasswordBtn" title="Toggle password visibility" aria-label="Toggle password visibility">
+                <i class="bi bi-eye" id="togglePasswordIcon"></i>
+              </button>
             </div>
             {% if form.password.errors %}
-            <div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>
+            <div class="text-danger small mt-1 fw-semibold">
+              <i class="bi bi-exclamation-circle me-1"></i>{{ form.password.errors|striptags }}
+            </div>
             {% endif %}
           </div>
 
-          <!-- Submit Button -->
+          <!-- Primary Submit Button -->
           <div class="d-grid mb-2">
-            <button type="submit" class="btn btn-primary py-2 fw-semibold d-flex align-items-center justify-content-center gap-2">
-              <i class="bi bi-box-arrow-in-right"></i> Sign In to Portal
+            <button type="submit" class="btn btn-primary py-2 fw-bold d-flex align-items-center justify-content-center gap-2">
+              <i class="bi bi-box-arrow-in-right fs-5"></i>
+              <span>Sign In to Portal</span>
             </button>
           </div>
         </form>
       </div>
 
-      <div class="card-footer bg-light py-2 text-center text-secondary small">
-        <i class="bi bi-shield-lock me-1"></i> Authorized Staff & Consultant Access Only
+      <div class="card-footer bg-light py-3 text-center text-secondary small border-top">
+        <i class="bi bi-shield-check text-success me-1"></i> End-to-end encrypted staff session
       </div>
     </div>
 
+    <!-- Return to Public Site -->
     <div class="text-center mt-3">
-      <a href="{% url 'public:home' %}" class="text-secondary small text-decoration-none">
+      <a href="{% url 'public:home' %}" class="text-secondary small text-decoration-none fw-semibold">
         <i class="bi bi-arrow-left me-1"></i> Return to Public Customer Website
       </a>
     </div>
@@ -97,5 +114,31 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{% static 'adminlte/js/adminlte.min.js' %}"></script>
+  
+  <!-- Interactive Show/Hide Password Script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var toggleBtn = document.getElementById("togglePasswordBtn");
+      var passwordInput = document.getElementById("id_password");
+      var toggleIcon = document.getElementById("togglePasswordIcon");
+
+      if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener("click", function () {
+          var isPassword = passwordInput.getAttribute("type") === "password";
+          passwordInput.setAttribute("type", isPassword ? "text" : "password");
+          
+          if (toggleIcon) {
+            if (isPassword) {
+              toggleIcon.classList.remove("bi-eye");
+              toggleIcon.classList.add("bi-eye-slash");
+            } else {
+              toggleIcon.classList.remove("bi-eye-slash");
+              toggleIcon.classList.add("bi-eye");
+            }
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>

@@ -13,7 +13,7 @@ User = get_user_model()
 
 class StaffLoginForm(AuthenticationForm):
     """
-    Tabler-styled login form for staff authentication.
+    Login form for staff authentication with clear styling.
     """
     username = forms.CharField(
         widget=forms.TextInput(attrs={
@@ -62,6 +62,7 @@ class LeadStatusUpdateForm(forms.Form):
 class LeadForm(forms.ModelForm):
     """
     Form for creating new leads manually by staff and editing existing leads.
+    Enforces business validation and state machine rules on status updates.
     """
     class Meta:
         model = Inquiry
@@ -82,7 +83,7 @@ class LeadForm(forms.ModelForm):
             'service': forms.Select(attrs={'class': 'form-select'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'follow_up_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
-            'internal_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Internal strategy, client budget, or requirements'}),
+            'internal_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Internal strategy, client budget, or requirements (max 2000 characters)'}),
             'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Customer query / requirement description'}),
         }
 
@@ -99,6 +100,26 @@ class LeadForm(forms.ModelForm):
 
     def clean_email(self) -> str:
         return self.cleaned_data.get('email', '').strip().lower()
+
+    def clean_internal_notes(self) -> str:
+        notes = self.cleaned_data.get('internal_notes', '').strip()
+        if len(notes) > 2000:
+            raise forms.ValidationError('Internal notes cannot exceed 2000 characters.')
+        return notes
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_status = cleaned_data.get('status')
+        if self.instance and self.instance.pk and new_status:
+            if self.instance.status != new_status:
+                from dashboard.services import is_valid_status_transition
+                if not is_valid_status_transition(self.instance.status, new_status):
+                    target_label = dict(LeadStatus.choices).get(new_status, new_status)
+                    self.add_error(
+                        'status',
+                        f'Cannot transition lead from "{self.instance.get_status_display()}" to "{target_label}".'
+                    )
+        return cleaned_data
 
 
 class FollowUpScheduleForm(forms.Form):
@@ -118,6 +139,12 @@ class FollowUpScheduleForm(forms.Form):
             'placeholder': 'Follow-up objective or discussion summary (e.g., Send revised quote, demo call)'
         })
     )
+
+    def clean_remarks(self) -> str:
+        remarks = self.cleaned_data.get('remarks', '').strip()
+        if len(remarks) > 500:
+            raise forms.ValidationError('Follow-up remarks cannot exceed 500 characters.')
+        return remarks
 
 
 class AdminProfileForm(forms.ModelForm):

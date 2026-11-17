@@ -1,11 +1,15 @@
 """
 Business logic and service layer for admin dashboard.
 Handles advanced metric aggregation, charts data, filtered queries,
-Kanban grouping, follow-up management, and atomic status transitions.
+Kanban grouping, follow-up management, atomic status transitions,
+CSV formula injection protection, and login rate limiting.
 """
 import csv
+import logging
 from typing import Tuple, Dict, Any, List
 from datetime import datetime, timedelta
+from django.conf import settings
+from django.core.cache import cache
 from django.utils import timezone
 from django.http import HttpResponse
 from django.db import transaction
@@ -14,13 +18,76 @@ from django.db.models.functions import TruncMonth
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from inquiries.models import Inquiry, LeadStatus, ServiceChoices, LeadStatusHistory
 
+logger = logging.getLogger(__name__)
+
+# Dangerous trigger characters for CSV / spreadsheet formula injection
+DANGEROUS_CSV_PREFIXES = ('=', '+', '-', '@', '\t', '\r', '|', '%')
+
+# Strict allowed status transitions state machine
+ALLOWED_STATUS_TRANSITIONS: Dict[str, set[str]] = {
+    LeadStatus.NEW: {
+        LeadStatus.CONTACTED,
+        LeadStatus.FOLLOW_UP,
+        LeadStatus.PROPOSAL_SENT,
+        LeadStatus.MATURE,
+        LeadStatus.CLOSED,
+    },
+    LeadStatus.CONTACTED: {
+        LeadStatus.FOLLOW_UP,
+        LeadStatus.PROPOSAL_SENT,
+        LeadStatus.MATURE,
+        LeadStatus.CLOSED,
+    },
+    LeadStatus.FOLLOW_UP: {
+        LeadStatus.CONTACTED,
+        LeadStatus.PROPOSAL_SENT,
+        LeadStatus.MATURE,
+        LeadStatus.CLOSED,
+    },
+    LeadStatus.PROPOSAL_SENT: {
+        LeadStatus.FOLLOW_UP,
+        LeadStatus.MATURE,
+        LeadStatus.CLOSED,
+    },
+    LeadStatus.MATURE: {
+        LeadStatus.FOLLOW_UP,
+        LeadStatus.CLOSED,
+    },
+    LeadStatus.CLOSED: {
+        LeadStatus.CONTACTED,
+        LeadStatus.FOLLOW_UP,
+    },
+}
+
+
+def sanitize_csv_value(val: Any) -> str:
+    """
+    Sanitize cell content to protect against spreadsheet formula injection (CSV Injection).
+    If the stripped value starts with any dangerous character (=, +, -, @, tab, CR, pipe, %),
+    prepends a single quote so spreadsheet engines interpret it strictly as plain text.
+    Preserves clean formatting for standard values.
+    """
+    if val is None:
+        return ''
+    s = str(val)
+    stripped = s.lstrip()
+    if stripped and stripped[0] in DANGEROUS_CSV_PREFIXES:
+        return f"'{s}"
+    return s
+
 
 def get_dashboard_metrics() -> Dict[str, Any]:
     """
     Compute dynamic database-backed inquiry counts and conversion analytics
     across all lead stages and follow-up schedules.
+    Uses application timezone (Asia/Kolkata) to ensure consistent date boundaries.
     """
     now = timezone.now()
+    tz = timezone.get_current_timezone()
+    now_local = now.astimezone(tz)
+    today_date = now_local.date()
+    start_of_tomorrow = datetime.combine(today_date, datetime.min.time(), tzinfo=tz) + timedelta(days=1)
+
     status_counts = Inquiry.objects.values('status').annotate(total=Count('id'))
     counts_map = {item['status']: item['total'] for item in status_counts}
 
@@ -35,9 +102,9 @@ def get_dashboard_metrics() -> Dict[str, Any]:
     # Conversion rate: Mature leads / Total inquiries
     conversion_rate = round((mature_count / total_inquiries * 100), 1) if total_inquiries > 0 else 0.0
 
-    # Follow-ups due: scheduled <= now and not closed/mature
+    # Follow-ups due: scheduled before end of today (Asia/Kolkata) and not closed/mature
     follow_ups_due = Inquiry.objects.filter(
-        follow_up_date__lte=now
+        follow_up_date__lt=start_of_tomorrow
     ).exclude(status__in=[LeadStatus.MATURE, LeadStatus.CLOSED]).count()
 
     # Stage distribution for ApexCharts Donut
@@ -72,7 +139,6 @@ def get_dashboard_metrics() -> Dict[str, Any]:
         'mature': mature_count,
         'closed': closed_count,
         'conversion_rate': conversion_rate,
-        # Chart Data payloads
         'stage_labels': stage_labels,
         'stage_series': stage_series,
         'service_labels': service_labels,
@@ -96,7 +162,6 @@ def get_filtered_leads_queryset(
     """
     queryset = Inquiry.objects.all().order_by('-created_at')
 
-    # 1. Search text filter across name, mobile, reference ID, and email
     if search_query:
         cleaned = search_query.strip()[:100]
         queryset = queryset.filter(
@@ -106,17 +171,14 @@ def get_filtered_leads_queryset(
             Q(email__icontains=cleaned)
         )
 
-    # 2. Status filter
     valid_statuses = [choice[0] for choice in LeadStatus.choices]
     if status_filter and status_filter in valid_statuses:
         queryset = queryset.filter(status=status_filter)
 
-    # 3. Service filter
     valid_services = [choice[0] for choice in ServiceChoices.choices]
     if service_filter and service_filter in valid_services:
         queryset = queryset.filter(service=service_filter)
 
-    # 4. Date Range filters (YYYY-MM-DD)
     if date_from:
         try:
             d_from = datetime.strptime(date_from.strip(), '%Y-%m-%d')
@@ -153,18 +215,16 @@ def get_kanban_columns() -> List[Dict[str, Any]]:
     """
     columns = []
     badge_map = {
-        LeadStatus.NEW: 'bg-blue-lt',
-        LeadStatus.CONTACTED: 'bg-azure-lt',
-        LeadStatus.FOLLOW_UP: 'bg-yellow-lt',
-        LeadStatus.PROPOSAL_SENT: 'bg-purple-lt',
-        LeadStatus.MATURE: 'bg-green-lt',
-        LeadStatus.CLOSED: 'bg-secondary-lt',
+        LeadStatus.NEW: 'badge-new',
+        LeadStatus.CONTACTED: 'badge-contacted',
+        LeadStatus.FOLLOW_UP: 'badge-followup',
+        LeadStatus.PROPOSAL_SENT: 'badge-proposal',
+        LeadStatus.MATURE: 'badge-mature',
+        LeadStatus.CLOSED: 'badge-closed',
     }
 
     all_leads = Inquiry.objects.all().order_by('-updated_at')
-    leads_by_stage = {}
-    for stage_key, _ in LeadStatus.choices:
-        leads_by_stage[stage_key] = []
+    leads_by_stage = {stage_key: [] for stage_key, _ in LeadStatus.choices}
 
     for lead in all_leads:
         if lead.status in leads_by_stage:
@@ -174,7 +234,7 @@ def get_kanban_columns() -> List[Dict[str, Any]]:
         columns.append({
             'key': stage_key,
             'label': stage_label,
-            'badge_class': badge_map.get(stage_key, 'bg-secondary-lt'),
+            'badge_class': badge_map.get(stage_key, 'badge-closed'),
             'leads': leads_by_stage[stage_key],
             'count': len(leads_by_stage[stage_key]),
         })
@@ -185,16 +245,27 @@ def get_kanban_columns() -> List[Dict[str, Any]]:
 def get_follow_ups_data() -> Dict[str, Any]:
     """
     Retrieve inquiries categorized into Overdue, Due Today, and Upcoming follow-ups.
+    Uses configured application timezone (Asia/Kolkata) to compute midnight boundaries:
+    - Overdue: follow-up date strictly earlier than today's local midnight (< start_of_today).
+    - Due Today: follow-up date within today (>= start_of_today and < start_of_tomorrow).
+    - Upcoming: follow-up date tomorrow or later (>= start_of_tomorrow).
+    Overdue and Due Today are mutually exclusive; total_due represents unique total count.
     """
-    now = timezone.now()
-    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    today_end = today_start + timedelta(days=1)
+    tz = timezone.get_current_timezone()
+    now_local = timezone.now().astimezone(tz)
+    today_date = now_local.date()
+
+    start_of_today = datetime.combine(today_date, datetime.min.time(), tzinfo=tz)
+    start_of_tomorrow = start_of_today + timedelta(days=1)
 
     active_inquiries = Inquiry.objects.exclude(status__in=[LeadStatus.MATURE, LeadStatus.CLOSED])
 
-    overdue = active_inquiries.filter(follow_up_date__lt=now).order_by('follow_up_date')
-    due_today = active_inquiries.filter(follow_up_date__gte=today_start, follow_up_date__lt=today_end).order_by('follow_up_date')
-    upcoming = active_inquiries.filter(follow_up_date__gte=today_end).order_by('follow_up_date')
+    overdue = active_inquiries.filter(follow_up_date__lt=start_of_today).order_by('follow_up_date')
+    due_today = active_inquiries.filter(
+        follow_up_date__gte=start_of_today,
+        follow_up_date__lt=start_of_tomorrow
+    ).order_by('follow_up_date')
+    upcoming = active_inquiries.filter(follow_up_date__gte=start_of_tomorrow).order_by('follow_up_date')
     unscheduled = active_inquiries.filter(follow_up_date__isnull=True).order_by('-created_at')[:20]
 
     return {
@@ -206,6 +277,14 @@ def get_follow_ups_data() -> Dict[str, Any]:
     }
 
 
+def is_valid_status_transition(current_status: str, target_status: str) -> bool:
+    """Validate whether transitioning from current_status to target_status is allowed."""
+    if current_status == target_status:
+        return False
+    allowed = ALLOWED_STATUS_TRANSITIONS.get(current_status, set())
+    return target_status in allowed
+
+
 def execute_status_transition(
     inquiry_id: int,
     new_status: str,
@@ -213,9 +292,9 @@ def execute_status_transition(
     remarks: str = ''
 ) -> Tuple[bool, str, Inquiry | None]:
     """
-    Atomically transition an inquiry's status stage and record the audit history.
-    Locks row using select_for_update() to eliminate race conditions.
-    Enforces documented policy: no-op updates (same status) are rejected.
+    Centralized, atomic status transition service.
+    Locks inquiry row with select_for_update() to prevent concurrent race conditions.
+    Validates allowed state machine transitions, rejects no-ops, and creates audit history.
     """
     valid_statuses = [choice[0] for choice in LeadStatus.choices]
     if new_status not in valid_statuses:
@@ -230,6 +309,11 @@ def execute_status_transition(
         # Check for no-op update
         if inquiry.status == new_status:
             return False, f'Inquiry is already in "{inquiry.get_status_display()}" status. No changes made.', inquiry
+
+        # Check state machine rules
+        if not is_valid_status_transition(inquiry.status, new_status):
+            target_label = dict(LeadStatus.choices).get(new_status, new_status)
+            return False, f'Cannot transition lead from "{inquiry.get_status_display()}" to "{target_label}".', inquiry
 
         previous_status = inquiry.status
         inquiry.status = new_status
@@ -248,7 +332,7 @@ def execute_status_transition(
 
 def export_leads_to_csv(queryset) -> HttpResponse:
     """
-    Stream a sanitized, formatted CSV file of lead records for reporting.
+    Stream a sanitized, formatted CSV file of lead records protected against formula injection.
     """
     response = HttpResponse(content_type='text/csv')
     timestamp = timezone.now().strftime('%Y%m%d_%H%M')
@@ -269,17 +353,74 @@ def export_leads_to_csv(queryset) -> HttpResponse:
     ])
 
     for lead in queryset:
+        follow_up_str = lead.follow_up_date.strftime('%Y-%m-%d %H:%M') if lead.follow_up_date else 'Not Scheduled'
         writer.writerow([
-            lead.reference_id,
-            lead.full_name,
-            lead.mobile_number,
-            lead.email,
-            lead.get_service_display(),
-            lead.get_status_display(),
-            lead.follow_up_date.strftime('%Y-%m-%d %H:%M') if lead.follow_up_date else 'Not Scheduled',
-            lead.created_at.strftime('%Y-%m-%d %H:%M'),
-            lead.updated_at.strftime('%Y-%m-%d %H:%M'),
-            lead.message.replace('\n', ' ').strip(),
+            sanitize_csv_value(lead.reference_id),
+            sanitize_csv_value(lead.full_name),
+            sanitize_csv_value(lead.mobile_number),
+            sanitize_csv_value(lead.email),
+            sanitize_csv_value(lead.get_service_display()),
+            sanitize_csv_value(lead.get_status_display()),
+            sanitize_csv_value(follow_up_str),
+            sanitize_csv_value(lead.created_at.strftime('%Y-%m-%d %H:%M')),
+            sanitize_csv_value(lead.updated_at.strftime('%Y-%m-%d %H:%M')),
+            sanitize_csv_value(lead.message.replace('\n', ' ').strip()),
         ])
 
     return response
+
+
+# Login Brute-Force & Lockout Helpers
+def _get_login_cache_key(prefix: str, identifier: str) -> str:
+    return f"login_fail_{prefix}_{identifier.strip().lower()}"
+
+
+def is_login_locked(ip: str, username: str = '') -> bool:
+    """Check if either IP or username is currently throttled / locked out."""
+    limit = getattr(settings, 'LOGIN_MAX_ATTEMPTS', 5)
+    ip_key = _get_login_cache_key('ip', ip)
+    try:
+        if cache.get(ip_key, 0) >= limit:
+            return True
+        if username:
+            user_key = _get_login_cache_key('user', username)
+            if cache.get(user_key, 0) >= limit:
+                return True
+    except Exception as exc:
+        logger.warning("Cache backend error during login lockout check: %s", exc)
+    return False
+
+
+def record_login_failure(ip: str, username: str = '') -> int:
+    """Increment failure counters for IP and username upon failed authentication."""
+    lockout_seconds = getattr(settings, 'LOGIN_LOCKOUT_SECONDS', 300)
+    max_count = 0
+    try:
+        ip_key = _get_login_cache_key('ip', ip)
+        ip_count = cache.get(ip_key, 0) + 1
+        cache.set(ip_key, ip_count, timeout=lockout_seconds)
+        max_count = max(max_count, ip_count)
+
+        if username:
+            user_key = _get_login_cache_key('user', username)
+            user_count = cache.get(user_key, 0) + 1
+            cache.set(user_key, user_count, timeout=lockout_seconds)
+            max_count = max(max_count, user_count)
+
+        logger.warning(
+            "Failed login attempt from IP '%s' for username '%s'. Recorded fail count: %d",
+            ip, username, max_count
+        )
+    except Exception as exc:
+        logger.warning("Cache backend error recording login failure: %s", exc)
+    return max_count
+
+
+def reset_login_failures(ip: str, username: str = '') -> None:
+    """Clear failed login counters upon successful authentication."""
+    try:
+        cache.delete(_get_login_cache_key('ip', ip))
+        if username:
+            cache.delete(_get_login_cache_key('user', username))
+    except Exception as exc:
+        logger.warning("Cache backend error resetting login failures: %s", exc)

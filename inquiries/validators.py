@@ -6,8 +6,9 @@ import re
 from django.core.exceptions import ValidationError
 
 
-# Indian 10-digit mobile number: exactly 10 ASCII digits
-MOBILE_REGEX = re.compile(r'^\d{10}$')
+# Indian 10-digit mobile number: strictly 10 ASCII digits (0-9)
+# Uses explicit [0-9] character class with ASCII flag to reject Devanagari and other Unicode numerals.
+MOBILE_REGEX = re.compile(r'^[0-9]{10}$', re.ASCII)
 
 # Name validation: allows alphabetic characters, spaces, dots, hyphens, and apostrophes
 NAME_REGEX = re.compile(r"^[A-Za-z\s.\'-]+$")
@@ -15,16 +16,19 @@ NAME_REGEX = re.compile(r"^[A-Za-z\s.\'-]+$")
 
 def validate_mobile_number(value: str) -> None:
     """
-    Validate that the mobile number consists of exactly 10 ASCII digits.
-    Rejects country codes (+91), spaces, punctuation, and non-digit characters.
+    Validate that the mobile number consists of exactly 10 ASCII digits (0-9).
+    Rejects country codes (+91), spaces, punctuation, Devanagari/Unicode numerals,
+    and non-digit characters.
     """
     if not value or not isinstance(value, str):
         raise ValidationError('Mobile number is required.')
 
     normalized = value.strip()
-    if not MOBILE_REGEX.match(normalized):
+
+    # Reject if non-ASCII digits are present (e.g., Devanagari numerals ०-९)
+    if not normalized.isascii() or not MOBILE_REGEX.match(normalized):
         raise ValidationError(
-            'Enter a valid 10-digit mobile number without country codes, spaces, or symbols.'
+            'Enter a valid 10-digit mobile number containing only digits 0-9 without country codes, spaces, or symbols.'
         )
 
 

@@ -25,13 +25,8 @@
   <nav class="navbar navbar-expand-lg corp-navbar" aria-label="Main Navigation">
     <div class="container">
       <a class="corp-brand" href="{% url 'public:home' %}">
-        <div class="corp-brand-icon">
-          <i class="bi bi-building"></i>
-        </div>
-        <div class="d-flex flex-column">
-          <span class="corp-brand-text">Start-Up Sahay</span>
-          <span class="corp-brand-sub">Private Limited &bull; Corporate Advisory</span>
-        </div>
+        {% load static %}
+        <img src="{% static 'images/startupsahay_logo.webp' %}" alt="Start-Up Sahay" class="corp-brand-img" height="42" style="height: 42px !important; width: auto !important; max-width: 175px !important; object-fit: contain !important; display: block;" onerror="this.onerror=null; this.src='{% static 'images/startupsahay_logo.png' %}';">
       </a>
 
       <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#corpNavbarContent" aria-controls="corpNavbarContent" aria-expanded="false" aria-label="Toggle navigation">

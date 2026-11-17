@@ -1,411 +1,384 @@
 /* ==========================================================================
-   Start-Up Sahay — Sahay LeadFlow AdminLTE 4 Theme Enhancements
-   Enterprise CRM Design System: Clean, professional, high-density business UI
-   Zero frivolous decoration, crisp borders, consistent spacing, accessible contrast.
+   Start-Up Sahay — Enterprise Brand Design System for Sahay LeadFlow (AdminLTE 4)
+   Authentic Visual Identity extracted from https://startupsahay.com/
+   Primary Brand Gold: #FFBA00 | Contrast Pitch Black/Slate: #111111 / #0F172A
+   Secondary Accent: #F4511E (Warm Coral) | Font: 'Montserrat', sans-serif
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Poppins:wght@400;500;600;700&display=swap');
+
 :root {
-  /* Corporate Navy Brand System */
-  --sahay-navy: #0f2e5a;
-  --sahay-navy-dark: #0a1f3d;
-  --sahay-navy-light: #1b4982;
-  --sahay-blue: #184c78;
-  --sahay-accent: #d97706;
-  --sahay-border: #dee2e6;
-  --sahay-border-light: #e9ecef;
-  --sahay-bg-app: #f4f6f9;
-  --sahay-text-main: #212529;
-  --sahay-text-muted: #6c757d;
+  /* --- Authentic Startup Sahay Brand Identity Palette --- */
+  --sahay-primary: #FFBA00;            /* Authentic Primary Brand Amber Gold */
+  --sahay-primary-hover: #E6A700;      /* Rich Amber Hover */
+  --sahay-primary-active: #D99B00;     /* Deep Gold Pressed State */
+  --sahay-primary-light: #FFFBEB;      /* Warm Amber Subtle Canvas Tint */
+  --sahay-primary-subtle: #FEF3C7;     /* Soft Amber Border / Highlight Pill */
+  --sahay-primary-border: #FDE68A;
+  --sahay-primary-gradient: linear-gradient(135deg, #FFBA00 0%, #FF9E00 100%);
   
-  /* Status Colors */
-  --status-new: #0d6efd;
-  --status-contacted: #0891b2;
-  --status-followup: #d97706;
-  --status-proposal: #7c3aed;
-  --status-mature: #16a34a;
-  --status-closed: #4b5563;
-  
-  /* WhatsApp Official */
-  --wa-green: #25d366;
-  --wa-dark: #128c7e;
+  /* --- Dark Contrast / Executive Slate --- */
+  --sahay-dark: #111111;               /* Brand Text Black / Logo Charcoal */
+  --sahay-dark-surface: #0F172A;       /* Midnight Slate Sidebar Background */
+  --sahay-dark-secondary: #1E293B;     /* Slate Navy for Header / Dropdown Cards */
+  --sahay-dark-hover: rgba(255, 255, 255, 0.08);
+
+  /* --- Secondary Accent from startupsahay.com --- */
+  --sahay-accent: #F4511E;             /* Official Warm Coral / Vermilion */
+  --sahay-accent-hover: #D83B0B;
+  --sahay-accent-light: #FFF1EE;
+
+  /* --- Functional Status Color System --- */
+  --status-new: #0284C7;               /* Cerulean Blue (New Inquiries) */
+  --status-new-bg: #E0F2FE;
+  --status-contacted: #0D9488;         /* Teal (Client Contacted) */
+  --status-contacted-bg: #CCFBF1;
+  --status-followup: #D97706;          /* Warm Amber (Follow-up Due) */
+  --status-followup-bg: #FEF3C7;
+  --status-proposal: #7C3AED;          /* Royal Violet (Proposal Sent) */
+  --status-proposal-bg: #EDE9FE;
+  --status-mature: #16A34A;            /* Emerald Green (Qualified / Converted) */
+  --status-mature-bg: #DCFCE7;
+  --status-closed: #64748B;            /* Neutral Slate (Closed / Inactive) */
+  --status-closed-bg: #F1F5F9;
+
+  /* --- WhatsApp Official --- */
+  --wa-green: #25D366;
+  --wa-dark: #128C7E;
+  --wa-light: #E7FCEE;
+
+  /* --- Backgrounds, Borders & Typography --- */
+  --sahay-bg-app: #F8FAFC;             /* Clean App Canvas */
+  --sahay-bg-card: #FFFFFF;            /* Pure White Surfaces */
+  --sahay-border: #E2E8F0;             /* Crisp Slate Border */
+  --sahay-border-light: #F1F5F9;
+  --sahay-text-main: #0F172A;          /* High contrast primary text */
+  --sahay-text-secondary: #475569;     /* Body & metadata text */
+  --sahay-text-muted: #94A3B8;
+
+  /* --- Typography --- */
+  --sahay-font: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sahay-font-alt: 'Poppins', sans-serif;
+
+  /* --- Radii & Shadows --- */
+  --sahay-radius-sm: 6px;
+  --sahay-radius-md: 8px;
+  --sahay-radius-lg: 12px;
+  --sahay-radius-pill: 100px;
+  --sahay-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --sahay-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --sahay-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --sahay-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --sahay-shadow-primary: 0 4px 12px 0 rgba(255, 186, 0, 0.35);
 }
 
-body.layout-fixed {
-  font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: var(--sahay-text-main);
+/* ==========================================================================
+   Global Body & Typography Overrides
+   ========================================================================== */
+body, body.layout-fixed {
+  font-family: var(--sahay-font) !important;
+  color: var(--sahay-text-main) !important;
+  background-color: var(--sahay-bg-app) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: var(--sahay-font);
+  font-weight: 700;
+  color: var(--sahay-dark);
+  letter-spacing: -0.015em;
+}
+
+/* ==========================================================================
+   Header Navbar Styling
+   ========================================================================== */
+.app-header.navbar {
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid var(--sahay-border) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+  padding: 0.5rem 1rem;
+}
+
+.app-header .nav-link {
+  color: var(--sahay-text-secondary) !important;
+  font-weight: 500;
+  font-size: 0.88rem;
+  border-radius: var(--sahay-radius-sm);
+  padding: 0.4rem 0.75rem;
+  transition: all 0.15s ease;
+}
+
+.app-header .nav-link:hover {
+  color: var(--sahay-dark) !important;
   background-color: var(--sahay-bg-app);
 }
 
-/* Sidebar Branding & Aesthetics */
+.app-header .nav-link.active,
+.app-header .nav-link.text-primary {
+  color: var(--sahay-dark) !important;
+  font-weight: 700 !important;
+  position: relative;
+}
+
+.app-header .nav-link.text-primary::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background-color: var(--sahay-primary);
+  border-radius: 2px;
+}
+
+/* Search input in header */
+.app-header .input-group .form-control:focus {
+  border-color: var(--sahay-primary) !important;
+  box-shadow: 0 0 0 3px rgba(255, 186, 0, 0.2) !important;
+}
+
+/* User profile avatar */
+.user-avatar-circle {
+  width: 34px;
+  height: 34px;
+  background: var(--sahay-primary-gradient);
+  color: var(--sahay-dark);
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+  box-shadow: var(--sahay-shadow-xs);
+}
+
+/* User dropdown menu */
+.user-menu .dropdown-menu {
+  border-radius: var(--sahay-radius-md) !important;
+  overflow: hidden;
+  box-shadow: var(--sahay-shadow-lg) !important;
+}
+
+.user-menu .user-header {
+  background: var(--sahay-dark-secondary) !important;
+  color: #FFFFFF !important;
+  border-bottom: 3px solid var(--sahay-primary);
+}
+
+.user-menu .user-header .user-avatar-circle {
+  width: 52px;
+  height: 52px;
+  font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   Sidebar Navigation & Branding (Midnight Slate with Startup Sahay Logo)
+   ========================================================================== */
 .app-sidebar {
-  background-color: #111827 !important;
+  background-color: var(--sahay-dark-surface) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .app-sidebar .sidebar-brand {
-  height: 56px;
-  background-color: #0b0f19;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  height: 64px;
+  background-color: #FFFFFF !important;
+  border-bottom: 2px solid var(--sahay-primary);
   padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.app-sidebar .brand-link {
-  color: #ffffff;
+.app-sidebar .sidebar-brand .brand-link {
   display: flex;
   align-items: center;
   gap: 0.65rem;
   text-decoration: none;
+  width: 100%;
 }
 
-.brand-icon-box {
-  width: 32px;
-  height: 32px;
-  background-color: var(--sahay-blue);
-  color: #ffffff;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
+.app-sidebar .sidebar-brand .brand-logo-img {
+  max-height: 42px;
+  max-width: 175px;
+  width: auto;
+  object-fit: contain;
+}
+
+.sidebar-menu .nav-header {
+  font-size: 0.68rem;
   font-weight: 700;
-  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--sahay-primary);
+  padding: 0.85rem 1rem 0.35rem 1rem;
+  opacity: 0.9;
 }
 
 .sidebar-menu .nav-item .nav-link {
   font-size: 0.88rem;
   font-weight: 500;
-  padding: 0.55rem 0.85rem;
-  border-radius: 4px;
-  color: #94a3b8;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--sahay-radius-sm);
+  color: #94A3B8 !important;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  margin: 0.15rem 0.5rem;
-  transition: all 0.15s ease-in-out;
+  gap: 0.75rem;
+  margin: 0.15rem 0.65rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-menu .nav-item .nav-link:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF !important;
+  background-color: var(--sahay-dark-hover);
+  transform: translateX(2px);
 }
 
 .sidebar-menu .nav-item .nav-link.active {
-  color: #ffffff;
-  background-color: var(--sahay-blue);
-  font-weight: 600;
+  color: var(--sahay-dark) !important;
+  background: var(--sahay-primary-gradient) !important;
+  font-weight: 700 !important;
+  box-shadow: var(--sahay-shadow-primary);
+}
+
+.sidebar-menu .nav-item .nav-link.active .nav-icon {
+  color: var(--sahay-dark) !important;
 }
 
 .sidebar-menu .nav-item .nav-link .nav-icon {
-  font-size: 1rem;
-  width: 20px;
+  font-size: 1.05rem;
+  width: 22px;
   text-align: center;
-  flex-shrink: 0;
+  color: #64748B;
+  transition: color 0.2s;
 }
 
-.sidebar-menu .nav-header {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: #64748b;
-  padding: 0.75rem 1rem 0.25rem;
+.sidebar-menu .nav-item .nav-link:hover .nav-icon {
+  color: var(--sahay-primary);
 }
 
-/* Header Navbar */
-.app-header.navbar {
-  height: 56px;
-  border-bottom: 1px solid var(--sahay-border);
-  background-color: #ffffff !important;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-}
-
-.user-avatar-circle {
-  width: 32px;
-  height: 32px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  background-color: var(--sahay-blue);
-  color: #ffffff;
+/* ==========================================================================
+   Buttons — Startup Sahay Golden Amber & Secondary Tokens
+   ========================================================================== */
+.btn {
+  font-family: var(--sahay-font);
   font-weight: 600;
+  border-radius: var(--sahay-radius-sm);
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
 }
 
-/* Cards & Content Header */
-.app-content-header {
-  padding: 1rem 1rem 0.5rem;
-  background-color: transparent;
+/* Primary Button: Startup Sahay Amber Gold */
+.btn-primary,
+.btn-corp-primary {
+  background: var(--sahay-primary) !important;
+  border-color: var(--sahay-primary) !important;
+  color: var(--sahay-dark) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 4px rgba(255, 186, 0, 0.2);
 }
 
-.app-content-header .breadcrumb {
-  margin-bottom: 0;
-  font-size: 0.85rem;
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-corp-primary:hover,
+.btn-corp-primary:focus {
+  background: var(--sahay-primary-hover) !important;
+  border-color: var(--sahay-primary-hover) !important;
+  color: #000000 !important;
+  box-shadow: var(--sahay-shadow-primary);
+  transform: translateY(-1px);
 }
 
-.app-content-header .breadcrumb-item a {
-  color: var(--sahay-blue);
-  text-decoration: none;
+.btn-primary:active,
+.btn-corp-primary:active {
+  background: var(--sahay-primary-active) !important;
+  border-color: var(--sahay-primary-active) !important;
+  color: #000000 !important;
+  transform: translateY(0);
 }
 
-.app-content-header .breadcrumb-item a:hover {
-  text-decoration: underline;
+/* Secondary Button: Clean Corporate Slate */
+.btn-secondary,
+.btn-corp-secondary {
+  background: var(--sahay-dark-secondary) !important;
+  border-color: var(--sahay-dark-secondary) !important;
+  color: #FFFFFF !important;
 }
 
-.card {
-  border: 1px solid var(--sahay-border);
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  background-color: #ffffff;
-  margin-bottom: 1.25rem;
+.btn-secondary:hover,
+.btn-corp-secondary:hover {
+  background: var(--sahay-dark-surface) !important;
+  border-color: var(--sahay-dark-surface) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
 }
 
-.card-header {
-  background-color: #ffffff;
-  border-bottom: 1px solid var(--sahay-border);
-  padding: 0.75rem 1.25rem;
-  font-weight: 600;
-  color: var(--sahay-text-main);
+/* Outlines */
+.btn-outline-primary {
+  color: var(--sahay-dark) !important;
+  border-color: var(--sahay-primary) !important;
+  background-color: transparent !important;
 }
 
-.card-header .card-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 0;
+.btn-outline-primary:hover {
+  background-color: var(--sahay-primary) !important;
+  color: var(--sahay-dark) !important;
+  box-shadow: var(--sahay-shadow-primary);
 }
 
-/* Small Info Boxes (AdminLTE 4) */
-.info-box {
-  display: flex;
-  min-height: 80px;
-  background-color: #ffffff;
-  border: 1px solid var(--sahay-border);
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  margin-bottom: 1rem;
-  overflow: hidden;
+.btn-outline-secondary {
+  color: var(--sahay-text-secondary) !important;
+  border-color: var(--sahay-border) !important;
+  background-color: #FFFFFF !important;
 }
 
-.info-box-icon {
-  width: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.75rem;
-  flex-shrink: 0;
+.btn-outline-secondary:hover {
+  background-color: var(--sahay-bg-app) !important;
+  color: var(--sahay-dark) !important;
+  border-color: var(--sahay-text-secondary) !important;
 }
 
-.info-box-content {
-  padding: 0.75rem 1rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.info-box-text {
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  color: var(--sahay-text-muted);
-}
-
-.info-box-number {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--sahay-text-main);
-  line-height: 1.2;
-}
-
-/* Tables */
-.table-crm {
-  margin-bottom: 0;
-  font-size: 0.88rem;
-}
-
-.table-crm thead th {
-  background-color: #f8fafc;
-  color: #475569;
-  font-weight: 600;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-bottom: 2px solid var(--sahay-border);
-  padding: 0.65rem 0.85rem;
-  white-space: nowrap;
-}
-
-.table-crm tbody td {
-  padding: 0.65rem 0.85rem;
-  vertical-align: middle;
-  border-bottom: 1px solid var(--sahay-border-light);
-}
-
-.table-crm tbody tr:hover {
-  background-color: #f8fafc;
-}
-
-.ref-code {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--sahay-navy);
-}
-
-/* Status Badges */
-.badge-stage {
-  font-size: 0.74rem;
-  font-weight: 600;
-  padding: 0.35em 0.65em;
-  border-radius: 3px;
-  display: inline-block;
-  white-space: nowrap;
-}
-
-.badge-new {
-  background-color: #e0f2fe;
-  color: #0369a1;
-  border: 1px solid #bae6fd;
-}
-
-.badge-contacted {
-  background-color: #ecfeff;
-  color: #0e7490;
-  border: 1px solid #a5f3fc;
-}
-
-.badge-followup {
-  background-color: #fef3c7;
-  color: #b45309;
-  border: 1px solid #fde68a;
-}
-
-.badge-proposal {
-  background-color: #ede9fe;
-  color: #6d28d9;
-  border: 1px solid #ddd6fe;
-}
-
-.badge-mature {
-  background-color: #dcfce7;
-  color: #15803d;
-  border: 1px solid #bbf7d0;
-}
-
-.badge-closed {
-  background-color: #f1f5f9;
-  color: #475569;
-  border: 1px solid #e2e8f0;
-}
-
-.badge-service {
-  background-color: #f1f5f9;
-  color: #334155;
-  border: 1px solid #cbd5e1;
-  font-weight: 500;
-  font-size: 0.74rem;
-}
-
-/* WhatsApp Button */
+/* WhatsApp Solid Action Button */
 .btn-whatsapp {
-  background-color: #25d366;
-  color: #ffffff;
-  border: 1px solid #1ebc59;
+  background-color: var(--wa-green) !important;
+  border-color: var(--wa-green) !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);
+}
+
+.btn-whatsapp:hover {
+  background-color: var(--wa-dark) !important;
+  border-color: var(--wa-dark) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px);
+}
+
+/* Pagination: Startup Sahay Active Gold Accent */
+.pagination .page-item.active .page-link {
+  background-color: var(--sahay-primary) !important;
+  border-color: var(--sahay-primary) !important;
+  color: var(--sahay-dark) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 4px rgba(255, 186, 0, 0.3);
+}
+
+.pagination .page-link {
+  color: var(--sahay-text-main);
+  border-color: var(--sahay-border);
   font-weight: 500;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
 }
 
-.btn-whatsapp:hover,
-.btn-whatsapp:focus {
-  background-color: #128c7e;
-  color: #ffffff;
-  border-color: #0e6c61;
+.pagination .page-link:hover {
+  background-color: var(--sahay-primary-light);
+  border-color: var(--sahay-primary);
+  color: var(--sahay-dark);
 }
 
-.btn-outline-whatsapp {
-  color: #128c7e;
-  background-color: #ffffff;
-  border: 1px solid #25d366;
-}
-
-.btn-outline-whatsapp:hover,
-.btn-outline-whatsapp:focus {
-  background-color: #25d366;
-  color: #ffffff;
-}
-
-/* Kanban Pipeline System */
-.kanban-board-container {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  padding-bottom: 1.5rem;
-  min-height: calc(100vh - 240px);
-}
-
-.kanban-column {
-  flex: 0 0 310px;
-  width: 310px;
-  background-color: #edf2f7;
-  border: 1px solid var(--sahay-border);
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-}
-
-.kanban-column-header {
-  padding: 0.75rem 1rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid var(--sahay-border);
-  border-top: 3px solid var(--sahay-blue);
-  border-radius: 4px 4px 0 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.kanban-column-header.col-new { border-top-color: var(--status-new); }
-.kanban-column-header.col-contacted { border-top-color: var(--status-contacted); }
-.kanban-column-header.col-followup { border-top-color: var(--status-followup); }
-.kanban-column-header.col-proposal { border-top-color: var(--status-proposal); }
-.kanban-column-header.col-mature { border-top-color: var(--status-mature); }
-.kanban-column-header.col-closed { border-top-color: var(--status-closed); }
-
-.kanban-column-title {
-  font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--sahay-text-main);
-  margin-bottom: 0;
-}
-
-.kanban-cards-list {
-  padding: 0.75rem;
-  flex-grow: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  min-height: 250px;
-}
-
-.kanban-card {
-  background-color: #ffffff;
-  border: 1px solid var(--sahay-border);
-  border-radius: 4px;
-  padding: 0.75rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-.kanban-card:hover {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.kanban-card-title {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--sahay-text-main);
-  margin-bottom: 0.35rem;
-}
-
-/* Timeline component for Audit History */
+/* Timeline Audit Trail (Lead Detail & Status History) */
 .timeline-audit {
   position: relative;
   margin: 0;
@@ -413,118 +386,525 @@ body.layout-fixed {
   list-style: none;
 }
 
-.timeline-audit:before {
+.timeline-audit::before {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
+  left: 15px;
   width: 2px;
-  background: var(--sahay-border);
-  left: 20px;
-  margin-left: -1px;
+  background-color: var(--sahay-border);
 }
 
 .timeline-audit > li {
   position: relative;
-  margin-right: 0;
-  margin-bottom: 15px;
+  margin-bottom: 1.25rem;
+  padding-left: 38px;
 }
 
-.timeline-audit > li > .timeline-icon {
-  width: 32px;
-  height: 32px;
-  font-size: 14px;
-  line-height: 32px;
+.timeline-audit .timeline-icon {
   position: absolute;
-  color: #fff;
-  background: #6c757d;
+  left: 5px;
+  top: 2px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  text-align: center;
-  left: 4px;
-  top: 0;
-}
-
-.timeline-audit > li > .timeline-item {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  border-radius: 4px;
-  background: #fff;
-  color: #495057;
-  margin-left: 50px;
-  margin-right: 0;
-  padding: 0;
-  position: relative;
-  border: 1px solid var(--sahay-border);
-}
-
-.timeline-audit > li > .timeline-item > .time {
-  color: #999;
-  float: right;
-  padding: 10px;
-  font-size: 12px;
-}
-
-.timeline-audit > li > .timeline-item > .timeline-header {
-  margin: 0;
-  color: #495057;
-  border-bottom: 1px solid var(--sahay-border-light);
-  padding: 10px 15px;
-  font-size: 14px;
-  line-height: 1.1;
-  font-weight: 600;
-}
-
-.timeline-audit > li > .timeline-item > .timeline-body {
-  padding: 10px 15px;
-  font-size: 13px;
-}
-
-/* Auth Login Page (AdminLTE 4) */
-body.login-page {
-  background-color: #f1f5f9;
+  font-size: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  margin: 0;
+  background-color: var(--sahay-primary) !important;
+  color: var(--sahay-dark) !important;
+  border: 2px solid #FFFFFF;
+  box-shadow: var(--sahay-shadow-xs);
 }
 
-.login-box {
-  width: 400px;
-  max-width: 92%;
-  margin: 2rem auto;
+.timeline-audit .timeline-item {
+  background-color: #FFFFFF;
+  border: 1px solid var(--sahay-border);
+  border-radius: var(--sahay-radius-sm);
+  padding: 0.65rem 0.85rem;
+  box-shadow: var(--sahay-shadow-xs);
 }
 
-.login-box .card {
-  border: 1px solid #cbd5e1;
-  border-top: 3px solid var(--sahay-blue);
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+.timeline-audit .timeline-item .time {
+  float: right;
+  font-size: 0.75rem;
+  color: var(--sahay-text-muted);
 }
 
-.login-logo {
-  font-size: 1.6rem;
-  font-weight: 700;
-  text-align: center;
+.timeline-audit .timeline-header {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.timeline-audit .timeline-body {
+  font-size: 0.82rem;
+  color: var(--sahay-text-secondary);
+}
+
+/* WhatsApp Action Button */
+.btn-outline-whatsapp {
+  color: var(--wa-dark) !important;
+  border-color: var(--wa-green) !important;
+  background-color: #FFFFFF !important;
+  font-weight: 600;
+}
+
+.btn-outline-whatsapp:hover {
+  background-color: var(--wa-green) !important;
+  border-color: var(--wa-green) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+}
+
+/* ==========================================================================
+   KPI Summary Small-Boxes (Dashboard Overview)
+   ========================================================================== */
+.small-box {
+  border-radius: var(--sahay-radius-md) !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--sahay-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 0;
+}
+
+.small-box:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sahay-shadow-md);
+}
+
+.small-box .inner {
+  padding: 1.25rem 1.25rem 0.75rem 1.25rem;
+}
+
+.small-box .inner h3 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.02em;
+}
+
+.small-box .inner p {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.9;
+}
+
+.small-box .small-box-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2.75rem;
+  opacity: 0.2;
+  transition: transform 0.2s ease;
+}
+
+.small-box:hover .small-box-icon {
+  transform: scale(1.1);
+  opacity: 0.3;
+}
+
+.small-box .small-box-footer {
+  background: rgba(0, 0, 0, 0.08);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.45rem 1.25rem;
+  display: block;
+  text-align: right;
+  transition: background 0.15s ease;
+}
+
+.small-box .small-box-footer:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Specific small-box brand color treatments */
+.small-box.text-bg-primary {
+  background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%) !important;
+  color: #FFFFFF !important;
+  border-bottom: 3px solid var(--sahay-primary);
+}
+
+.small-box.text-bg-info {
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%) !important;
+  color: #FFFFFF !important;
+}
+
+.small-box.text-bg-warning {
+  background: var(--sahay-primary-gradient) !important;
+  color: var(--sahay-dark) !important;
+}
+
+.small-box.text-bg-warning .inner h3,
+.small-box.text-bg-warning .inner p,
+.small-box.text-bg-warning .small-box-footer {
+  color: var(--sahay-dark) !important;
+}
+
+.small-box.text-bg-success {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+}
+
+/* ==========================================================================
+   Cards & Outlines
+   ========================================================================== */
+.card {
+  border-radius: var(--sahay-radius-md) !important;
+  border: 1px solid var(--sahay-border) !important;
+  background-color: #FFFFFF !important;
+  box-shadow: var(--sahay-shadow-xs) !important;
   margin-bottom: 1.25rem;
 }
 
-.login-logo a {
-  color: var(--sahay-navy);
+.card.card-outline.card-primary {
+  border-top: 3px solid var(--sahay-primary) !important;
+}
+
+.card.card-outline.card-info {
+  border-top: 3px solid var(--status-contacted) !important;
+}
+
+.card.card-outline.card-warning {
+  border-top: 3px solid var(--sahay-primary) !important;
+}
+
+.card.card-outline.card-success {
+  border-top: 3px solid var(--status-mature) !important;
+}
+
+.card.card-outline.card-danger {
+  border-top: 3px solid var(--sahay-accent) !important;
+}
+
+.card-header {
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid var(--sahay-border) !important;
+  padding: 0.85rem 1.25rem;
+}
+
+.card-title {
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: var(--sahay-dark) !important;
+  margin: 0;
+}
+
+/* ==========================================================================
+   Data Tables & Typography
+   ========================================================================== */
+.table {
+  font-size: 0.86rem;
+  color: var(--sahay-text-main);
+  margin-bottom: 0;
+}
+
+.table thead th {
+  background-color: #F8FAFC !important;
+  color: var(--sahay-text-secondary) !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  border-bottom: 1px solid var(--sahay-border) !important;
+  padding: 0.75rem 1rem !important;
+  vertical-align: middle;
+}
+
+.table tbody td {
+  padding: 0.75rem 1rem !important;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--sahay-border-light);
+}
+
+.table-hover tbody tr:hover td {
+  background-color: var(--sahay-primary-light) !important;
+}
+
+/* Reference Code Badges */
+.ref-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--sahay-dark-secondary);
+  background-color: var(--sahay-primary-subtle);
+  border: 1px solid var(--sahay-primary-border);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--sahay-radius-sm);
+  display: inline-block;
+  letter-spacing: 0.03em;
+}
+
+.ref-code:hover {
+  background-color: var(--sahay-primary);
+  color: var(--sahay-dark);
+}
+
+/* ==========================================================================
+   Lead Maturity Stage Badges (Rounded Pills)
+   ========================================================================== */
+.badge-stage {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: var(--sahay-radius-pill);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.badge-new {
+  background-color: var(--status-new-bg);
+  color: var(--status-new);
+  border-color: rgba(2, 132, 199, 0.25);
+}
+
+.badge-contacted {
+  background-color: var(--status-contacted-bg);
+  color: var(--status-contacted);
+  border-color: rgba(13, 148, 136, 0.25);
+}
+
+.badge-followup {
+  background-color: var(--status-followup-bg);
+  color: var(--status-followup);
+  border-color: rgba(217, 119, 6, 0.25);
+}
+
+.badge-proposal {
+  background-color: var(--status-proposal-bg);
+  color: var(--status-proposal);
+  border-color: rgba(124, 58, 237, 0.25);
+}
+
+.badge-mature {
+  background-color: var(--status-mature-bg);
+  color: var(--status-mature);
+  border-color: rgba(22, 163, 74, 0.25);
+}
+
+.badge-closed {
+  background-color: var(--status-closed-bg);
+  color: var(--status-closed);
+  border-color: rgba(100, 116, 139, 0.25);
+}
+
+.badge-service {
+  background-color: #F1F5F9;
+  color: var(--sahay-dark);
+  border-color: #CBD5E1;
+  font-weight: 600;
+  border-radius: var(--sahay-radius-sm);
+}
+
+/* ==========================================================================
+   6-Stage Kanban Pipeline Board
+   ========================================================================== */
+.kanban-board-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  align-items: flex-start;
+  min-height: calc(100vh - 220px);
+}
+
+.kanban-column {
+  flex: 0 0 290px;
+  background-color: #F8FAFC !important;
+  border: 1px solid var(--sahay-border) !important;
+  border-radius: var(--sahay-radius-md) !important;
+  box-shadow: var(--sahay-shadow-xs) !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.kanban-column.card-primary {
+  border-top: 3px solid var(--status-new) !important;
+}
+
+.kanban-column.card-info {
+  border-top: 3px solid var(--status-contacted) !important;
+}
+
+.kanban-column.card-warning {
+  border-top: 3px solid var(--sahay-primary) !important;
+}
+
+.kanban-column.card-secondary {
+  border-top: 3px solid var(--status-proposal) !important;
+}
+
+.kanban-column.card-success {
+  border-top: 3px solid var(--status-mature) !important;
+}
+
+.kanban-column.card-dark {
+  border-top: 3px solid var(--status-closed) !important;
+}
+
+.kanban-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.65rem;
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+}
+
+.kanban-card {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--sahay-border) !important;
+  border-radius: var(--sahay-radius-sm) !important;
+  padding: 0.85rem !important;
+  box-shadow: var(--sahay-shadow-xs) !important;
+  transition: all 0.2s ease;
+}
+
+.kanban-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sahay-shadow-md) !important;
+  border-color: var(--sahay-primary) !important;
+}
+
+/* ==========================================================================
+   Forms & Controls
+   ========================================================================== */
+.form-label {
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  color: var(--sahay-text-secondary) !important;
+  margin-bottom: 0.35rem;
+}
+
+.form-control,
+.form-select {
+  font-family: var(--sahay-font);
+  font-size: 0.88rem;
+  border-radius: var(--sahay-radius-sm);
+  border: 1px solid var(--sahay-border);
+  padding: 0.5rem 0.75rem;
+  color: var(--sahay-text-main);
+  background-color: #FFFFFF;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--sahay-primary) !important;
+  box-shadow: 0 0 0 3px rgba(255, 186, 0, 0.25) !important;
+  outline: none;
+}
+
+.input-group-text {
+  background-color: #F8FAFC;
+  border-color: var(--sahay-border);
+  color: var(--sahay-text-secondary);
+  font-size: 0.88rem;
+}
+
+/* ==========================================================================
+   Login Page Styling (Auth with Startup Sahay Logo & Password Toggle)
+   ========================================================================== */
+.login-page {
+  background: radial-gradient(circle at 10% 20%, #FFFBEB 0%, #F8FAFC 90%) !important;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 440px;
+  padding: 1.5rem;
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.login-logo .brand-logo-img {
+  max-height: 54px;
+  max-width: 220px;
+  width: auto;
+  object-fit: contain;
+}
+
+.login-box .card {
+  border-radius: var(--sahay-radius-lg) !important;
+  border: 1px solid var(--sahay-border) !important;
+  box-shadow: var(--sahay-shadow-lg) !important;
+  overflow: hidden;
+}
+
+.login-box .card-header {
+  background: #FFFFFF !important;
+  border-bottom: 3px solid var(--sahay-primary) !important;
+  padding: 1.25rem 1.5rem 0.75rem 1.5rem !important;
+}
+
+.login-box .login-card-body {
+  padding: 1.75rem 1.75rem 1.25rem 1.75rem !important;
+}
+
+/* Password Toggle Icon Button */
+.password-toggle-btn {
+  border-left: none !important;
+  background-color: #FFFFFF !important;
+  cursor: pointer;
+  color: var(--sahay-text-secondary);
+  transition: color 0.15s ease;
+}
+
+.password-toggle-btn:hover {
+  color: var(--sahay-dark);
+}
+
+/* Footer & Breadcrumb */
+.app-content-header {
+  padding: 1rem 0 0.5rem 0;
+}
+
+.breadcrumb-item a {
+  color: var(--sahay-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--sahay-primary-hover);
+}
+
+.breadcrumb-item.active {
+  color: var(--sahay-dark);
+  font-weight: 600;
+}
+
+.app-footer {
+  background-color: #FFFFFF !important;
+  border-top: 1px solid var(--sahay-border) !important;
+  color: var(--sahay-text-secondary);
+  font-size: 0.82rem;
+  padding: 0.85rem 1.5rem;
+}
+
+.app-footer a {
+  color: var(--sahay-dark);
+  font-weight: 600;
   text-decoration: none;
 }
 
-.login-card-body {
-  padding: 1.75rem;
-}
-
-/* Pagination */
-.pagination .page-link {
-  color: var(--sahay-blue);
-  border-color: var(--sahay-border);
-  font-size: 0.85rem;
-}
-
-.pagination .page-item.active .page-link {
-  background-color: var(--sahay-blue);
-  border-color: var(--sahay-blue);
-  color: #ffffff;
+.app-footer a:hover {
+  color: var(--sahay-primary-hover);
 }

@@ -337,20 +337,21 @@ document.addEventListener("DOMContentLoaded", function () {
       },
       plotOptions: {
         bar: {
-          borderRadius: 3,
+          borderRadius: 4,
           horizontal: true,
-          barHeight: '55%'
+          barHeight: '55%',
+          distributed: false
         }
       },
       dataLabels: {
         enabled: true,
         style: {
           fontSize: '11px',
-          fontWeight: 600,
-          colors: ['#333']
+          fontWeight: 700,
+          colors: ['#111111']
         }
       },
-      colors: ['#0f2e5a'],
+      colors: ['#FFBA00'],
       xaxis: {
         categories: serviceLabels,
         labels: {

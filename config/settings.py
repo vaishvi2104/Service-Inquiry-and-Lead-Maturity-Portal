@@ -3,6 +3,8 @@ Django settings for Start-Up Sahay Portal project.
 Built for Start-Up Sahay Private Limited — Service Inquiry & Lead Maturity Portal.
 """
 import os
+import sys
+import urllib.parse
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
 from django.contrib.messages import constants as messages_constants
@@ -14,30 +16,30 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load local environment variables from .env file
 load_env_file(BASE_DIR / '.env')
 
+# Check if currently running automated test suite
+IS_TESTING = 'test' in sys.argv
+
+# Debug flag: Defaults strictly to False for security
+DEBUG = get_bool_env('DEBUG', default=False)
+
 # Security: Secret Key
 SECRET_KEY = os.environ.get('SECRET_KEY')
 if not SECRET_KEY:
-    # Safe default strictly for development; production enforces explicit SECRET_KEY
-    if os.environ.get('DEBUG', 'True').lower() in ('false', '0', 'no'):
+    if not DEBUG and not IS_TESTING:
         raise ImproperlyConfigured("SECRET_KEY environment variable must be set in production mode.")
     SECRET_KEY = 'django-insecure-startup-sahay-local-development-secret-key-replace-in-prod'
 
-# Debug flag
-DEBUG = get_bool_env('DEBUG', default=True)
+# Allowed hosts: Strictly configured via environment variables
+default_hosts = '127.0.0.1,localhost,testserver' if (DEBUG or IS_TESTING) else ''
+ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', default=default_hosts)
 
-# Allowed hosts
-ALLOWED_HOSTS = get_list_env('ALLOWED_HOSTS', default='127.0.0.1,localhost,testserver,.onrender.com,.ngrok-free.app,.ngrok.io,.loca.lt')
-if DEBUG and '*' not in ALLOWED_HOSTS:
-    ALLOWED_HOSTS.append('*')
+# CSRF Trusted Origins: Explicitly configured, no wildcard testing origins
+default_csrf = 'http://127.0.0.1,http://localhost' if (DEBUG or IS_TESTING) else ''
+CSRF_TRUSTED_ORIGINS = get_list_env('CSRF_TRUSTED_ORIGINS', default=default_csrf)
 
-# CSRF Trusted Origins for tunneling (ngrok, localtunnel), Render, and remote testing
-CSRF_TRUSTED_ORIGINS = get_list_env(
-    'CSRF_TRUSTED_ORIGINS',
-    default='https://*.onrender.com,https://*.ngrok-free.app,https://*.ngrok-free.dev,https://*.ngrok.io,https://*.loca.lt,http://127.0.0.1,http://localhost'
-)
-
-# Reverse proxy SSL header (essential for Render, Heroku, AWS, etc.)
+# Reverse proxy configurations
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_FOR = get_bool_env('USE_X_FORWARDED_FOR', default=False)
 
 # Application definition
 INSTALLED_APPS = [
@@ -85,14 +87,82 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
-# Database
-# Local SQLite by default for development and assignment demonstration
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+# Database Configuration
+def _configure_database() -> dict:
+    """Configure database settings dynamically supporting PostgreSQL & SQLite."""
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url:
+        parsed = urllib.parse.urlparse(database_url)
+        scheme = parsed.scheme.lower()
+        if scheme in ('sqlite', 'sqlite3'):
+            path = parsed.path
+            if path.startswith('///'):
+                db_path = Path(path[3:])
+            elif path.startswith('/'):
+                db_path = BASE_DIR / path[1:]
+            elif not path or path == ':memory:':
+                return {'ENGINE': 'django.db.backends.sqlite3', 'NAME': ':memory:'}
+            else:
+                db_path = BASE_DIR / path
+            return {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': db_path,
+            }
+        elif scheme in ('postgres', 'postgresql', 'pgsql'):
+            return {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': parsed.path.lstrip('/'),
+                'USER': parsed.username or '',
+                'PASSWORD': urllib.parse.unquote(parsed.password or ''),
+                'HOST': parsed.hostname or '',
+                'PORT': str(parsed.port or 5432),
+            }
+
+    # Fallback to discrete parameters or default SQLite
+    engine = os.environ.get('DATABASE_ENGINE', 'django.db.backends.sqlite3')
+    db_name = os.environ.get('DATABASE_NAME')
+    if engine == 'django.db.backends.sqlite3':
+        db_path = BASE_DIR / (db_name or 'db.sqlite3')
+        return {
+            'ENGINE': engine,
+            'NAME': db_path,
+        }
+    return {
+        'ENGINE': engine,
+        'NAME': db_name or 'startupsahay_db',
+        'USER': os.environ.get('DATABASE_USER', ''),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('DATABASE_HOST', ''),
+        'PORT': os.environ.get('DATABASE_PORT', '5432'),
     }
+
+
+DATABASES = {
+    'default': _configure_database()
 }
+
+
+# Shared Caching Backend (Supports Redis or LocMem fallback)
+def _configure_cache() -> dict:
+    redis_url = os.environ.get('REDIS_URL') or os.environ.get('CACHE_URL')
+    if redis_url:
+        return {
+            'default': {
+                'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+                'LOCATION': redis_url,
+            }
+        }
+    return {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'startupsahay-cache-default',
+        }
+    }
+
+
+CACHES = _configure_cache()
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -111,6 +181,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Fast password hasher for test execution speed
+if IS_TESTING:
+    PASSWORD_HASHERS = [
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    ]
+
 # Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Kolkata'
@@ -122,7 +198,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Whitenoise storage for production static files compression and caching
 STORAGES = {
     'default': {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
@@ -132,7 +207,6 @@ STORAGES = {
     },
 }
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Authentication URLs
@@ -150,15 +224,27 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Production security controls
 if not DEBUG:
-    SESSION_COOKIE_SECURE = get_bool_env('SESSION_COOKIE_SECURE', False)
-    CSRF_COOKIE_SECURE = get_bool_env('CSRF_COOKIE_SECURE', False)
-    SECURE_SSL_REDIRECT = get_bool_env('SECURE_SSL_REDIRECT', False)
-    SECURE_HSTS_SECONDS = get_int_env('SECURE_HSTS_SECONDS', 0)
+    SESSION_COOKIE_SECURE = get_bool_env('SESSION_COOKIE_SECURE', default=not IS_TESTING)
+    CSRF_COOKIE_SECURE = get_bool_env('CSRF_COOKIE_SECURE', default=not IS_TESTING)
+    SECURE_SSL_REDIRECT = get_bool_env('SECURE_SSL_REDIRECT', default=not IS_TESTING)
+    SECURE_HSTS_SECONDS = get_int_env('SECURE_HSTS_SECONDS', default=31536000 if not IS_TESTING else 0)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = get_bool_env('SECURE_HSTS_INCLUDE_SUBDOMAINS', default=not IS_TESTING)
+    SECURE_HSTS_PRELOAD = get_bool_env('SECURE_HSTS_PRELOAD', default=not IS_TESTING)
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+else:
+    SESSION_COOKIE_SECURE = get_bool_env('SESSION_COOKIE_SECURE', default=False)
+    CSRF_COOKIE_SECURE = get_bool_env('CSRF_COOKIE_SECURE', default=False)
+    SECURE_SSL_REDIRECT = get_bool_env('SECURE_SSL_REDIRECT', default=False)
+    SECURE_HSTS_SECONDS = get_int_env('SECURE_HSTS_SECONDS', default=0)
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+    SECURE_HSTS_PRELOAD = False
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
 
-# Messages framework tag mapping to Bootstrap 5 alert classes
+# Messages framework tag mapping to Bootstrap alert classes
 MESSAGE_TAGS = {
     messages_constants.DEBUG: 'secondary',
     messages_constants.INFO: 'info',
@@ -168,5 +254,9 @@ MESSAGE_TAGS = {
 }
 
 # Rate Limiting configuration for inquiry submissions
-INQUIRY_RATE_LIMIT_MAX_REQUESTS = get_int_env('INQUIRY_RATE_LIMIT_MAX_REQUESTS', 5)
-INQUIRY_RATE_LIMIT_WINDOW_SECONDS = get_int_env('INQUIRY_RATE_LIMIT_WINDOW_SECONDS', 600)
+INQUIRY_RATE_LIMIT_MAX_REQUESTS = get_int_env('INQUIRY_RATE_LIMIT_MAX_REQUESTS', default=5)
+INQUIRY_RATE_LIMIT_WINDOW_SECONDS = get_int_env('INQUIRY_RATE_LIMIT_WINDOW_SECONDS', default=600)
+
+# Login brute-force protection
+LOGIN_MAX_ATTEMPTS = get_int_env('LOGIN_MAX_ATTEMPTS', default=5)
+LOGIN_LOCKOUT_SECONDS = get_int_env('LOGIN_LOCKOUT_SECONDS', default=300)
